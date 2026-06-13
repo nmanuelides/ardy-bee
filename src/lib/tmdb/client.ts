@@ -3,7 +3,6 @@
 import "server-only";
 
 const TMDB_BASE = "https://api.themoviedb.org/3";
-const IMAGE_BASE = "https://image.tmdb.org/t/p";
 
 type QueryParams = Record<string, string | number | boolean | undefined>;
 
@@ -32,15 +31,4 @@ export async function tmdbFetch<T>(
     throw new Error(`TMDb ${res.status} ${res.statusText} for ${path}`);
   }
   return res.json() as Promise<T>;
-}
-
-export type PosterSize = "w185" | "w342" | "w500" | "w780" | "original";
-export type ProfileSize = "w185" | "w342" | "h632" | "original";
-
-/** Build a full image URL from a TMDb file path, or null if absent. */
-export function tmdbImage(
-  filePath: string | null | undefined,
-  size: PosterSize | ProfileSize = "w500",
-): string | null {
-  return filePath ? `${IMAGE_BASE}/${size}${filePath}` : null;
 }
