@@ -1,0 +1,14 @@
+@use "abstracts" as *;
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @include respond("md") {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @include respond("xl") {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

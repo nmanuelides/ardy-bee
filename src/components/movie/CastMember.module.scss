@@ -1,0 +1,65 @@
+@use "abstracts" as *;
+
+.card {
+  @include glass;
+  @include rim-light;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 1.25rem;
+  border-radius: var(--radius-lg);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.avatar {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex: none;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  background: var(--color-surface);
+  display: grid;
+  place-items: center;
+}
+
+.img {
+  object-fit: cover;
+}
+
+.initial {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+}
+
+.who {
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--text-lg);
+  line-height: 1.2;
+}
+
+.character {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.community {
+  margin-top: 0.25rem;
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+.communityScore {
+  color: var(--color-accent);
+  font-weight: 700;
+}

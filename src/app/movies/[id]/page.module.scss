@@ -1,0 +1,15 @@
+@use "abstracts" as *;
+
+.cast {
+  @include content-width;
+  margin-top: clamp(1.5rem, 4vw, 3rem);
+}
+
+.heading {
+  font-size: var(--text-2xl);
+  margin-bottom: 1.5rem;
+}
+
+.empty {
+  color: var(--color-text-muted);
+}

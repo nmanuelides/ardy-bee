@@ -1,0 +1,108 @@
+@use "abstracts" as *;
+
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        var(--color-bg) 8%,
+        transparent 70%
+      ),
+      linear-gradient(to right, var(--color-bg) 10%, transparent 65%);
+  }
+}
+
+.backdropImg {
+  object-fit: cover;
+  opacity: 0.5;
+}
+
+.inner {
+  @include content-width;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-top: clamp(3rem, 9vw, 7rem);
+  padding-bottom: clamp(2rem, 5vw, 4rem);
+
+  @include respond("md") {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 2.5rem;
+  }
+}
+
+.poster {
+  position: relative;
+  width: 140px;
+  aspect-ratio: 2 / 3;
+  flex: none;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-2);
+
+  @include respond("md") {
+    width: 200px;
+  }
+}
+
+.posterImg {
+  object-fit: cover;
+}
+
+.meta {
+  max-width: 60ch;
+}
+
+.title {
+  font-size: var(--text-3xl);
+  margin-bottom: 0.5rem;
+}
+
+.facts {
+  color: var(--color-text-muted);
+  font-weight: 600;
+  font-size: var(--text-sm);
+}
+
+.tagline {
+  margin-top: 0.75rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+.genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.genre {
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
+
+.overview {
+  margin-top: 1rem;
+  color: var(--color-text);
+  line-height: 1.65;
+}

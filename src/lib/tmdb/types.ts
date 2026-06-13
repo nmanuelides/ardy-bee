@@ -3,6 +3,7 @@
 export interface TmdbMovie {
   id: number;
   title: string;
+  original_title: string;
   overview: string;
   poster_path: string | null;
   backdrop_path: string | null;
@@ -23,4 +24,33 @@ export interface TmdbPaginated<T> {
   results: T[];
   total_pages: number;
   total_results: number;
+}
+
+export interface TmdbGenre {
+  id: number;
+  name: string;
+}
+
+export interface TmdbMovieDetails extends TmdbMovie {
+  runtime: number | null;
+  tagline: string | null;
+  genres: TmdbGenre[];
+}
+
+export interface TmdbCastMember {
+  id: number; // person id
+  name: string;
+  character: string;
+  profile_path: string | null;
+  order: number;
+  known_for_department: string;
+}
+
+export interface TmdbCredits {
+  id: number;
+  cast: TmdbCastMember[];
+}
+
+export interface TmdbPersonDetails extends TmdbPerson {
+  popularity: number;
 }

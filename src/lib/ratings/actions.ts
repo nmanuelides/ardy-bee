@@ -1,0 +1,120 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { getMovieDetails } from "@/lib/tmdb/movies";
+import { getPersonDetails } from "@/lib/tmdb/people";
+import { MAX_RATING, MIN_RATING } from "@/lib/ratings";
+
+export interface RatePerformanceInput {
+  movieId: number;
+  personId: number;
+  characterName: string | null;
+  creditOrder: number | null;
+  score: number;
+}
+
+export type RateResult =
+  | { ok: true }
+  | { ok: false; error: string; needsAuth?: boolean };
+
+function isValidScore(score: number): boolean {
+  return (
+    score >= MIN_RATING &&
+    score <= MAX_RATING &&
+    Number.isInteger(score * 2) // enforces 0.5 increments
+  );
+}
+
+/**
+ * Records a user's rating for an actor's performance in a movie.
+ * Lazily caches the movie/person/performance rows (server-side, service-role)
+ * the first time anyone rates that pairing, then upserts the user's rating.
+ */
+export async function ratePerformance(
+  input: RatePerformanceInput,
+): Promise<RateResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { ok: false, error: "Please sign in to rate.", needsAuth: true };
+  }
+  if (!isValidScore(input.score)) {
+    return { ok: false, error: "Invalid score." };
+  }
+
+  let admin;
+  try {
+    admin = createAdminClient();
+  } catch {
+    return {
+      ok: false,
+      error: "Ratings aren't configured yet (missing server key).",
+    };
+  }
+
+  // Cache movie + person from TMDb (authoritative data, not client-supplied).
+  const [movie, person] = await Promise.all([
+    getMovieDetails(input.movieId),
+    getPersonDetails(input.personId),
+  ]);
+
+  await admin.from("movies").upsert({
+    id: movie.id,
+    title: movie.title,
+    original_title: movie.original_title ?? null,
+    overview: movie.overview,
+    poster_path: movie.poster_path,
+    backdrop_path: movie.backdrop_path,
+    release_date: movie.release_date || null,
+    runtime: movie.runtime,
+    popularity: movie.popularity,
+    tmdb_vote_average: movie.vote_average,
+  });
+
+  await admin.from("people").upsert({
+    id: person.id,
+    name: person.name,
+    profile_path: person.profile_path,
+    known_for_department: person.known_for_department,
+    popularity: person.popularity,
+  });
+
+  // Upsert the performance and get its id.
+  const { data: performance, error: perfError } = await admin
+    .from("performances")
+    .upsert(
+      {
+        movie_id: movie.id,
+        person_id: person.id,
+        character_name: input.characterName,
+        credit_order: input.creditOrder,
+      },
+      { onConflict: "movie_id,person_id" },
+    )
+    .select("id")
+    .single();
+
+  if (perfError || !performance) {
+    return { ok: false, error: "Could not save the performance." };
+  }
+
+  // Upsert the rating AS THE USER, so RLS owner checks apply.
+  const { error: ratingError } = await supabase
+    .from("ratings")
+    .upsert(
+      { user_id: user.id, performance_id: performance.id, score: input.score },
+      { onConflict: "user_id,performance_id" },
+    );
+
+  if (ratingError) {
+    return { ok: false, error: ratingError.message };
+  }
+
+  revalidatePath(`/movies/${input.movieId}`);
+  return { ok: true };
+}
