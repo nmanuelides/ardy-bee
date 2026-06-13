@@ -1,0 +1,73 @@
+@use "sass:map";
+@use "variables" as *;
+
+// --- Responsive ---------------------------------------------------------
+// Mobile-first: styles inside apply at the breakpoint width and up.
+@mixin respond($bp) {
+  @if map.has-key($breakpoints, $bp) {
+    @media (min-width: map.get($breakpoints, $bp)) {
+      @content;
+    }
+  } @else {
+    @error "Unknown breakpoint `#{$bp}`. Available: #{map.keys($breakpoints)}.";
+  }
+}
+
+// --- Surfaces -----------------------------------------------------------
+
+// Frosted glass: translucent fill + backdrop blur + hairline border.
+@mixin glass($blur: var(--glass-blur)) {
+  background: var(--glass-bg);
+  backdrop-filter: blur($blur) saturate(140%);
+  -webkit-backdrop-filter: blur($blur) saturate(140%);
+  border: 1px solid var(--glass-border);
+}
+
+// Soft neumorphic relief — raised from the surface.
+@mixin neumorphic {
+  background: var(--color-surface);
+  box-shadow:
+    var(--neu-distance) var(--neu-distance) var(--neu-blur) var(--neu-dark),
+    calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1) var(--neu-blur) var(--neu-light);
+}
+
+// Pressed / inset neumorphic relief.
+@mixin neumorphic-inset {
+  background: var(--color-surface);
+  box-shadow:
+    inset var(--neu-distance) var(--neu-distance) var(--neu-blur) var(--neu-dark),
+    inset calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1) var(--neu-blur) var(--neu-light);
+}
+
+// Rim light: a 1px gradient highlight along the top edge of a rounded box.
+// Uses a masked pseudo-element so it follows `border-radius: inherit`.
+@mixin rim-light($from: var(--rim-light)) {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(180deg, #{$from}, transparent 55%);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+// --- Helpers ------------------------------------------------------------
+@mixin content-width {
+  width: 100%;
+  max-width: $content-max;
+  margin-inline: auto;
+  padding-inline: $gutter;
+}
+
+@mixin focus-ring {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}

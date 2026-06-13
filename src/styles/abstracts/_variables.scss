@@ -1,0 +1,22 @@
+// Compile-time SCSS variables (NOT theme tokens — those live in themes/ as CSS
+// custom properties so they can be swapped at runtime).
+
+// Responsive breakpoints
+$breakpoints: (
+  "sm": 480px,
+  "md": 768px,
+  "lg": 1024px,
+  "xl": 1280px,
+  "xxl": 1536px,
+);
+
+// Layout
+$content-max: 1280px;
+$gutter: clamp(1rem, 4vw, 2.5rem);
+
+// Stacking order
+$z-base: 1;
+$z-header: 100;
+$z-overlay: 200;
+$z-modal: 300;
+$z-toast: 400;

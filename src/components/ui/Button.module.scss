@@ -1,0 +1,56 @@
+@use "abstracts" as *;
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5ch;
+  padding: 0.85rem 1.6rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  letter-spacing: 0.02em;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    background var(--dur-base) var(--ease-out);
+
+  &:active {
+    transform: translateY(1px) scale(0.99);
+  }
+}
+
+.accent {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  box-shadow: 0 6px 22px var(--color-accent-soft);
+
+  &:hover {
+    box-shadow: 0 10px 30px var(--color-accent-soft);
+    transform: translateY(-2px);
+  }
+}
+
+.neumorphic {
+  @include neumorphic;
+  color: var(--color-text);
+
+  &:hover {
+    color: var(--color-accent);
+  }
+  &:active {
+    @include neumorphic-inset;
+  }
+}
+
+.ghost {
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--glass-border);
+
+  &:hover {
+    color: var(--color-text);
+    border-color: var(--rim-light);
+  }
+}

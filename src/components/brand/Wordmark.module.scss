@@ -1,0 +1,33 @@
+@use "abstracts" as *;
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4ch;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--color-text);
+
+  &[data-size="sm"] {
+    font-size: 1.3rem;
+  }
+  &[data-size="lg"] {
+    font-size: var(--text-3xl);
+  }
+}
+
+.accent {
+  color: var(--color-accent);
+}
+
+// The bee: a small accent dot with a soft glow standing in for the mascot mark.
+.bee {
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: var(--radius-pill);
+  background: radial-gradient(circle at 35% 30%, var(--c-cream), var(--color-accent));
+  box-shadow: 0 0 0.6em var(--color-accent-soft);
+  flex: none;
+}

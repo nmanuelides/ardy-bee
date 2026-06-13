@@ -1,0 +1,5 @@
+// Single entry point for component modules:  @use "abstracts" as *;
+// Forwards compile-time variables, functions, and mixins. Emits no CSS.
+@forward "variables";
+@forward "functions";
+@forward "mixins";

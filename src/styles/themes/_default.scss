@@ -1,0 +1,65 @@
+// ===========================================================================
+// Theme: "ardy" (default) — Ardy Bee house palette.
+//
+// Every visual value the UI consumes is a CSS custom property defined here.
+// To add a theme, copy this block under a new `[data-theme="..."]` selector
+// and change the values — no component code changes needed.
+// ===========================================================================
+
+:root,
+[data-theme="ardy"] {
+  // --- Raw brand colors ---
+  --c-ink: #13121e; // near-black base
+  --c-plum: #300223; // dark plum
+  --c-cream: #edd6ad; // warm cream
+  --c-accent: #d10076; // magenta accent
+
+  // --- Semantic surfaces ---
+  --color-bg: var(--c-ink);
+  --color-surface: #1b1929; // lifted from bg so neumorphism reads
+  --color-surface-2: var(--c-plum);
+  --color-elevated: #211f31;
+
+  // --- Text ---
+  --color-text: var(--c-cream);
+  --color-text-muted: rgba(237, 214, 173, 0.62);
+  --color-text-faint: rgba(237, 214, 173, 0.38);
+
+  // --- Accent ---
+  --color-accent: var(--c-accent);
+  --color-accent-soft: rgba(209, 0, 118, 0.16);
+  --color-accent-contrast: #fff5fb;
+
+  // --- Glass ---
+  --glass-bg: rgba(48, 2, 35, 0.34);
+  --glass-border: rgba(237, 214, 173, 0.14);
+  --glass-blur: 16px;
+
+  // --- Rim light ---
+  --rim-light: rgba(237, 214, 173, 0.5);
+
+  // --- Neumorphic shadow pair (derived from --color-surface) ---
+  --neu-light: rgba(255, 255, 255, 0.045);
+  --neu-dark: rgba(0, 0, 0, 0.55);
+  --neu-distance: 7px;
+  --neu-blur: 16px;
+
+  // --- Radii ---
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
+
+  // --- Elevation (drop shadows for floating elements) ---
+  --shadow-1: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 12px 40px rgba(0, 0, 0, 0.45);
+
+  // --- Motion ---
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms;
+  --dur-base: 280ms;
+  --dur-slow: 520ms;
+
+  color-scheme: dark;
+}

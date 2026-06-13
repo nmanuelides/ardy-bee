@@ -1,0 +1,58 @@
+@use "abstracts" as *;
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: $z-header;
+  padding: 0.75rem 0;
+}
+
+.inner {
+  @include content-width;
+  @include glass;
+  @include rim-light;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: var(--radius-pill);
+  // glass already sets a max-width via content-width's inner; keep nav pill snug
+  max-width: calc(#{$content-max} - 2rem);
+}
+
+.brand {
+  flex: none;
+}
+
+.nav {
+  display: none;
+  margin-inline: auto;
+  gap: 0.5rem;
+
+  @include respond("md") {
+    display: flex;
+  }
+}
+
+.link {
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-pill);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  transition: color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--color-text);
+    background: var(--color-accent-soft);
+  }
+}
+
+.actions {
+  margin-left: auto;
+
+  @include respond("md") {
+    margin-left: 0;
+  }
+}

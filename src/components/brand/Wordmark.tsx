@@ -1,0 +1,17 @@
+import styles from "./Wordmark.module.scss";
+
+interface WordmarkProps {
+  /** Visual size. `lg` is for the hero, `sm` for the header. */
+  size?: "sm" | "lg";
+}
+
+/** The "Ardy Bee" logotype. ARDB = Actors Ratings Data Base. */
+export default function Wordmark({ size = "sm" }: WordmarkProps) {
+  return (
+    <span className={styles.wordmark} data-size={size} aria-label="Ardy Bee">
+      <span className={styles.bee} aria-hidden="true" />
+      <span>Ardy</span>
+      <span className={styles.accent}>Bee</span>
+    </span>
+  );
+}

@@ -1,0 +1,37 @@
+@use "abstracts" as *;
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  // Subtle plum glow anchored top-center for depth behind glass surfaces.
+  background-image:
+    radial-gradient(
+      120% 80% at 50% -10%,
+      var(--color-surface-2) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      90% 60% at 85% 110%,
+      var(--color-accent-soft) 0%,
+      transparent 50%
+    );
+  background-attachment: fixed;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+
+:focus-visible {
+  @include focus-ring;
+}
+
+// Custom scrollbar
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-2);
+  border-radius: var(--radius-pill);
+}
