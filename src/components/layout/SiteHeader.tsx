@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Wordmark from "@/components/brand/Wordmark";
 import Button from "@/components/ui/Button";
+import UserMenu from "./UserMenu";
+import { createClient } from "@/lib/supabase/server";
 import styles from "./SiteHeader.module.scss";
 
 const NAV = [
@@ -9,7 +11,17 @@ const NAV = [
   { href: "/rankings", label: "Rankings" },
 ];
 
-export default function SiteHeader() {
+export default async function SiteHeader() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const label =
+    (user?.user_metadata?.display_name as string | undefined) ??
+    user?.email ??
+    "";
+
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
@@ -26,7 +38,13 @@ export default function SiteHeader() {
         </nav>
 
         <div className={styles.actions}>
-          <Button variant="accent">Sign in</Button>
+          {user ? (
+            <UserMenu label={label} />
+          ) : (
+            <Link href="/login">
+              <Button variant="accent">Sign in</Button>
+            </Link>
+          )}
         </div>
       </div>
     </header>

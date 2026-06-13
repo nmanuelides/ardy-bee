@@ -1,0 +1,63 @@
+@use "abstracts" as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+
+  span {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  input {
+    @include neumorphic-inset;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    transition: box-shadow var(--dur-base) var(--ease-out);
+
+    &::placeholder {
+      color: var(--color-text-faint);
+    }
+    &:focus-visible {
+      outline: none;
+      box-shadow:
+        inset var(--neu-distance) var(--neu-distance) var(--neu-blur) var(--neu-dark),
+        inset calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1)
+          var(--neu-blur) var(--neu-light),
+        0 0 0 1px var(--color-accent);
+    }
+  }
+}
+
+.submit {
+  margin-top: 0.4rem;
+  width: 100%;
+}
+
+.error,
+.message {
+  font-size: var(--text-sm);
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-sm);
+}
+
+.error {
+  color: var(--color-accent-contrast);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-accent);
+}
+
+.message {
+  color: var(--color-text);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
