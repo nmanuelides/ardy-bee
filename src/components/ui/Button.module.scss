@@ -50,17 +50,22 @@
     -7px -7px 16px rgba(150, 120, 165, 0.28),
     8px 8px 18px rgba(0, 0, 0, 0.55);
 
-  // bevel border: button colour (top-left) → much darker (bottom-right)
+  // bevel border: button colour at the top-left corner → much darker at the
+  // bottom-right. Radial from the corner so it stays diagonal at any width.
   &::before {
-    background: linear-gradient(
-      140deg,
-      var(--color-accent) 18%,
-      color-mix(in srgb, var(--color-accent) 28%, #000) 82%
+    background: radial-gradient(
+      farthest-corner at top left,
+      var(--color-accent),
+      color-mix(in srgb, var(--color-accent) 28%, #000)
     );
   }
-  // defined rim light, brightest top-left
+  // defined rim light, brightest at the top-left corner
   &::after {
-    background: linear-gradient(140deg, rgba(255, 120, 200, 0.95), transparent 42%);
+    background: radial-gradient(
+      farthest-corner at top left,
+      rgba(255, 120, 200, 0.95),
+      transparent 55%
+    );
   }
 
   &:hover {
@@ -85,10 +90,18 @@
     8px 8px 18px rgba(0, 0, 0, 0.6);
 
   &::before {
-    background: linear-gradient(140deg, var(--color-elevated) 18%, #0a0810 82%);
+    background: radial-gradient(
+      farthest-corner at top left,
+      var(--color-elevated),
+      #0a0810
+    );
   }
   &::after {
-    background: linear-gradient(140deg, rgba(160, 140, 250, 0.7), transparent 42%);
+    background: radial-gradient(
+      farthest-corner at top left,
+      rgba(160, 140, 250, 0.7),
+      transparent 55%
+    );
   }
 
   &:hover {
