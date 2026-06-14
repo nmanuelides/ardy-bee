@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Manrope } from "next/font/google";
+import CursorBee from "@/components/brand/CursorBee";
 import "../styles/main.scss";
 
 // Display: characterful, contemporary, very readable. Body: clean geometric sans.
@@ -30,7 +31,10 @@ export default function RootLayout({
       data-theme="ardy"
       className={`${display.variable} ${body.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <CursorBee />
+      </body>
     </html>
   );
 }

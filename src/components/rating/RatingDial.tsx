@@ -9,7 +9,7 @@ import {
   ratingLabel,
 } from "@/lib/ratings";
 import { ratePerformance } from "@/lib/ratings/actions";
-import StingBee from "./StingBee";
+import { emitBeeReaction } from "@/lib/bee/events";
 import styles from "./RatingDial.module.scss";
 
 interface RatingDialProps {
@@ -34,12 +34,21 @@ export default function RatingDial({
   const router = useRouter();
   const [score, setScore] = useState<number | null>(initialScore);
   const [hover, setHover] = useState<number | null>(null);
-  const [sting, setSting] = useState(0); // increments to retrigger animation
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const stingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scoreRef = useRef<HTMLSpanElement>(null);
 
   const display = hover ?? score ?? 0;
+
+  // Summon the cursor bee to the score: sting a 1, drop honey on a 9+.
+  function reactWithBee(value: number) {
+    const rect = scoreRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    if (isStinger(value)) emitBeeReaction("sting", x, y);
+    else if (value >= 9) emitBeeReaction("honey", x, y);
+  }
 
   // Map pointer position within a cell to a 0.5-resolution value, floored at 1.
   // Typed as MouseEvent so both onPointerMove and onClick handlers can call it.
@@ -56,10 +65,7 @@ export default function RatingDial({
     }
     setScore(value);
     setError(null);
-    if (isStinger(value)) {
-      setSting((n) => n + 1);
-      if (stingTimer.current) clearTimeout(stingTimer.current);
-    }
+    reactWithBee(value);
 
     startTransition(async () => {
       const res = await ratePerformance({
@@ -118,11 +124,14 @@ export default function RatingDial({
             </button>
           );
         })}
-        <StingBee trigger={sting} />
       </div>
 
       <div className={styles.readout}>
-        <span className={styles.score} data-sting={score !== null && isStinger(score) || undefined}>
+        <span
+          ref={scoreRef}
+          className={styles.score}
+          data-sting={(score !== null && isStinger(score)) || undefined}
+        >
           {display > 0 ? formatScore(display) : "–"}
         </span>
         <span className={styles.label}>
