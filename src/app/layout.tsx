@@ -39,7 +39,7 @@ export default function RootLayout({
     >
       <body>
         <Backdrop />
-        {children}
+        <div className="app-shell">{children}</div>
         <CursorBee />
       </body>
     </html>

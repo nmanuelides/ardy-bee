@@ -1,17 +1,21 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  z-index: -1; // behind content, above the body base color
+  // z-index 0 (NOT negative): a negative-z backdrop sits outside the backdrop
+  // root, so backdrop-filter on content above can't blur it. Content is
+  // layered above this via .app-shell { z-index: 1 }.
+  z-index: 0;
   overflow: hidden;
   background: var(--color-bg);
 }
 
 // Defined organic shapes with only a hair of edge-softening, so frosted glass
 // on top produces a clear blurred-vs-sharp contrast.
+// NOTE: no `will-change`/transform-promotion — that would put the blobs on
+// their own compositing layer that backdrop-filter skips.
 .blob {
   position: absolute;
-  filter: blur(4px); // crisp shapes, just-softened edges
-  will-change: transform;
+  filter: blur(4px);
 }
 
 // magenta → plum, top right (behind the hero panel)

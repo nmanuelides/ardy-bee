@@ -7,6 +7,12 @@ body {
   color: var(--color-text);
 }
 
+// Content sits above the fixed <Backdrop> so glass surfaces can blur it.
+.app-shell {
+  position: relative;
+  z-index: 1;
+}
+
 ::selection {
   background: var(--color-accent);
   color: var(--color-accent-contrast);
