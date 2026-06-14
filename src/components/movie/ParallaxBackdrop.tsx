@@ -26,12 +26,13 @@ export default function ParallaxBackdrop({ src }: { src: string }) {
     let raf = 0;
     const update = () => {
       raf = 0;
-      const rect = wrap.getBoundingClientRect();
-      const h = rect.height || 1;
-      // how far the banner has scrolled up past the top of the viewport
-      const scrolled = Math.max(0, -rect.top);
-      // push the image down at FACTOR× that, so it travels at (1-FACTOR)× the
-      // page. Clamp to the scale headroom so an edge never shows.
+      const h = wrap.offsetHeight || 1;
+      // Drive off the page scroll directly (the banner sits at the top of the
+      // page) so the drift starts on the very first pixel of scroll — not only
+      // once the banner's top reaches the top of the viewport.
+      const scrolled = window.scrollY || document.documentElement.scrollTop || 0;
+      // push the image down at FACTOR× the scroll, so it travels at (1-FACTOR)×
+      // the page. Clamp to the scale headroom so an edge never shows.
       const maxTravel = ((SCALE - 1) / 2) * h * 0.95;
       const yPx = Math.min(FACTOR * scrolled, maxTravel);
       layer.style.transform = `translate3d(0, ${(yPx / h) * 100}%, 0) scale(${SCALE})`;
