@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Manrope } from "next/font/google";
 import CursorBee from "@/components/brand/CursorBee";
 import "../styles/main.scss";
@@ -20,6 +20,11 @@ export const metadata: Metadata = {
   title: "Ardy Bee — Rate the performance, not the movie",
   description:
     "Ardy Bee (ARDB) is the Actors Ratings Data Base: rate actor performances from 1 to 10, build your taste profile, and discover films where your favorites share the screen.",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#13121e",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
