@@ -1,9 +1,15 @@
-.bee {
+// Shared fixed layers — all sit above everything and ignore pointer events.
+.bee,
+.trailLayer,
+.sparkLayer {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000; // above modals/toasts
+  z-index: 1000;
   pointer-events: none;
+}
+
+.bee {
   will-change: transform;
 }
 
@@ -12,102 +18,77 @@
 }
 
 .react {
-  // reaction animations live here so they don't fight the JS-set transforms
-  // on .bee (translate) and .flip (facing)
   transform-origin: center;
 }
 
+// --- the pixel bee ---
 .svg {
   display: block;
+  shape-rendering: crispEdges; // keep pixels sharp
   filter:
-    drop-shadow(0 0 4px var(--color-accent))
-    drop-shadow(0 0 9px var(--color-accent-soft));
+    drop-shadow(0 0 3px var(--color-accent))
+    drop-shadow(0 0 7px var(--color-accent))
+    drop-shadow(0 0 14px var(--color-accent));
 }
 
-.body {
-  fill: var(--color-accent);
-}
-.head {
-  fill: var(--color-accent);
-}
-.stripe {
-  fill: var(--color-bg);
-}
-.eye {
-  fill: var(--c-cream);
-}
-.stinger {
-  fill: var(--color-bg);
-}
-.antenna {
-  stroke: var(--color-bg);
-  stroke-width: 1.4;
-}
-.antennaTip {
+.pixels rect {
   fill: var(--color-accent);
 }
 
-.wing {
-  fill: var(--c-cream);
-  opacity: 0.7;
+// --- glow trail ---
+.trailDot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  background: var(--color-accent);
+  margin-left: -3px;
+  margin-top: -3px;
+  filter: blur(2px);
+  will-change: transform;
 }
 
-.wings {
-  transform-box: fill-box;
-  transform-origin: center bottom;
-  animation: flutter 0.13s linear infinite;
+// --- sparks ---
+.spark {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 6px var(--color-accent);
+  transform: translate(-50%, -50%);
 }
 
-@keyframes flutter {
-  50% {
-    transform: scaleY(0.45);
-  }
+.spark.gold {
+  background: var(--c-cream);
+  box-shadow: 0 0 7px var(--c-cream);
 }
 
-// --- Sting: a quick downward jab, twice ---
+// --- sting: sharp, repeated downward stabs ---
 .bee[data-reaction="sting"] .react {
-  animation: poke 0.32s ease-in-out 2;
+  animation: sting 0.7s ease-in-out;
 }
 
-@keyframes poke {
-  0%,
+@keyframes sting {
+  0% {
+    transform: translateY(-12px) rotate(-8deg);
+  }
+  16% {
+    transform: translateY(18px) rotate(6deg);
+  }
+  30% {
+    transform: translateY(-9px) rotate(-5deg);
+  }
+  48% {
+    transform: translateY(18px) rotate(6deg);
+  }
+  62% {
+    transform: translateY(-6px) rotate(-3deg);
+  }
+  80% {
+    transform: translateY(15px) rotate(4deg);
+  }
   100% {
     transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(12px) rotate(8deg);
-  }
-}
-
-// --- Honey: a droplet falls from the bee onto the target ---
-.honeyDrop {
-  position: absolute;
-  left: 50%;
-  top: 60%;
-  width: 9px;
-  height: 12px;
-  margin-left: -4.5px;
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-  background: var(--c-cream);
-  box-shadow: 0 0 8px var(--c-cream);
-  opacity: 0;
-}
-
-.bee[data-reaction="honey"] .honeyDrop {
-  animation: honey-drop 1s ease-in forwards;
-}
-
-@keyframes honey-drop {
-  0% {
-    opacity: 0;
-    transform: translateY(-4px) scale(0.3);
-  }
-  25% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(38px) scale(0.6);
   }
 }

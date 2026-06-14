@@ -131,6 +131,7 @@ export default function RatingDial({
           ref={scoreRef}
           className={styles.score}
           data-sting={(score !== null && isStinger(score)) || undefined}
+          data-honey={(score !== null && score >= 9) || undefined}
         >
           {display > 0 ? formatScore(display) : "–"}
         </span>

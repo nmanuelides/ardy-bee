@@ -72,6 +72,10 @@
     color: var(--color-accent);
     animation: shake 0.4s var(--ease-in-out);
   }
+  &[data-honey] {
+    color: var(--c-cream);
+    animation: honey-glow 1.4s var(--ease-out);
+  }
 }
 
 .label {
@@ -89,4 +93,9 @@
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-3px); }
   75% { transform: translateX(3px); }
+}
+
+@keyframes honey-glow {
+  0%, 100% { text-shadow: none; }
+  40% { text-shadow: 0 0 14px var(--c-cream), 0 0 24px var(--color-accent-soft); }
 }
