@@ -4,8 +4,8 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import styles from "./MovieHero.module.scss";
 
-const SCALE = 1.22;
-const TRAVEL = 14; // % of layer height the image drifts over the hero's scroll
+const SCALE = 1.4;
+const TRAVEL = 30; // % of layer height the image drifts across the hero's scroll
 
 /**
  * Movie-hero backdrop that drifts slower than the page scroll (parallax).
@@ -27,10 +27,17 @@ export default function ParallaxBackdrop({ src }: { src: string }) {
     const update = () => {
       raf = 0;
       const rect = wrap.getBoundingClientRect();
-      // 0 when the hero sits at the top of the viewport, → 1 as it scrolls
-      // fully past the top. Drives the image down as the page scrolls up.
-      const p = Math.max(0, Math.min(1, -rect.top / (rect.height || 1)));
-      layer.style.transform = `translate3d(0, ${p * TRAVEL}%, 0) scale(${SCALE})`;
+      const vh = window.innerHeight || 1;
+      // progress across the whole time the hero is on screen: 0 just as it
+      // enters from the bottom, 1 once it has fully scrolled past the top.
+      const p = Math.max(
+        0,
+        Math.min(1, (vh - rect.top) / (vh + rect.height)),
+      );
+      // symmetric drift: image is centered mid-scroll, lagging the page by
+      // ±TRAVEL/2 at the extremes (so it reads as a slower, deeper plane).
+      const y = (p - 0.5) * TRAVEL;
+      layer.style.transform = `translate3d(0, ${y}%, 0) scale(${SCALE})`;
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
