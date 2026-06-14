@@ -1,0 +1,80 @@
+@use "abstracts" as *;
+
+.page {
+  @include content-width;
+  padding-block: clamp(2rem, 6vw, 4rem);
+}
+
+.header {
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.lead {
+  margin-top: 0.75rem;
+  max-width: 58ch;
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+}
+
+.favorites {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.favLabel {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-faint);
+  margin-right: 0.25rem;
+}
+
+.chip {
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--glass-border);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+
+  @include respond("sm") {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @include respond("md") {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @include respond("xl") {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 2.5rem;
+  border: 1px dashed var(--glass-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-muted);
+  max-width: 52ch;
+}
+
+.hint {
+  font-size: var(--text-sm);
+
+  strong {
+    color: var(--color-text);
+  }
+}

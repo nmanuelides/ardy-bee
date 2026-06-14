@@ -54,3 +54,12 @@ export interface TmdbCredits {
 export interface TmdbPersonDetails extends TmdbPerson {
   popularity: number;
 }
+
+export interface TmdbPersonMovieCredit extends TmdbMovie {
+  character: string;
+}
+
+export interface TmdbPersonMovieCredits {
+  id: number;
+  cast: TmdbPersonMovieCredit[];
+}

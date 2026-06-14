@@ -24,8 +24,8 @@ export function ratingLabel(score: number): string {
   if (score < 5) return "Shaky";
   if (score < 6.5) return "Solid";
   if (score < 8) return "Strong";
-  if (score < 9.5) return "Stellar";
-  return "The Hive's Best";
+  if (score < 9) return "Stellar";
+  return "Honey"; // 9.0–10: the sweetest performances
 }
 
 /** Format a score for display, e.g. 7 -> "7", 7.5 -> "7.5". */

@@ -9,6 +9,7 @@ const NAV = [
   { href: "/movies", label: "Movies" },
   { href: "/actors", label: "Actors" },
   { href: "/rankings", label: "Rankings" },
+  { href: "/recommendations", label: "For You" },
 ];
 
 export default async function SiteHeader() {
