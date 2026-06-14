@@ -27,34 +27,43 @@
 }
 
 .row {
-  @include glass;
+  @include neumorphic;
   display: flex;
   align-items: center;
   gap: 1rem;
   padding: 0.7rem 1rem;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   transition:
     transform var(--dur-fast) var(--ease-out),
-    border-color var(--dur-base) var(--ease-out);
+    box-shadow var(--dur-base) var(--ease-out);
 
   &:hover {
-    transform: translateX(3px);
-    border-color: var(--rim-light);
+    transform: translateX(4px);
+    box-shadow:
+      calc(var(--neu-distance) + 2px) calc(var(--neu-distance) + 2px)
+        calc(var(--neu-blur) + 4px) var(--neu-dark),
+      calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1) var(--neu-blur)
+        var(--neu-light);
   }
 }
 
+// Rank number sits in a pressed-in circular badge.
 .rank {
+  @include neumorphic-inset(3px, 6px);
   flex: none;
-  width: 2.2rem;
-  text-align: center;
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
   font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 800;
-  font-size: var(--text-lg);
+  font-size: var(--text-sm);
   color: var(--color-text-faint);
 
   &[data-top] {
     color: var(--color-accent);
-    font-size: var(--text-xl);
+    text-shadow: 0 0 10px var(--color-accent-soft);
   }
 }
 

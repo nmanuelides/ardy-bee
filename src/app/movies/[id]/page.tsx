@@ -3,6 +3,7 @@ import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import MovieHero from "@/components/movie/MovieHero";
 import CastList from "@/components/movie/CastList";
+import Reveal from "@/components/motion/Reveal";
 import type { PerformanceStat } from "@/components/movie/CastMember";
 import { getMovieCredits, getMovieDetails } from "@/lib/tmdb/movies";
 import { createClient } from "@/lib/supabase/server";
@@ -78,19 +79,21 @@ export default async function MoviePage({
       <SiteHeader />
       <main>
         <MovieHero details={details} />
-        <section className={styles.cast}>
-          <h2 className={styles.heading}>The cast — rate the performances</h2>
-          {cast.length > 0 ? (
-            <CastList
-              movieId={movieId}
-              cast={cast}
-              stats={stats}
-              isAuthenticated={!!user}
-            />
-          ) : (
-            <p className={styles.empty}>No cast information available.</p>
-          )}
-        </section>
+        <Reveal>
+          <section className={styles.cast}>
+            <h2 className={styles.heading}>The cast — rate the performances</h2>
+            {cast.length > 0 ? (
+              <CastList
+                movieId={movieId}
+                cast={cast}
+                stats={stats}
+                isAuthenticated={!!user}
+              />
+            ) : (
+              <p className={styles.empty}>No cast information available.</p>
+            )}
+          </section>
+        </Reveal>
       </main>
       <SiteFooter />
     </>

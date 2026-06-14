@@ -15,9 +15,9 @@
   position: relative;
   display: flex;
   gap: 3px;
-  padding: 4px;
+  padding: 5px;
   border-radius: var(--radius-pill);
-  @include neumorphic-inset;
+  @include neumorphic-inset(4px, 8px);
   cursor: pointer;
 
   &:focus-visible {
@@ -28,9 +28,9 @@
 .cell {
   position: relative;
   flex: 1;
-  height: 1.5rem;
+  height: 1.6rem;
   border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--color-bg) 60%, transparent);
+  background: color-mix(in srgb, var(--color-bg) 55%, transparent);
   overflow: hidden;
 
   &:first-child {
