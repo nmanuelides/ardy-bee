@@ -1,0 +1,15 @@
+.svg {
+  display: inline-block;
+  shape-rendering: crispEdges;
+  filter: drop-shadow(0 0 3px var(--color-accent));
+}
+
+.accent {
+  fill: var(--color-accent);
+}
+.dark {
+  fill: var(--color-surface-2);
+}
+.cream {
+  fill: var(--c-cream);
+}

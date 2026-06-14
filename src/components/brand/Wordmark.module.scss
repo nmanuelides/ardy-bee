@@ -21,3 +21,10 @@
 .accent {
   color: var(--color-accent);
 }
+
+// Ardy mascot to the right of "Bee"
+.bee {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.15ch;
+}

@@ -2,23 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { BEE_EVENT, type BeeReaction, type BeeReactionDetail } from "@/lib/bee/events";
+import { BEE_SPRITE as BEE } from "./beeSprite";
 import styles from "./CursorBee.module.scss";
 
-// Detailed side-view bumblebee, facing left (after the provided reference).
-// 'A' = accent, 'D' = dark plum, 'C' = cream (eye/wings), ' ' = transparent.
-const BEE = [
-  ".......CC......",
-  ".....CCCCCC....",
-  "...D.CCCCCCC...",
-  "...D.CCCCCC....",
-  ".....DDDDDD....",
-  "..DDDAAAAAAAD..",
-  ".DCCDAADAADAAD.",
-  ".DCDDAADAADAAD.",
-  "..DDDAADAADAD..",
-  "....DDDDDDDD...",
-  ".....D.D.D.....",
-];
 const PX = 2;
 
 function classFor(c: string) {
