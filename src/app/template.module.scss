@@ -1,15 +1,15 @@
+// Opacity-only: a transform here would create a containing block that
+// disables backdrop-filter on descendant glass (the sticky header).
 .page {
-  animation: page-in 0.5s var(--ease-out) both;
+  animation: page-in 0.4s var(--ease-out) both;
 }
 
 @keyframes page-in {
   from {
     opacity: 0;
-    transform: translateY(14px);
   }
   to {
     opacity: 1;
-    transform: none;
   }
 }
 
