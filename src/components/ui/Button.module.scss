@@ -16,21 +16,29 @@
     transform var(--dur-fast) var(--ease-out),
     box-shadow var(--dur-base) var(--ease-out);
 
-  // Gradient bevel border, OUTSIDE the rim light: the button's own colour at
-  // the top-left fading to a much darker version at the bottom-right (light
-  // from the top-left). Masked to a thin ring so it follows the pill radius.
-  &::before {
+  // ::before = gradient bevel border at the very edge (set per variant)
+  // ::after  = the bright defined rim light, just INSIDE the border
+  &::before,
+  &::after {
     content: "";
     position: absolute;
-    inset: 0;
     border-radius: inherit;
-    padding: 2px;
     pointer-events: none;
     -webkit-mask:
       linear-gradient(#000 0 0) content-box,
       linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
+  }
+  // gradient bevel border ring
+  &::before {
+    inset: 0;
+    padding: 2px;
+  }
+  // rim-light ring, inset so it sits inside the border and stays on top
+  &::after {
+    inset: 2px;
+    padding: 1.5px;
   }
 }
 
@@ -39,28 +47,32 @@
   color: var(--color-accent-contrast);
   background: var(--color-accent);
   box-shadow:
-    inset 2px 2px 1px rgba(255, 74, 178, 0.95),
     -7px -7px 16px rgba(150, 120, 165, 0.28),
     8px 8px 18px rgba(0, 0, 0, 0.55);
 
+  // bevel border: button colour (top-left) → much darker (bottom-right)
   &::before {
     background: linear-gradient(
-      135deg,
-      var(--color-accent),
-      color-mix(in srgb, var(--color-accent) 30%, #000)
+      140deg,
+      var(--color-accent) 18%,
+      color-mix(in srgb, var(--color-accent) 28%, #000) 82%
     );
+  }
+  // defined rim light, brightest top-left
+  &::after {
+    background: linear-gradient(140deg, rgba(255, 120, 200, 0.95), transparent 42%);
   }
 
   &:hover {
     box-shadow:
-      inset 2px 2px 1px rgba(255, 74, 178, 0.95),
       -9px -9px 20px rgba(150, 120, 165, 0.32),
       11px 11px 24px rgba(0, 0, 0, 0.6);
   }
   &:active {
+    transform: translateY(1px);
     box-shadow:
       inset 3px 3px 6px rgba(120, 0, 70, 0.55),
-      inset -2px -2px 5px rgba(255, 74, 178, 0.4);
+      inset -2px -2px 5px rgba(255, 120, 200, 0.35);
   }
 }
 
@@ -69,25 +81,27 @@
   color: var(--color-text);
   background: var(--color-elevated);
   box-shadow:
-    inset 2px 2px 1px rgba(150, 122, 240, 0.6),
     -7px -7px 16px rgba(150, 120, 165, 0.22),
     8px 8px 18px rgba(0, 0, 0, 0.6);
 
   &::before {
-    background: linear-gradient(135deg, var(--color-elevated), #0a0810);
+    background: linear-gradient(140deg, var(--color-elevated) 18%, #0a0810 82%);
+  }
+  &::after {
+    background: linear-gradient(140deg, rgba(160, 140, 250, 0.7), transparent 42%);
   }
 
   &:hover {
     color: var(--color-accent);
     box-shadow:
-      inset 2px 2px 1px rgba(150, 122, 240, 0.6),
       -9px -9px 20px rgba(150, 120, 165, 0.26),
       11px 11px 24px rgba(0, 0, 0, 0.66);
   }
   &:active {
+    transform: translateY(1px);
     box-shadow:
       inset 3px 3px 6px rgba(0, 0, 0, 0.55),
-      inset -2px -2px 5px rgba(150, 122, 240, 0.35);
+      inset -2px -2px 5px rgba(160, 140, 250, 0.4);
   }
 }
 
