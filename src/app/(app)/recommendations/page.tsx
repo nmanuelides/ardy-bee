@@ -1,6 +1,4 @@
 import Link from "next/link";
-import SiteHeader from "@/components/layout/SiteHeader";
-import SiteFooter from "@/components/layout/SiteFooter";
 import Button from "@/components/ui/Button";
 import RecommendationCard from "@/components/recommendations/RecommendationCard";
 import Reveal from "@/components/motion/Reveal";
@@ -16,11 +14,9 @@ export default async function RecommendationsPage() {
     await getRecommendations();
 
   return (
-    <>
-      <SiteHeader />
-      <main className={styles.page}>
-        <header className={styles.header}>
-          <h1>For you</h1>
+    <main className={styles.page}>
+      <header className={styles.header}>
+        <h1>For you</h1>
           <p className={styles.lead}>
             Movies where two or more of your favorite actors share the screen —
             drawn from the performances you&apos;ve rated highest.
@@ -77,8 +73,6 @@ export default async function RecommendationsPage() {
             )}
           </>
         )}
-      </main>
-      <SiteFooter />
-    </>
+    </main>
   );
 }

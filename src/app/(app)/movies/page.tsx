@@ -1,5 +1,3 @@
-import SiteHeader from "@/components/layout/SiteHeader";
-import SiteFooter from "@/components/layout/SiteFooter";
 import MovieCard from "@/components/movie/MovieCard";
 import Reveal from "@/components/motion/Reveal";
 import {
@@ -32,28 +30,24 @@ export default async function MoviesPage() {
   ].filter((s) => s.movies.length > 0);
 
   return (
-    <>
-      <SiteHeader />
-      <main className={styles.page}>
-        <header className={styles.header}>
-          <h1>Movies</h1>
-          <p className={styles.lead}>
-            Browse films and rate the performances inside them.
-          </p>
-        </header>
+    <main className={styles.page}>
+      <header className={styles.header}>
+        <h1>Movies</h1>
+        <p className={styles.lead}>
+          Browse films and rate the performances inside them.
+        </p>
+      </header>
 
-        {sections.map((s) => (
-          <section key={s.title} className={styles.section}>
-            <h2 className={styles.sectionTitle}>{s.title}</h2>
-            <Reveal stagger className={styles.grid}>
-              {s.movies.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
-              ))}
-            </Reveal>
-          </section>
-        ))}
-      </main>
-      <SiteFooter />
-    </>
+      {sections.map((s) => (
+        <section key={s.title} className={styles.section}>
+          <h2 className={styles.sectionTitle}>{s.title}</h2>
+          <Reveal stagger className={styles.grid}>
+            {s.movies.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
+          </Reveal>
+        </section>
+      ))}
+    </main>
   );
 }

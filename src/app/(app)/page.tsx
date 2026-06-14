@@ -1,5 +1,3 @@
-import SiteHeader from "@/components/layout/SiteHeader";
-import SiteFooter from "@/components/layout/SiteFooter";
 import Hero from "@/components/home/Hero";
 import SectionRail from "@/components/home/SectionRail";
 import Reveal from "@/components/motion/Reveal";
@@ -22,21 +20,17 @@ export default async function HomePage() {
     .sort((a, b) => a.release_date.localeCompare(b.release_date));
 
   return (
-    <>
-      <SiteHeader />
-      <main>
-        <Hero
-          topActors={topActors.status === "fulfilled" ? topActors.value : []}
-          topMovies={topMovies.status === "fulfilled" ? topMovies.value : []}
-        />
-        <Reveal>
-          <SectionRail title="Popular now" movies={popularMovies} />
-        </Reveal>
-        <Reveal>
-          <SectionRail title="Upcoming" movies={upcomingMovies} />
-        </Reveal>
-      </main>
-      <SiteFooter />
-    </>
+    <main>
+      <Hero
+        topActors={topActors.status === "fulfilled" ? topActors.value : []}
+        topMovies={topMovies.status === "fulfilled" ? topMovies.value : []}
+      />
+      <Reveal>
+        <SectionRail title="Popular now" movies={popularMovies} />
+      </Reveal>
+      <Reveal>
+        <SectionRail title="Upcoming" movies={upcomingMovies} />
+      </Reveal>
+    </main>
   );
 }

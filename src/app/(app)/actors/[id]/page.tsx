@@ -1,7 +1,5 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import SiteHeader from "@/components/layout/SiteHeader";
-import SiteFooter from "@/components/layout/SiteFooter";
 import MovieCard from "@/components/movie/MovieCard";
 import Reveal from "@/components/motion/Reveal";
 import { tmdbImage } from "@/lib/tmdb/image";
@@ -46,40 +44,34 @@ export default async function ActorPage({
     .join("  ·  ");
 
   return (
-    <>
-      <SiteHeader />
-      <main className={styles.page}>
-        <header className={styles.hero}>
-          <div className={styles.photo}>
-            {photo ? (
-              <Image src={photo} alt={person.name} fill sizes="240px" className={styles.photoImg} />
-            ) : (
-              <span className={styles.initial}>{person.name.charAt(0)}</span>
-            )}
-          </div>
-          <div className={styles.meta}>
-            <h1 className={styles.name}>{person.name}</h1>
-            {facts && <p className={styles.facts}>{facts}</p>}
-            {person.biography && (
-              <p className={styles.bio}>{person.biography}</p>
-            )}
-          </div>
-        </header>
+    <main className={styles.page}>
+      <header className={styles.hero}>
+        <div className={styles.photo}>
+          {photo ? (
+            <Image src={photo} alt={person.name} fill sizes="240px" className={styles.photoImg} />
+          ) : (
+            <span className={styles.initial}>{person.name.charAt(0)}</span>
+          )}
+        </div>
+        <div className={styles.meta}>
+          <h1 className={styles.name}>{person.name}</h1>
+          {facts && <p className={styles.facts}>{facts}</p>}
+          {person.biography && <p className={styles.bio}>{person.biography}</p>}
+        </div>
+      </header>
 
-        {knownFor.length > 0 && (
-          <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>
-              Filmography <span className={styles.count}>{knownFor.length}</span>
-            </h2>
-            <Reveal stagger className={styles.grid}>
-              {knownFor.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
-              ))}
-            </Reveal>
-          </section>
-        )}
-      </main>
-      <SiteFooter />
-    </>
+      {knownFor.length > 0 && (
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>
+            Filmography <span className={styles.count}>{knownFor.length}</span>
+          </h2>
+          <Reveal stagger className={styles.grid}>
+            {knownFor.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
+          </Reveal>
+        </section>
+      )}
+    </main>
   );
 }

@@ -1,6 +1,4 @@
 import { notFound } from "next/navigation";
-import SiteHeader from "@/components/layout/SiteHeader";
-import SiteFooter from "@/components/layout/SiteFooter";
 import MovieHero from "@/components/movie/MovieHero";
 import CastList from "@/components/movie/CastList";
 import Reveal from "@/components/motion/Reveal";
@@ -75,27 +73,23 @@ export default async function MoviePage({
   }
 
   return (
-    <>
-      <SiteHeader />
-      <main>
-        <MovieHero details={details} />
-        <Reveal>
-          <section className={styles.cast}>
-            <h2 className={styles.heading}>The cast — rate the performances</h2>
-            {cast.length > 0 ? (
-              <CastList
-                movieId={movieId}
-                cast={cast}
-                stats={stats}
-                isAuthenticated={!!user}
-              />
-            ) : (
-              <p className={styles.empty}>No cast information available.</p>
-            )}
-          </section>
-        </Reveal>
-      </main>
-      <SiteFooter />
-    </>
+    <main>
+      <MovieHero details={details} />
+      <Reveal>
+        <section className={styles.cast}>
+          <h2 className={styles.heading}>The cast — rate the performances</h2>
+          {cast.length > 0 ? (
+            <CastList
+              movieId={movieId}
+              cast={cast}
+              stats={stats}
+              isAuthenticated={!!user}
+            />
+          ) : (
+            <p className={styles.empty}>No cast information available.</p>
+          )}
+        </section>
+      </Reveal>
+    </main>
   );
 }

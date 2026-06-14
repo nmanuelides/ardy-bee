@@ -1,5 +1,3 @@
-import SiteHeader from "@/components/layout/SiteHeader";
-import SiteFooter from "@/components/layout/SiteFooter";
 import RankSection from "@/components/rankings/RankSection";
 import ActorRow from "@/components/rankings/ActorRow";
 import PerformanceRow from "@/components/rankings/PerformanceRow";
@@ -32,12 +30,10 @@ export default async function RankingsPage() {
   ]);
 
   return (
-    <>
-      <SiteHeader />
-      <main className={styles.page}>
-        <header className={styles.header}>
-          <h1>Rankings</h1>
-          <p className={styles.lead}>
+    <main className={styles.page}>
+      <header className={styles.header}>
+        <h1>Rankings</h1>
+        <p className={styles.lead}>
             Ranked by a weighted score — a deep body of strong work outranks a
             single lucky 10. The more ratings, the more a score is trusted.
           </p>
@@ -96,8 +92,6 @@ export default async function RankingsPage() {
             ))}
           </RankSection>
         </div>
-      </main>
-      <SiteFooter />
-    </>
+    </main>
   );
 }
