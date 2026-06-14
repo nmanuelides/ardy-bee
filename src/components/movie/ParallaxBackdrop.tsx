@@ -2,16 +2,16 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./MovieHero.module.scss";
 
-gsap.registerPlugin(ScrollTrigger);
+const SCALE = 1.22;
+const TRAVEL = 14; // % of layer height the image drifts over the hero's scroll
 
 /**
  * Movie-hero backdrop that drifts slower than the page scroll (parallax).
- * The inner layer is scaled up a touch so the vertical travel never exposes
- * an edge. No-ops under prefers-reduced-motion.
+ * Driven directly from scroll position each frame (rAF-throttled) so it
+ * doesn't depend on any layout-measurement timing. The layer is scaled up so
+ * the drift never exposes an edge. No-ops under prefers-reduced-motion.
  */
 export default function ParallaxBackdrop({ src }: { src: string }) {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -23,24 +23,27 @@ export default function ParallaxBackdrop({ src }: { src: string }) {
     if (!wrap || !layer) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        layer,
-        { yPercent: -9 },
-        {
-          yPercent: 9,
-          ease: "none",
-          scrollTrigger: {
-            trigger: wrap,
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
-          },
-        },
-      );
-    }, wrap);
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const rect = wrap.getBoundingClientRect();
+      // 0 when the hero sits at the top of the viewport, → 1 as it scrolls
+      // fully past the top. Drives the image down as the page scrolls up.
+      const p = Math.max(0, Math.min(1, -rect.top / (rect.height || 1)));
+      layer.style.transform = `translate3d(0, ${p * TRAVEL}%, 0) scale(${SCALE})`;
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
 
-    return () => ctx.revert();
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
   return (
