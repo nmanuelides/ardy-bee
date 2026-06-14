@@ -4,40 +4,39 @@ import { useEffect, useRef, useState } from "react";
 import { BEE_EVENT, type BeeReaction, type BeeReactionDetail } from "@/lib/bee/events";
 import styles from "./CursorBee.module.scss";
 
-// Front-facing pixel bumblebee.
-// 'B' = dark plum (the reference's black), 'Y' = accent (its yellow),
-// ' ' = transparent (its white). Wings on top, striped body, stinger below.
+// Detailed side-view bumblebee, facing left (after the provided reference).
+// 'A' = accent (its yellow), 'D' = dark plum (its black), 'C' = cream
+// (its eye-white / wings), ' ' = transparent.
 const BEE = [
-  "...BB....BB...",
-  "..B..B..B..B..",
-  "..B.BB..BB.B..",
-  "...BB....BB...",
-  "...BBBBBBBB...",
-  "..BYYBYYBYYB..",
-  "..BYYBYYBYYB..",
-  "..BYYBYYBYYB..",
-  "..BYYBYYBYYB..",
-  "..BYYBYYBYYB..",
-  "...BBBBBBBB...",
-  "....BBBBBB....",
-  "......BB......",
+  "........CCC.....",
+  "......CCCCCCC...",
+  "...D..CCCCCCC...",
+  "...D.CCCCCCCC...",
+  "..DDDAAAAAAAAD..",
+  ".DCDCDAADAADAD..",
+  ".DCCCDAADAADAD..",
+  ".DCCDDAADAADAAD.",
+  "..DDDAAADAADAD..",
+  "..DDDDDDDDDDDD..",
+  "....D.D.D.D.....",
 ];
 const PX = 3;
+
+function classFor(c: string) {
+  if (c === "A") return styles.accent;
+  if (c === "D") return styles.dark;
+  if (c === "C") return styles.cream;
+  return null;
+}
 
 function BeePixels() {
   const rects: React.ReactElement[] = [];
   BEE.forEach((row, y) => {
     [...row].forEach((c, x) => {
-      if (c === "B" || c === "Y") {
+      const cls = classFor(c);
+      if (cls) {
         rects.push(
-          <rect
-            key={`${x}-${y}`}
-            className={c === "Y" ? styles.accent : styles.dark}
-            x={x * PX}
-            y={y * PX}
-            width={PX}
-            height={PX}
-          />,
+          <rect key={`${x}-${y}`} className={cls} x={x * PX} y={y * PX} width={PX} height={PX} />,
         );
       }
     });
@@ -51,21 +50,22 @@ function BeePixels() {
   );
 }
 
-const TRAIL_LEN = 10;
-const TRAIL_STEP = 3;
+const TRAIL_LEN = 12;
+const TRAIL_STEP = 1; // sample every frame → smooth comet, no stray gaps
 
 export default function CursorBee() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const sparkLayer = useRef<HTMLDivElement>(null);
   const trailRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
-  const pos = useRef({ x: -100, y: -100 });
-  const targetPos = useRef({ x: -100, y: -100 });
+  const pos = useRef({ x: -200, y: -200 });
+  const targetPos = useRef({ x: -200, y: -200 });
   const mode = useRef<"follow" | "react">("follow");
   const reactionRef = useRef<BeeReaction | null>(null);
   const reactCenter = useRef({ x: 0, y: 0 });
   const reactStart = useRef(0);
   const history = useRef<{ x: number; y: number }[]>([]);
+  const seenMove = useRef(false);
 
   const [reaction, setReaction] = useState<BeeReaction | null>(null);
   const [enabled, setEnabled] = useState(false);
@@ -99,6 +99,12 @@ export default function CursorBee() {
     }
 
     const onMove = (e: MouseEvent) => {
+      if (!seenMove.current) {
+        // first sighting: drop the bee in near the cursor so it doesn't streak
+        seenMove.current = true;
+        pos.current = { x: e.clientX + 16, y: e.clientY - 16 };
+        for (let i = 0; i < TRAIL_LEN; i++) history.current.push({ ...pos.current });
+      }
       if (mode.current === "follow") {
         targetPos.current = { x: e.clientX + 16, y: e.clientY - 16 };
       }
@@ -118,7 +124,7 @@ export default function CursorBee() {
       stingTimers.length = 0;
 
       if (type === "sting") {
-        targetPos.current = { x, y: y - 26 }; // hover above; stinger jabs down
+        targetPos.current = { x, y: y - 24 };
         [150, 360, 560].forEach((t) =>
           stingTimers.push(
             window.setTimeout(() => {
@@ -141,9 +147,7 @@ export default function CursorBee() {
     window.addEventListener(BEE_EVENT, onReact as EventListener);
 
     let raf = 0;
-    let frame = 0;
     const tick = (now: number) => {
-      frame++;
       const wrap = wrapRef.current;
 
       if (mode.current === "react" && reactionRef.current === "honey") {
@@ -154,18 +158,16 @@ export default function CursorBee() {
           x: reactCenter.current.x + Math.cos(ang) * r,
           y: reactCenter.current.y + Math.sin(ang) * r,
         };
-        if (frame % 4 === 0) spawnSpark(pos.current.x, pos.current.y);
+        spawnSpark(pos.current.x, pos.current.y);
       }
 
-      if (wrap) {
+      if (wrap && seenMove.current) {
         const speed = mode.current === "react" ? 0.2 : 0.13;
         pos.current.x += (targetPos.current.x - pos.current.x) * speed;
         pos.current.y += (targetPos.current.y - pos.current.y) * speed;
         const bob = Math.sin(now / 220) * 4;
         wrap.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y + bob}px, 0)`;
-      }
 
-      if (frame % TRAIL_STEP === 0) {
         history.current.unshift({ x: pos.current.x, y: pos.current.y });
         history.current.length = Math.min(history.current.length, TRAIL_LEN);
         for (let i = 0; i < TRAIL_LEN; i++) {
@@ -201,10 +203,10 @@ export default function CursorBee() {
             }}
             className={styles.trailDot}
             style={{
-              transform: "translate3d(-100px, -100px, 0)",
-              opacity: (1 - i / TRAIL_LEN) * 0.6,
-              width: `${9 - i * 0.6}px`,
-              height: `${9 - i * 0.6}px`,
+              transform: "translate3d(-200px, -200px, 0)",
+              opacity: (1 - i / TRAIL_LEN) * 0.5,
+              width: `${7 - i * 0.4}px`,
+              height: `${7 - i * 0.4}px`,
             }}
           />
         ))}
