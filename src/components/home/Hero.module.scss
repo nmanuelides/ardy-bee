@@ -104,76 +104,90 @@
   box-shadow: 0 0 8px var(--color-accent);
 }
 
-.tiles {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+// The performance being rated
+.perf {
+  @include neumorphic;
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.15rem;
+  display: flex;
+  align-items: center;
   gap: 1rem;
 }
 
-.tile {
-  @include neumorphic;
-  border-radius: var(--radius-lg);
-  padding: 1.1rem 0.5rem 0.9rem;
+.poster {
+  width: 46px;
+  height: 64px;
+  flex: none;
+  border-radius: var(--radius-md);
+  background: linear-gradient(150deg, var(--color-surface-2), var(--color-accent));
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.2),
+    0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.who {
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--text-lg);
+  line-height: 1.15;
+}
+
+.role {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.scoreBlock {
+  margin-left: auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.55rem;
-
-  &[data-sting] .tileScore {
-    color: var(--color-accent);
-  }
+  align-items: flex-end;
+  flex: none;
 }
 
-.avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  box-shadow:
-    inset 0 1px 2px rgba(255, 255, 255, 0.25),
-    0 3px 7px rgba(0, 0, 0, 0.45);
-}
-
-.tileScore {
+.score {
   font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 800;
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
   line-height: 1;
   color: var(--color-text);
 }
 
-.tileLabel {
-  font-size: 0.62rem;
+.label {
+  font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.09em;
-  color: var(--color-text-faint);
+  color: var(--color-accent);
+  font-weight: 700;
 }
 
-.orbRow {
+.dialRow {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-.scale {
+.track {
   @include neumorphic-inset(4px, 8px);
+  position: relative;
   flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 0.7rem 0.85rem;
+  height: 1.5rem;
   border-radius: var(--radius-pill);
+  overflow: hidden;
 }
 
-.tick {
-  flex: 1;
-  height: 6px;
+// fill to 8.5 / 10
+.fill {
+  position: absolute;
+  inset: 3px;
+  width: calc(85% - 6px);
   border-radius: var(--radius-pill);
-  background: var(--color-bg);
-
-  &[data-active] {
-    background: var(--color-accent);
-    box-shadow: 0 0 10px var(--color-accent);
-  }
+  background: linear-gradient(90deg, var(--color-surface-2), var(--color-accent));
+  box-shadow: 0 0 14px var(--color-accent-soft);
 }
 
 .orb {

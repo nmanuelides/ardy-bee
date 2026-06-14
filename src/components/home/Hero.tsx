@@ -1,13 +1,6 @@
 import Button from "@/components/ui/Button";
 import styles from "./Hero.module.scss";
 
-// Decorative sample performances shown in the hero panel (high → stinger).
-const TILES = [
-  { score: "9.5", label: "Honey", grad: "linear-gradient(145deg, #f0a3d0, #d10076)" },
-  { score: "8.0", label: "Stellar", grad: "linear-gradient(145deg, #6a2bd9, #d10076)" },
-  { score: "1.0", label: "Stings", grad: "linear-gradient(145deg, #d10076, #300223)", sting: true },
-];
-
 export default function Hero() {
   return (
     <section className={styles.hero}>
@@ -27,27 +20,28 @@ export default function Hero() {
         </div>
       </div>
 
+      {/* A single performance being rated — the core action, in Soft-UI. */}
       <aside className={styles.panel} aria-hidden="true">
         <div className={styles.panelHead}>
           <span className={styles.dot} />
           Now rating
         </div>
 
-        <div className={styles.tiles}>
-          {TILES.map((t) => (
-            <div key={t.score} className={styles.tile} data-sting={t.sting || undefined}>
-              <span className={styles.avatar} style={{ background: t.grad }} />
-              <span className={styles.tileScore}>{t.score}</span>
-              <span className={styles.tileLabel}>{t.label}</span>
-            </div>
-          ))}
+        <div className={styles.perf}>
+          <span className={styles.poster} />
+          <div className={styles.who}>
+            <p className={styles.name}>Anya Taylor-Joy</p>
+            <p className={styles.role}>as Furiosa · 2024</p>
+          </div>
+          <div className={styles.scoreBlock}>
+            <span className={styles.score}>8.5</span>
+            <span className={styles.label}>Stellar</span>
+          </div>
         </div>
 
-        <div className={styles.orbRow}>
-          <div className={styles.scale}>
-            {Array.from({ length: 10 }, (_, i) => (
-              <span key={i} className={styles.tick} data-active={i === 8 || undefined} />
-            ))}
+        <div className={styles.dialRow}>
+          <div className={styles.track}>
+            <span className={styles.fill} />
           </div>
           <span className={styles.orb}>
             <svg viewBox="0 0 24 24" width="22" height="22" className={styles.orbIcon}>
