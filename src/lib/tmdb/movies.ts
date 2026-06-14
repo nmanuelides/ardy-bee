@@ -34,6 +34,36 @@ export async function getTopRatedMovies(): Promise<TmdbMovie[]> {
   return data.results;
 }
 
+export type MovieCategory = "popular" | "top-rated" | "upcoming";
+
+const CATEGORY_PATH: Record<MovieCategory, string> = {
+  popular: "/movie/popular",
+  "top-rated": "/movie/top_rated",
+  upcoming: "/movie/upcoming",
+};
+
+export interface MoviePage {
+  results: TmdbMovie[];
+  page: number;
+  totalPages: number;
+}
+
+/** A single page of a movie category, for the browse grid + "See more". */
+export async function getMoviesByCategory(
+  category: MovieCategory,
+  page = 1,
+): Promise<MoviePage> {
+  const data = await tmdbFetch<TmdbPaginated<TmdbMovie>>(
+    CATEGORY_PATH[category],
+    { language: "en-US", page },
+  );
+  return {
+    results: data.results,
+    page: data.page,
+    totalPages: data.total_pages,
+  };
+}
+
 /** Full details for a single movie. */
 export async function getMovieDetails(id: number): Promise<TmdbMovieDetails> {
   return tmdbFetch<TmdbMovieDetails>(`/movie/${id}`, { language: "en-US" });
