@@ -22,23 +22,28 @@ body {
   @include focus-ring;
 }
 
-// Custom scrollbar
+// Custom scrollbar — bright accent thumb so it's easy to see
 html {
-  scrollbar-color: var(--color-surface-2) transparent;
+  scrollbar-color: var(--color-accent) var(--color-surface-2);
 }
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 14px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--color-surface-2);
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(var(--color-surface-2), var(--color-accent));
+  background: linear-gradient(180deg, #ff3aa3, var(--color-accent));
   border-radius: var(--radius-pill);
-  border: 3px solid var(--color-bg);
+  border: 3px solid var(--color-surface-2);
   background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent);
+  background: #ff5cb6;
   background-clip: padding-box;
+}
+// arrow buttons accent-tinted
+::-webkit-scrollbar-button {
+  background: var(--color-accent);
+  height: 6px;
 }
