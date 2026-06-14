@@ -3,6 +3,9 @@
 .hero {
   position: relative;
   overflow: hidden;
+  // tuck the banner up behind the transparent header so there's no seam;
+  // the header's glass frosts the image. Inner content is padded back down.
+  margin-top: calc(-1 * var(--header-h));
 }
 
 .backdrop {
@@ -39,7 +42,8 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  padding-top: clamp(3rem, 9vw, 7rem);
+  // clear the header (banner tucks behind it) + breathing room
+  padding-top: calc(var(--header-h) + clamp(2rem, 6vw, 4.5rem));
   padding-bottom: clamp(2rem, 5vw, 4rem);
 
   @include respond("md") {
