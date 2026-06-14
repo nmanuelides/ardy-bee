@@ -19,15 +19,16 @@ const fragmentShader = /* glsl */ `
   uniform float uAspect;
   varying vec2 vUv;
 
-  // Crisp organic blob: round (aspect-corrected) with an angular wobble so
-  // each one has its own irregular shape (driven by the seed).
-  float blob(vec2 p, vec2 c, float r, float seed) {
+  // Soft hexagon (honeycomb cell): rotate by rot for variety, measure the
+  // regular-hexagon distance, then a gentle smoothstep so it still blurs
+  // cleanly under glass while reading clearly as a hex.
+  float blob(vec2 p, vec2 c, float r, float rot) {
     vec2 d = p - c;
-    float dist = length(d);
-    float ang = atan(d.y, d.x);
-    float wob = 1.0 + 0.24 * sin(ang * 3.0 + seed) + 0.14 * sin(ang * 2.0 - seed * 1.7);
-    float rr = r * wob;
-    return smoothstep(rr, rr - 0.02, dist);
+    float ca = cos(rot), sa = sin(rot);
+    d = vec2(d.x * ca - d.y * sa, d.x * sa + d.y * ca);
+    d = abs(d);
+    float hd = max(dot(d, vec2(0.8660254, 0.5)), d.y);
+    return smoothstep(r, r - 0.05, hd);
   }
 
   void main() {
