@@ -10,7 +10,7 @@
 // on top produces a clear blurred-vs-sharp contrast.
 .blob {
   position: absolute;
-  filter: blur(7px);
+  filter: blur(4px); // crisp shapes, just-softened edges
   will-change: transform;
 }
 
@@ -59,6 +59,7 @@
   background: var(--color-accent);
   border-radius: 50%;
   opacity: 0.5;
+  filter: blur(2px); // sharpest shape — best showcase of the frost
   animation: drift-c 24s ease-in-out infinite reverse;
 }
 
