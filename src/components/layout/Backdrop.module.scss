@@ -1,80 +1,17 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  // z-index 0 (NOT negative) so it's inside the backdrop root and content
-  // layered above (.app-shell { z-index: 1 }) can blur it.
+  // z-index 0 (NOT negative) so it's inside the backdrop root and glass
+  // surfaces above (.app-shell { z-index: 1 }) can blur it.
   z-index: 0;
   overflow: hidden;
   background: var(--color-bg);
 }
 
-// Defined organic shapes, edges only just-softened, so frosted glass on top
-// produces clear blurred-vs-sharp contrast.
-//
-// IMPORTANT: these are STATIC. Animating them (transform) promotes each to its
-// own compositing layer, which Chromium's backdrop-filter does NOT sample —
-// that silently disables the frost. Motion lives elsewhere (cursor bee,
-// reveals, hero float), not here.
-.blob {
-  position: absolute;
-  filter: blur(4px);
-}
-
-.a {
-  width: 40vw;
-  height: 36vw;
-  top: -7vw;
-  right: -5vw;
-  background: linear-gradient(135deg, var(--color-accent), var(--color-surface-2));
-  border-radius: 42% 58% 60% 40% / 45% 45% 55% 55%;
-  opacity: 0.8;
-}
-
-.b {
-  width: 46vw;
-  height: 40vw;
-  bottom: -12vw;
-  left: -10vw;
-  background: linear-gradient(135deg, var(--color-surface-2), #480b30);
-  border-radius: 60% 40% 45% 55% / 55% 50% 50% 45%;
-  opacity: 0.9;
-}
-
-.c {
-  width: 26vw;
-  height: 24vw;
-  bottom: 6vw;
-  right: 7vw;
-  background: linear-gradient(140deg, var(--color-accent), #5e1038);
-  border-radius: 52% 48% 44% 56% / 56% 44% 56% 44%;
-  opacity: 0.55;
-}
-
-.e {
-  width: 13vw;
-  height: 13vw;
-  top: 38vw;
-  right: 22vw;
-  background: var(--color-accent);
-  border-radius: 50%;
-  opacity: 0.5;
-  filter: blur(2px);
-}
-
-.d {
-  width: 26vw;
-  height: 26vw;
-  top: 6vw;
-  left: 2vw;
-  background: radial-gradient(circle, var(--c-cream), transparent 66%);
-  border-radius: 50%;
-  filter: blur(26px);
-  opacity: 0.12;
-}
-
 .vignette {
   position: absolute;
   inset: 0;
+  pointer-events: none;
   background: radial-gradient(
     130% 110% at 50% 35%,
     transparent 45%,
