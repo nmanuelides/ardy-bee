@@ -1,7 +1,8 @@
 import Button from "@/components/ui/Button";
+import HeroDemo, { type Featured } from "./HeroDemo";
 import styles from "./Hero.module.scss";
 
-export default function Hero() {
+export default function Hero({ featured }: { featured: Featured | null }) {
   return (
     <section className={styles.hero}>
       <div className={styles.copy}>
@@ -20,36 +21,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* A single performance being rated — the core action, in Soft-UI. */}
-      <aside className={styles.panel} aria-hidden="true">
-        <div className={styles.panelHead}>
-          <span className={styles.dot} />
-          Now rating
-        </div>
-
-        <div className={styles.perf}>
-          <span className={styles.poster} />
-          <div className={styles.who}>
-            <p className={styles.name}>Anya Taylor-Joy</p>
-            <p className={styles.role}>as Furiosa · 2024</p>
-          </div>
-          <div className={styles.scoreBlock}>
-            <span className={styles.score}>8.5</span>
-            <span className={styles.label}>Stellar</span>
-          </div>
-        </div>
-
-        <div className={styles.dialRow}>
-          <div className={styles.track}>
-            <span className={styles.fill} />
-          </div>
-          <span className={styles.orb}>
-            <svg viewBox="0 0 24 24" width="22" height="22" className={styles.orbIcon}>
-              <path d="M12 4l7 8h-4.2v6.5H9.2V12H5z" fill="currentColor" />
-            </svg>
-          </span>
-        </div>
-      </aside>
+      {featured && <HeroDemo featured={featured} />}
     </section>
   );
 }
