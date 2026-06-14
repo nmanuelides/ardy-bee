@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import styles from "./MovieHero.module.scss";
 
-const SCALE = 1.9;
+const SCALE = 1.35; // modest zoom: enough travel for parallax, minimal reframing
 const FACTOR = 0.5; // image moves at (1 - FACTOR)x the page → a clear half-speed parallax
 
 /**
