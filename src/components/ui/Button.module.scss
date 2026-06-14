@@ -1,6 +1,7 @@
 @use "abstracts" as *;
 
 .button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -14,32 +15,52 @@
   transition:
     transform var(--dur-fast) var(--ease-out),
     box-shadow var(--dur-base) var(--ease-out);
+
+  // Gradient bevel border, OUTSIDE the rim light: the button's own colour at
+  // the top-left fading to a much darker version at the bottom-right (light
+  // from the top-left). Masked to a thin ring so it follows the pill radius.
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    pointer-events: none;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
 }
 
-// Soft-UI neumorphism, light from the top-left:
-//   1. inset top-left rim light — a brighter shade of the button's own colour
-//   2. soft LIGHT outer shadow on the top-left (a lighter shade of the bg)
-//   3. real DARK outer shadow on the bottom-right
+// Soft-UI neumorphism, light from the top-left.
 .accent {
   color: var(--color-accent-contrast);
   background: var(--color-accent);
   box-shadow:
     inset 2px 2px 1px rgba(255, 74, 178, 0.95),
-    inset -2px -2px 4px rgba(120, 0, 70, 0.45),
     -7px -7px 16px rgba(150, 120, 165, 0.28),
     8px 8px 18px rgba(0, 0, 0, 0.55);
+
+  &::before {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent),
+      color-mix(in srgb, var(--color-accent) 30%, #000)
+    );
+  }
 
   &:hover {
     box-shadow:
       inset 2px 2px 1px rgba(255, 74, 178, 0.95),
-      inset -2px -2px 4px rgba(120, 0, 70, 0.45),
       -9px -9px 20px rgba(150, 120, 165, 0.32),
       11px 11px 24px rgba(0, 0, 0, 0.6);
   }
   &:active {
     box-shadow:
       inset 3px 3px 6px rgba(120, 0, 70, 0.55),
-      inset -2px -2px 5px rgba(255, 150, 210, 0.4);
+      inset -2px -2px 5px rgba(255, 74, 178, 0.4);
   }
 }
 
@@ -49,22 +70,24 @@
   background: var(--color-elevated);
   box-shadow:
     inset 2px 2px 1px rgba(150, 122, 240, 0.6),
-    inset -2px -2px 4px rgba(0, 0, 0, 0.45),
     -7px -7px 16px rgba(150, 120, 165, 0.22),
     8px 8px 18px rgba(0, 0, 0, 0.6);
+
+  &::before {
+    background: linear-gradient(135deg, var(--color-elevated), #0a0810);
+  }
 
   &:hover {
     color: var(--color-accent);
     box-shadow:
       inset 2px 2px 1px rgba(150, 122, 240, 0.6),
-      inset -2px -2px 4px rgba(0, 0, 0, 0.45),
       -9px -9px 20px rgba(150, 120, 165, 0.26),
       11px 11px 24px rgba(0, 0, 0, 0.66);
   }
   &:active {
     box-shadow:
       inset 3px 3px 6px rgba(0, 0, 0, 0.55),
-      inset -2px -2px 5px rgba(140, 135, 165, 0.3);
+      inset -2px -2px 5px rgba(150, 122, 240, 0.35);
   }
 }
 
