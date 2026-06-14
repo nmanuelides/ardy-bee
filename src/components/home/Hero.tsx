@@ -1,8 +1,15 @@
 import Button from "@/components/ui/Button";
-import HeroDemo, { type Featured } from "./HeroDemo";
+import HeroBoards from "./HeroBoards";
+import type { ActorRank, MovieRank } from "@/lib/rankings/queries";
 import styles from "./Hero.module.scss";
 
-export default function Hero({ featured }: { featured: Featured | null }) {
+export default function Hero({
+  topActors,
+  topMovies,
+}: {
+  topActors: ActorRank[];
+  topMovies: MovieRank[];
+}) {
   return (
     <section className={styles.hero}>
       <div className={styles.copy}>
@@ -21,7 +28,7 @@ export default function Hero({ featured }: { featured: Featured | null }) {
         </div>
       </div>
 
-      {featured && <HeroDemo featured={featured} />}
+      <HeroBoards actors={topActors} movies={topMovies} />
     </section>
   );
 }
