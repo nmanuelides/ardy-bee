@@ -27,6 +27,15 @@
   }
 }
 
+// Holds the image and is what we parallax-translate; scaled up so the
+// vertical drift never exposes an edge inside the clipped hero.
+.parallaxLayer {
+  position: absolute;
+  inset: 0;
+  transform: scale(1.22);
+  will-change: transform;
+}
+
 .backdropImg {
   object-fit: cover;
   // anchor near the top so faces aren't cropped out on a wide, short banner

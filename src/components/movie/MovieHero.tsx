@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { tmdbImage } from "@/lib/tmdb/image";
 import type { TmdbMovieDetails } from "@/lib/tmdb/types";
+import ParallaxBackdrop from "./ParallaxBackdrop";
 import styles from "./MovieHero.module.scss";
 
 export default function MovieHero({ details }: { details: TmdbMovieDetails }) {
@@ -12,18 +13,7 @@ export default function MovieHero({ details }: { details: TmdbMovieDetails }) {
 
   return (
     <header className={styles.hero}>
-      {backdrop && (
-        <div className={styles.backdrop}>
-          <Image
-            src={backdrop}
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className={styles.backdropImg}
-          />
-        </div>
-      )}
+      {backdrop && <ParallaxBackdrop src={backdrop} />}
 
       <div className={styles.inner}>
         {poster && (
