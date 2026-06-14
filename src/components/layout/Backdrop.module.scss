@@ -6,95 +6,113 @@
   background: var(--color-bg);
 }
 
+// Defined organic shapes with only a hair of edge-softening, so frosted glass
+// on top produces a clear blurred-vs-sharp contrast.
 .blob {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(72px);
+  filter: blur(7px);
   will-change: transform;
 }
 
-// magenta — top right
+// magenta → plum, top right (behind the hero panel)
 .a {
-  width: 55vw;
-  height: 55vw;
-  top: -16vw;
-  right: -10vw;
-  background: radial-gradient(circle, var(--color-accent), transparent 68%);
-  opacity: 0.5;
+  width: 40vw;
+  height: 36vw;
+  top: -7vw;
+  right: -5vw;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-surface-2));
+  border-radius: 42% 58% 60% 40% / 45% 45% 55% 55%;
+  opacity: 0.8;
   animation: drift-a 26s ease-in-out infinite;
 }
 
-// plum depth — bottom left
+// plum depth, bottom left
 .b {
-  width: 62vw;
-  height: 62vw;
-  bottom: -22vw;
-  left: -16vw;
-  background: radial-gradient(circle, var(--color-surface-2), transparent 70%);
-  opacity: 0.95;
+  width: 46vw;
+  height: 40vw;
+  bottom: -12vw;
+  left: -10vw;
+  background: linear-gradient(135deg, var(--color-surface-2), #480b30);
+  border-radius: 60% 40% 45% 55% / 55% 50% 50% 45%;
+  opacity: 0.9;
   animation: drift-b 34s ease-in-out infinite;
 }
 
-// magenta accent — bottom right
+// accent blob, bottom right
 .c {
-  width: 42vw;
-  height: 42vw;
-  bottom: 2vw;
-  right: 4vw;
-  background: radial-gradient(circle, var(--color-accent), transparent 70%);
-  opacity: 0.32;
+  width: 26vw;
+  height: 24vw;
+  bottom: 6vw;
+  right: 7vw;
+  background: linear-gradient(140deg, var(--color-accent), #5e1038);
+  border-radius: 52% 48% 44% 56% / 56% 44% 56% 44%;
+  opacity: 0.55;
   animation: drift-c 30s ease-in-out infinite;
 }
 
-// warm cream glow — upper left
+// small bright accent, mid right — a sharp pop for glass to catch
+.e {
+  width: 13vw;
+  height: 13vw;
+  top: 38vw;
+  right: 22vw;
+  background: var(--color-accent);
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: drift-c 24s ease-in-out infinite reverse;
+}
+
+// warm cream glow, upper left — kept diffuse (it's light, not a shape)
 .d {
-  width: 34vw;
-  height: 34vw;
-  top: 8vw;
-  left: 4vw;
-  background: radial-gradient(circle, var(--c-cream), transparent 70%);
-  opacity: 0.1;
+  width: 26vw;
+  height: 26vw;
+  top: 6vw;
+  left: 2vw;
+  background: radial-gradient(circle, var(--c-cream), transparent 66%);
+  border-radius: 50%;
+  filter: blur(26px);
+  opacity: 0.12;
   animation: drift-a 30s ease-in-out infinite reverse;
 }
 
-// subtle edge darkening to keep content legible
+// edge darkening for legibility
 .vignette {
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    120% 100% at 50% 40%,
-    transparent 50%,
-    rgba(0, 0, 0, 0.45) 100%
+    130% 110% at 50% 35%,
+    transparent 45%,
+    rgba(0, 0, 0, 0.5) 100%
   );
 }
 
 @keyframes drift-a {
   0%,
   100% {
-    transform: translate(0, 0) scale(1);
+    transform: translate(0, 0) rotate(0deg);
   }
   50% {
-    transform: translate(4vw, 6vw) scale(1.12);
+    transform: translate(3vw, 4vw) rotate(8deg);
   }
 }
 
 @keyframes drift-b {
   0%,
   100% {
-    transform: translate(0, 0) scale(1);
+    transform: translate(0, 0) rotate(0deg);
   }
   50% {
-    transform: translate(6vw, -4vw) scale(1.08);
+    transform: translate(4vw, -3vw) rotate(-6deg);
   }
 }
 
 @keyframes drift-c {
   0%,
   100% {
-    transform: translate(0, 0) scale(1);
+    transform: translate(0, 0) rotate(0deg);
   }
   50% {
-    transform: translate(-5vw, -5vw) scale(1.15);
+    transform: translate(-4vw, -4vw) rotate(10deg);
   }
 }
 

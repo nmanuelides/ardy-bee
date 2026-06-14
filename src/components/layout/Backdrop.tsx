@@ -10,6 +10,7 @@ export default function Backdrop() {
       <span className={`${styles.blob} ${styles.a}`} />
       <span className={`${styles.blob} ${styles.b}`} />
       <span className={`${styles.blob} ${styles.c}`} />
+      <span className={`${styles.blob} ${styles.e}`} />
       <span className={`${styles.blob} ${styles.d}`} />
       <span className={styles.vignette} />
     </div>
