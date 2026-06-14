@@ -1,21 +1,10 @@
 @use "abstracts" as *;
 
 body {
+  // Base color only — the animated gradient blobs live in <Backdrop>, painted
+  // behind content so glass surfaces refract real color when they blur over it.
   background: var(--color-bg);
   color: var(--color-text);
-  // Subtle plum glow anchored top-center for depth behind glass surfaces.
-  background-image:
-    radial-gradient(
-      120% 80% at 50% -10%,
-      var(--color-surface-2) 0%,
-      transparent 55%
-    ),
-    radial-gradient(
-      90% 60% at 85% 110%,
-      var(--color-accent-soft) 0%,
-      transparent 50%
-    );
-  background-attachment: fixed;
 }
 
 ::selection {
