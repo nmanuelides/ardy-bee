@@ -2,6 +2,7 @@ import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import Hero from "@/components/home/Hero";
 import SectionRail from "@/components/home/SectionRail";
+import Reveal from "@/components/motion/Reveal";
 import { getPopularMovies, getUpcomingMovies } from "@/lib/tmdb/movies";
 
 export default async function HomePage() {
@@ -19,8 +20,12 @@ export default async function HomePage() {
       <SiteHeader />
       <main>
         <Hero />
-        <SectionRail title="Popular now" movies={popularMovies} />
-        <SectionRail title="Upcoming" movies={upcomingMovies} />
+        <Reveal>
+          <SectionRail title="Popular now" movies={popularMovies} />
+        </Reveal>
+        <Reveal>
+          <SectionRail title="Upcoming" movies={upcomingMovies} />
+        </Reveal>
       </main>
       <SiteFooter />
     </>

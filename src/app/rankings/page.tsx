@@ -4,6 +4,7 @@ import RankSection from "@/components/rankings/RankSection";
 import ActorRow from "@/components/rankings/ActorRow";
 import PerformanceRow from "@/components/rankings/PerformanceRow";
 import MovieRow from "@/components/rankings/MovieRow";
+import Reveal from "@/components/motion/Reveal";
 import {
   getMyTopPerformances,
   getTopActors,
@@ -60,16 +61,18 @@ export default async function RankingsPage() {
           </RankSection>
         )}
 
-        <RankSection
-          title="Best performances"
-          subtitle="across the hive"
-          isEmpty={performances.length === 0}
-          emptyLabel="No performances ranked yet — be the first to rate one."
-        >
-          {performances.map((perf, i) => (
-            <PerformanceRow key={perf.performanceId} rank={i + 1} perf={perf} />
-          ))}
-        </RankSection>
+        <Reveal>
+          <RankSection
+            title="Best performances"
+            subtitle="across the hive"
+            isEmpty={performances.length === 0}
+            emptyLabel="No performances ranked yet — be the first to rate one."
+          >
+            {performances.map((perf, i) => (
+              <PerformanceRow key={perf.performanceId} rank={i + 1} perf={perf} />
+            ))}
+          </RankSection>
+        </Reveal>
 
         <div className={styles.cols}>
           <RankSection

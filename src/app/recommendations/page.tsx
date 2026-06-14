@@ -3,6 +3,7 @@ import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import Button from "@/components/ui/Button";
 import RecommendationCard from "@/components/recommendations/RecommendationCard";
+import Reveal from "@/components/motion/Reveal";
 import { getRecommendations } from "@/lib/recommendations/queries";
 import styles from "./page.module.scss";
 
@@ -61,11 +62,11 @@ export default async function RecommendationsPage() {
             </div>
 
             {recommendations.length > 0 ? (
-              <div className={styles.grid}>
+              <Reveal stagger className={styles.grid}>
                 {recommendations.map((rec) => (
                   <RecommendationCard key={rec.movieId} rec={rec} />
                 ))}
-              </div>
+              </Reveal>
             ) : (
               <div className={styles.empty}>
                 <p>
