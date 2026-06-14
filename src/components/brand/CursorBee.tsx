@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { BEE_EVENT, type BeeReaction, type BeeReactionDetail } from "@/lib/bee/events";
 import styles from "./CursorBee.module.scss";
 
-// Pixel-art bee sprite, facing right. '#' = accent pixel, ' ' = transparent.
-const SPRITE = [
+// Pixel-art bee, facing right. '#' = accent pixel, ' ' = transparent.
+// DETAIL keeps the stripe/eye cut-outs; SOLID fills them so the glow is
+// computed from the outer silhouette only (interior gaps never glow).
+const DETAIL = [
   "   ###    # ",
   "   ####  ## ",
   "  ##### ### ",
@@ -16,33 +18,62 @@ const SPRITE = [
   "   #####    ",
   "    ###     ",
 ];
+const SOLID = [
+  "   ###    # ",
+  "   ####  ## ",
+  "  ##### ### ",
+  "############",
+  "############",
+  " ########## ",
+  "  #######   ",
+  "   #####    ",
+  "    ###     ",
+];
 const PX = 3;
+const W = DETAIL[0].length * PX;
+const H = DETAIL.length * PX;
 
-function BeePixels() {
+function pixels(map: string[], prefix: string) {
   const rects: React.ReactElement[] = [];
-  SPRITE.forEach((row, y) => {
+  map.forEach((row, y) => {
     [...row].forEach((c, x) => {
       if (c === "#") {
         rects.push(
-          <rect key={`${x}-${y}`} x={x * PX} y={y * PX} width={PX} height={PX} />,
+          <rect key={`${prefix}${x}-${y}`} x={x * PX} y={y * PX} width={PX} height={PX} />,
         );
       }
     });
   });
+  return rects;
+}
+
+function BeePixels() {
   return (
-    <svg
-      width={SPRITE[0].length * PX}
-      height={SPRITE.length * PX}
-      viewBox={`0 0 ${SPRITE[0].length * PX} ${SPRITE.length * PX}`}
-      className={styles.svg}
-      role="presentation"
-    >
-      <g className={styles.pixels}>{rects}</g>
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className={styles.svg} role="presentation">
+      <defs>
+        <filter id="ardy-glow" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="1.6" result="b1" />
+          <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="b2" />
+          <feMerge result="bb">
+            <feMergeNode in="b1" />
+            <feMergeNode in="b2" />
+          </feMerge>
+          {/* keep the blur only OUTSIDE the silhouette → contour glow */}
+          <feComposite in="bb" in2="SourceAlpha" operator="out" result="ring" />
+          <feFlood className={styles.glowFlood} result="flood" />
+          <feComposite in="flood" in2="ring" operator="in" />
+        </filter>
+      </defs>
+      <g filter="url(#ardy-glow)" className={styles.glowG}>
+        {pixels(SOLID, "s")}
+      </g>
+      <g className={styles.pixels}>{pixels(DETAIL, "d")}</g>
     </svg>
   );
 }
 
-const TRAIL_LEN = 8;
+const TRAIL_LEN = 10;
+const TRAIL_STEP = 3; // frames between trail samples (longer comet)
 
 export default function CursorBee() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -51,7 +82,7 @@ export default function CursorBee() {
   const trailRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   const pos = useRef({ x: -100, y: -100 });
-  const target = useRef({ x: -100, y: -100 });
+  const targetPos = useRef({ x: -100, y: -100 });
   const facing = useRef(1);
   const mode = useRef<"follow" | "react">("follow");
   const reactionRef = useRef<BeeReaction | null>(null);
@@ -68,11 +99,11 @@ export default function CursorBee() {
     if (!fine || reduced) return;
     setEnabled(true);
 
-    function spawnSpark(x: number, y: number, gold: boolean) {
+    function spawnSpark(x: number, y: number) {
       const layer = sparkLayer.current;
       if (!layer) return;
       const s = document.createElement("span");
-      s.className = gold ? `${styles.spark} ${styles.gold}` : styles.spark;
+      s.className = styles.spark;
       s.style.left = `${x}px`;
       s.style.top = `${y}px`;
       layer.appendChild(s);
@@ -90,13 +121,9 @@ export default function CursorBee() {
       ).onfinish = () => s.remove();
     }
 
-    function burst(x: number, y: number, n: number, gold: boolean) {
-      for (let i = 0; i < n; i++) spawnSpark(x, y, gold);
-    }
-
     const onMove = (e: MouseEvent) => {
       if (mode.current === "follow") {
-        target.current = { x: e.clientX + 16, y: e.clientY - 16 };
+        targetPos.current = { x: e.clientX + 16, y: e.clientY - 16 };
       }
     };
 
@@ -114,14 +141,18 @@ export default function CursorBee() {
       stingTimers.length = 0;
 
       if (type === "sting") {
-        target.current = { x, y: y - 22 }; // hover just above to stab down
-        // spark bursts timed with the downstrokes of the stab animation
-        [130, 380, 600].forEach((t) =>
-          stingTimers.push(window.setTimeout(() => burst(x, y, 6, false), t)),
+        facing.current = 1; // lock orientation so the stinger-down pose is consistent
+        targetPos.current = { x, y: y - 30 };
+        [140, 360, 580].forEach((t) =>
+          stingTimers.push(
+            window.setTimeout(() => {
+              for (let i = 0; i < 6; i++) spawnSpark(x, y);
+            }, t),
+          ),
         );
       }
 
-      const duration = type === "honey" ? 1700 : 750;
+      const duration = type === "honey" ? 1700 : 800;
       window.clearTimeout(revertTimer);
       revertTimer = window.setTimeout(() => {
         mode.current = "follow";
@@ -140,32 +171,34 @@ export default function CursorBee() {
       const wrap = wrapRef.current;
       const flip = flipRef.current;
 
-      // Honey: orbit around the number, scattering sparks.
+      // Honey: orbit the number, scattering sparks.
       if (mode.current === "react" && reactionRef.current === "honey") {
         const t = (now - reactStart.current) / 1000;
-        const ang = t * 7; // ~1 revolution / 0.9s
+        const ang = t * 7;
         const r = 34;
-        target.current = {
+        targetPos.current = {
           x: reactCenter.current.x + Math.cos(ang) * r,
           y: reactCenter.current.y + Math.sin(ang) * r,
         };
-        if (frame % 4 === 0) spawnSpark(pos.current.x, pos.current.y, true);
+        if (frame % 4 === 0) spawnSpark(pos.current.x, pos.current.y);
       }
 
       if (wrap && flip) {
         const speed = mode.current === "react" ? 0.2 : 0.13;
-        const dx = target.current.x - pos.current.x;
-        const dy = target.current.y - pos.current.y;
+        const dx = targetPos.current.x - pos.current.x;
+        const dy = targetPos.current.y - pos.current.y;
         pos.current.x += dx * speed;
         pos.current.y += dy * speed;
-        if (Math.abs(dx) > 1.5) facing.current = dx < 0 ? -1 : 1;
+        // Don't re-orient during a sting (keeps the stinger-down pose stable).
+        const stinging = mode.current === "react" && reactionRef.current === "sting";
+        if (Math.abs(dx) > 1.5 && !stinging) facing.current = dx < 0 ? -1 : 1;
         const bob = Math.sin(now / 220) * 4;
         wrap.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y + bob}px, 0)`;
         flip.style.transform = `scaleX(${facing.current})`;
       }
 
-      // Glow trail — sample every other frame for a longer comet.
-      if (frame % 2 === 0) {
+      // Glow trail.
+      if (frame % TRAIL_STEP === 0) {
         history.current.unshift({ x: pos.current.x, y: pos.current.y });
         history.current.length = Math.min(history.current.length, TRAIL_LEN);
         for (let i = 0; i < TRAIL_LEN; i++) {
@@ -201,9 +234,11 @@ export default function CursorBee() {
             }}
             className={styles.trailDot}
             style={{
-              opacity: (1 - i / TRAIL_LEN) * 0.45,
-              width: `${7 - i * 0.6}px`,
-              height: `${7 - i * 0.6}px`,
+              // start offscreen so un-sampled dots never sit at (0,0)
+              transform: "translate3d(-100px, -100px, 0)",
+              opacity: (1 - i / TRAIL_LEN) * 0.6,
+              width: `${9 - i * 0.6}px`,
+              height: `${9 - i * 0.6}px`,
             }}
           />
         ))}
