@@ -68,19 +68,21 @@
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    padding: 2px;
+    padding: 1.5px;
     pointer-events: none;
-    // Strongly brighten + saturate the backdrop so the edge takes on the
-    // colour/light behind it. Keep the white light-catch tiny (just the very
-    // top-left corner) so it doesn't whitewash the colourful refraction.
-    -webkit-backdrop-filter: brightness(2.1) saturate(2.6);
-    backdrop-filter: brightness(2.1) saturate(2.6);
+    // Brighten + saturate the backdrop so the rim picks up colour/light behind
+    // the glass...
+    -webkit-backdrop-filter: brightness(1.8) saturate(2.4);
+    backdrop-filter: brightness(1.8) saturate(2.4);
+    // ...over a consistent semi-transparent light-catch (brighter top-left) so
+    // the rim stays a bright glass edge even over dark areas, while colourful
+    // backdrops tint through it.
     background: linear-gradient(
       135deg,
-      rgba(255, 250, 240, 0.45),
-      rgba(255, 250, 240, 0) 22%,
-      rgba(255, 250, 240, 0) 88%,
-      rgba(255, 250, 240, 0.12)
+      rgba(255, 252, 245, 0.5),
+      rgba(255, 252, 245, 0.2) 45%,
+      rgba(255, 252, 245, 0.16) 70%,
+      rgba(255, 252, 245, 0.32)
     );
     -webkit-mask:
       linear-gradient(#000 0 0) content-box,
