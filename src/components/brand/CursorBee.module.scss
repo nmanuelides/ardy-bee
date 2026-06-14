@@ -1,5 +1,4 @@
 .bee,
-.trailLayer,
 .sparkLayer {
   position: fixed;
   top: 0;
@@ -35,20 +34,6 @@
 }
 .cream {
   fill: var(--c-cream); // eye-white / wings (the reference's white/blue)
-}
-
-// --- glow trail ---
-.trailDot {
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin-left: -4px;
-  margin-top: -4px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 6px var(--color-accent);
-  filter: blur(1px);
-  will-change: transform;
 }
 
 // --- sparks ---

@@ -5,8 +5,7 @@ import { BEE_EVENT, type BeeReaction, type BeeReactionDetail } from "@/lib/bee/e
 import styles from "./CursorBee.module.scss";
 
 // Detailed side-view bumblebee, facing left (after the provided reference).
-// 'A' = accent (its yellow), 'D' = dark plum (its black), 'C' = cream
-// (its eye-white / wings), ' ' = transparent.
+// 'A' = accent, 'D' = dark plum, 'C' = cream (eye/wings), ' ' = transparent.
 const BEE = [
   ".......CC......",
   ".....CCCCCC....",
@@ -50,13 +49,9 @@ function BeePixels() {
   );
 }
 
-const TRAIL_LEN = 12;
-const TRAIL_STEP = 1; // sample every frame → smooth comet, no stray gaps
-
 export default function CursorBee() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const sparkLayer = useRef<HTMLDivElement>(null);
-  const trailRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   const pos = useRef({ x: -200, y: -200 });
   const targetPos = useRef({ x: -200, y: -200 });
@@ -64,7 +59,6 @@ export default function CursorBee() {
   const reactionRef = useRef<BeeReaction | null>(null);
   const reactCenter = useRef({ x: 0, y: 0 });
   const reactStart = useRef(0);
-  const history = useRef<{ x: number; y: number }[]>([]);
   const seenMove = useRef(false);
 
   const [reaction, setReaction] = useState<BeeReaction | null>(null);
@@ -100,10 +94,8 @@ export default function CursorBee() {
 
     const onMove = (e: MouseEvent) => {
       if (!seenMove.current) {
-        // first sighting: drop the bee in near the cursor so it doesn't streak
         seenMove.current = true;
         pos.current = { x: e.clientX + 16, y: e.clientY - 16 };
-        for (let i = 0; i < TRAIL_LEN; i++) history.current.push({ ...pos.current });
       }
       if (mode.current === "follow") {
         targetPos.current = { x: e.clientX + 16, y: e.clientY - 16 };
@@ -167,14 +159,6 @@ export default function CursorBee() {
         pos.current.y += (targetPos.current.y - pos.current.y) * speed;
         const bob = Math.sin(now / 220) * 4;
         wrap.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y + bob}px, 0)`;
-
-        history.current.unshift({ x: pos.current.x, y: pos.current.y });
-        history.current.length = Math.min(history.current.length, TRAIL_LEN);
-        for (let i = 0; i < TRAIL_LEN; i++) {
-          const dot = trailRefs.current[i];
-          const p = history.current[i];
-          if (dot && p) dot.style.transform = `translate3d(${p.x}px, ${p.y}px, 0)`;
-        }
       }
 
       raf = requestAnimationFrame(tick);
@@ -194,27 +178,15 @@ export default function CursorBee() {
 
   return (
     <>
-      <div className={styles.trailLayer} aria-hidden="true">
-        {Array.from({ length: TRAIL_LEN }, (_, i) => (
-          <span
-            key={i}
-            ref={(el) => {
-              trailRefs.current[i] = el;
-            }}
-            className={styles.trailDot}
-            style={{
-              transform: "translate3d(-200px, -200px, 0)",
-              opacity: (1 - i / TRAIL_LEN) * 0.45,
-              width: `${5 - i * 0.3}px`,
-              height: `${5 - i * 0.3}px`,
-            }}
-          />
-        ))}
-      </div>
-
       <div ref={sparkLayer} className={styles.sparkLayer} aria-hidden="true" />
-
-      <div ref={wrapRef} className={styles.bee} data-reaction={reaction ?? undefined} aria-hidden="true">
+      <div
+        ref={wrapRef}
+        className={styles.bee}
+        data-reaction={reaction ?? undefined}
+        // start off-screen so it never flashes at (0,0) before the first move
+        style={{ transform: "translate3d(-200px, -200px, 0)" }}
+        aria-hidden="true"
+      >
         <div className={styles.react}>
           <BeePixels />
         </div>
