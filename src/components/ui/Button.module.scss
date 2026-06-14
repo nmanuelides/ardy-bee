@@ -28,10 +28,10 @@
     pointer-events: none;
     background: linear-gradient(
       180deg,
-      rgba(255, 250, 240, 0.7),
-      rgba(255, 250, 240, 0.06) 45%,
+      rgba(255, 250, 240, 0.35),
+      rgba(255, 250, 240, 0.04) 45%,
       rgba(255, 250, 240, 0) 72%,
-      rgba(255, 250, 240, 0.2)
+      rgba(255, 250, 240, 0.1)
     );
     -webkit-mask:
       linear-gradient(#000 0 0) content-box,
@@ -45,59 +45,68 @@
   }
 }
 
-// Glossy raised accent pill — top sheen + inner bottom shadow for 3D
-// roundness, neumorphic extrusion, and an accent glow.
+// Strongly extruded accent pill: cast shadow lifts it off the surface;
+// inner top gloss + inner bottom shadow give rounded volume; accent glow.
 .accent {
   color: var(--color-accent-contrast);
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--color-accent) 72%, #fff),
-    var(--color-accent) 55%,
-    color-mix(in srgb, var(--color-accent) 88%, #000)
+    color-mix(in srgb, var(--color-accent) 62%, #fff),
+    var(--color-accent) 48%,
+    color-mix(in srgb, var(--color-accent) 78%, #000)
   );
   box-shadow:
-    var(--neu-distance) var(--neu-distance) var(--neu-blur) var(--neu-dark),
-    calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1) var(--neu-blur)
-      var(--neu-light),
-    inset 0 2px 1px rgba(255, 255, 255, 0.45),
-    inset 0 -3px 5px rgba(70, 0, 40, 0.55),
-    0 0 18px var(--color-accent-soft);
+    0 16px 28px rgba(0, 0, 0, 0.5),
+    0 6px 12px rgba(80, 0, 45, 0.5),
+    inset 0 3px 2px rgba(255, 255, 255, 0.55),
+    inset 0 -8px 10px rgba(60, 0, 35, 0.6),
+    0 0 22px var(--color-accent-soft);
 
   &:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow:
+      0 22px 36px rgba(0, 0, 0, 0.55),
+      0 8px 16px rgba(80, 0, 45, 0.5),
+      inset 0 3px 2px rgba(255, 255, 255, 0.55),
+      inset 0 -8px 10px rgba(60, 0, 35, 0.6),
+      0 0 30px var(--color-accent-soft);
   }
   &:active {
-    transform: translateY(1px) scale(0.99);
+    transform: translateY(2px) scale(0.99);
     box-shadow:
-      inset 0 3px 6px rgba(70, 0, 40, 0.6),
+      0 4px 8px rgba(0, 0, 0, 0.4),
+      inset 0 5px 9px rgba(60, 0, 35, 0.7),
       inset 0 -1px 1px rgba(255, 255, 255, 0.2),
       0 0 12px var(--color-accent-soft);
   }
 }
 
-// Glossy raised surface pill.
+// Strongly extruded surface pill.
 .neumorphic,
 .ghost {
   color: var(--color-text);
-  background: linear-gradient(180deg, var(--tile-hi), var(--tile-lo));
+  background: linear-gradient(180deg, var(--color-elevated), var(--tile-lo));
   box-shadow:
-    var(--neu-distance) var(--neu-distance) var(--neu-blur) var(--neu-dark),
-    calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1) var(--neu-blur)
-      var(--neu-light),
-    inset 0 2px 1px rgba(255, 250, 240, 0.12),
-    inset 0 -3px 5px rgba(0, 0, 0, 0.4);
+    0 16px 28px rgba(0, 0, 0, 0.55),
+    0 6px 12px rgba(0, 0, 0, 0.4),
+    inset 0 3px 2px rgba(255, 250, 240, 0.16),
+    inset 0 -8px 10px rgba(0, 0, 0, 0.5);
 
   &:hover {
     color: var(--color-accent);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow:
+      0 22px 36px rgba(0, 0, 0, 0.6),
+      0 8px 16px rgba(0, 0, 0, 0.45),
+      inset 0 3px 2px rgba(255, 250, 240, 0.16),
+      inset 0 -8px 10px rgba(0, 0, 0, 0.5);
   }
   &:active {
-    transform: translateY(1px) scale(0.99);
+    transform: translateY(2px) scale(0.99);
     box-shadow:
-      inset var(--neu-distance) var(--neu-distance) var(--neu-blur)
-        var(--neu-dark),
-      inset calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1)
-        var(--neu-blur) var(--neu-light);
+      0 4px 8px rgba(0, 0, 0, 0.4),
+      inset 0 5px 9px rgba(0, 0, 0, 0.6),
+      inset 0 -1px 1px rgba(255, 250, 240, 0.1);
   }
 }
 
