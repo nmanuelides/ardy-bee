@@ -15,28 +15,47 @@
 
 // --- Surfaces -----------------------------------------------------------
 
-// Frosted glass: translucent fill + backdrop blur + hairline border.
+// Frosted glass: translucent fill + backdrop blur + hairline border + a soft
+// outer shadow so the panel reads as floating.
 @mixin glass($blur: var(--glass-blur)) {
   background: var(--glass-bg);
-  backdrop-filter: blur($blur) saturate(140%);
-  -webkit-backdrop-filter: blur($blur) saturate(140%);
+  backdrop-filter: blur($blur) saturate(150%);
+  -webkit-backdrop-filter: blur($blur) saturate(150%);
   border: 1px solid var(--glass-border);
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 250, 240, 0.08);
 }
 
-// Soft neumorphic relief — raised from the surface.
-@mixin neumorphic {
-  background: var(--color-surface);
+// Soft neumorphic relief — a pillow raised from the surface. The gradient
+// fill gives it directional sheen; the dual shadow extrudes it.
+@mixin neumorphic($dist: var(--neu-distance), $blur: var(--neu-blur)) {
+  background: linear-gradient(145deg, var(--tile-hi), var(--tile-lo));
   box-shadow:
-    var(--neu-distance) var(--neu-distance) var(--neu-blur) var(--neu-dark),
-    calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1) var(--neu-blur) var(--neu-light);
+    #{$dist} #{$dist} #{$blur} var(--neu-dark),
+    calc(#{$dist} * -1) calc(#{$dist} * -1) #{$blur} var(--neu-light);
+}
+
+// Larger, softer pillow for hero/feature tiles.
+@mixin neumorphic-lg {
+  @include neumorphic(var(--neu-distance-lg), var(--neu-blur-lg));
 }
 
 // Pressed / inset neumorphic relief.
-@mixin neumorphic-inset {
+@mixin neumorphic-inset($dist: var(--neu-distance), $blur: var(--neu-blur)) {
   background: var(--color-surface);
   box-shadow:
-    inset var(--neu-distance) var(--neu-distance) var(--neu-blur) var(--neu-dark),
-    inset calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1) var(--neu-blur) var(--neu-light);
+    inset #{$dist} #{$dist} #{$blur} var(--neu-dark),
+    inset calc(#{$dist} * -1) calc(#{$dist} * -1) #{$blur} var(--neu-light);
+}
+
+// Glossy raised orb — for circular CTAs. Radial sheen + extrusion + top rim.
+@mixin glossy-orb {
+  background: radial-gradient(circle at 36% 28%, var(--color-elevated), var(--color-bg) 78%);
+  box-shadow:
+    var(--neu-distance) var(--neu-distance) var(--neu-blur) var(--neu-dark),
+    calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1) var(--neu-blur) var(--neu-light),
+    inset 0 1px 1px rgba(255, 250, 240, 0.12);
 }
 
 // Rim light: a 1px gradient highlight along the top edge of a rounded box.

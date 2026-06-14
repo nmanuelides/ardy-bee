@@ -18,7 +18,10 @@
   --color-bg: var(--c-ink);
   --color-surface: #1b1929; // lifted from bg so neumorphism reads
   --color-surface-2: var(--c-plum);
-  --color-elevated: #211f31;
+  --color-elevated: #232038;
+  // Pillow gradient pair (top-left lighter → bottom-right darker) for soft tiles
+  --tile-hi: #24213a;
+  --tile-lo: #15131f;
 
   // --- Text ---
   --color-text: var(--c-cream);
@@ -30,19 +33,22 @@
   --color-accent-soft: rgba(209, 0, 118, 0.16);
   --color-accent-contrast: #fff5fb;
 
-  // --- Glass ---
-  --glass-bg: rgba(48, 2, 35, 0.34);
-  --glass-border: rgba(237, 214, 173, 0.14);
-  --glass-blur: 16px;
+  // --- Glass (frosted) ---
+  --glass-bg: rgba(35, 32, 56, 0.45);
+  --glass-border: rgba(237, 214, 173, 0.16);
+  --glass-blur: 22px;
 
   // --- Rim light ---
-  --rim-light: rgba(237, 214, 173, 0.5);
+  --rim-light: rgba(237, 214, 173, 0.55);
 
-  // --- Neumorphic shadow pair (derived from --color-surface) ---
-  --neu-light: rgba(255, 255, 255, 0.045);
-  --neu-dark: rgba(0, 0, 0, 0.55);
-  --neu-distance: 7px;
-  --neu-blur: 16px;
+  // --- Neumorphic shadow pair — pronounced "pillow" on dark surfaces.
+  //     Warm cream-tinted highlight (top-left), near-black shadow (bottom-right).
+  --neu-light: rgba(255, 250, 240, 0.07);
+  --neu-dark: rgba(0, 0, 0, 0.62);
+  --neu-distance: 9px;
+  --neu-blur: 22px;
+  --neu-distance-lg: 14px;
+  --neu-blur-lg: 32px;
 
   // --- Radii ---
   --radius-sm: 8px;
