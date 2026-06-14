@@ -28,7 +28,7 @@ export default function MovieCard({ movie }: { movie: TmdbMovie }) {
         )}
 
         {vote && (
-          <span className={styles.vote}>
+          <span className={styles.vote} title="TMDb audience score">
             <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true">
               <path
                 d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.7L12 17.5 5.9 20.3l1.4-6.7L2.2 9l6.9-.7z"
