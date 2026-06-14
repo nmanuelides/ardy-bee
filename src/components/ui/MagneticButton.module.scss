@@ -1,0 +1,104 @@
+@use "abstracts" as *;
+
+.btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 2rem;
+  border: 1px solid color-mix(in srgb, var(--c-cream) 16%, transparent);
+  border-radius: 999px;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  color: var(--c-cream);
+  font: inherit;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  // magnetic lean + the lift on hover; springy easing
+  transform: translate3d(var(--tx, 0), var(--ty, 0), 0);
+  transition:
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--c-accent) 55%, transparent);
+    box-shadow:
+      0 10px 30px -8px color-mix(in srgb, var(--c-accent) 50%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--c-cream) 10%, transparent);
+  }
+
+  &:active {
+    transform: translate3d(var(--tx, 0), var(--ty, 0), 0) scale(0.97);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: progress;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transform: none;
+    transition: border-color 0.2s ease;
+  }
+}
+
+.label {
+  position: relative;
+  z-index: 2;
+}
+
+// Accent glow that tracks the pointer.
+.glow {
+  position: absolute;
+  inset: -40%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    180px circle at var(--mx) var(--my),
+    color-mix(in srgb, var(--c-accent) 75%, transparent),
+    transparent 60%
+  );
+  transition: opacity 0.3s ease;
+  mix-blend-mode: screen;
+
+  .btn:hover & {
+    opacity: 0.9;
+  }
+}
+
+// Honeycomb mesh, revealed only under the cursor via a radial mask.
+.mesh {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='24'%3E%3Cpath d='M14 0 L28 8 L28 16 L14 24 L0 16 L0 8 Z' fill='none' stroke='%23EDD6AD' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 22px 19px;
+  -webkit-mask-image: radial-gradient(
+    120px circle at var(--mx) var(--my),
+    #000 0%,
+    transparent 65%
+  );
+  mask-image: radial-gradient(
+    120px circle at var(--mx) var(--my),
+    #000 0%,
+    transparent 65%
+  );
+  transition: opacity 0.3s ease;
+
+  .btn:hover & {
+    opacity: 0.5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    display: none;
+  }
+}

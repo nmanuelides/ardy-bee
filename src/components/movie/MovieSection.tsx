@@ -3,7 +3,7 @@
 import { useState } from "react";
 import MovieCard from "./MovieCard";
 import Reveal from "@/components/motion/Reveal";
-import Button from "@/components/ui/Button";
+import MagneticButton from "@/components/ui/MagneticButton";
 import type { TmdbMovie } from "@/lib/tmdb/types";
 import type { MovieCategory } from "@/lib/tmdb/movies";
 import styles from "./MovieSection.module.scss";
@@ -62,9 +62,9 @@ export default function MovieSection({
       </Reveal>
       {hasMore && (
         <div className={styles.more}>
-          <Button variant="ghost" onClick={loadMore} disabled={loading}>
+          <MagneticButton onClick={loadMore} disabled={loading}>
             {loading ? "Loading…" : "See more"}
-          </Button>
+          </MagneticButton>
         </div>
       )}
     </section>
