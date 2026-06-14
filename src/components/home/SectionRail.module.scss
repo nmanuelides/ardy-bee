@@ -16,24 +16,23 @@
   font-size: var(--text-2xl);
 }
 
+// Glass panel wrapping the carousel
+.railWrap {
+  @include glass;
+  border-radius: var(--radius-lg);
+  padding: 0.75rem;
+}
+
 .rail {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 44%;
+  grid-auto-columns: 46%;
   gap: 1.1rem;
   overflow-x: auto;
-  padding: 0.5rem 0 1.1rem;
+  // generous vertical padding so the hover lift/scale isn't clipped by the
+  // overflow (overflow-x:auto also clips overflow-y)
+  padding: 1.1rem 0.25rem 0.9rem;
   scroll-snap-type: x mandatory;
-
-  // soft fade at the left/right edges so cards melt off-screen
-  --edge: 3%;
-  mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    #000 var(--edge),
-    #000 calc(100% - var(--edge)),
-    transparent 100%
-  );
 
   // Firefox
   scrollbar-width: thin;

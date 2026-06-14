@@ -22,12 +22,14 @@ export default function SectionRail({
       <div className={styles.head}>
         <h2 className={styles.title}>{title}</h2>
       </div>
-      <div className={styles.rail}>
-        {list.length > 0
-          ? list.map((movie) => <MovieCard key={movie.id} movie={movie} />)
-          : Array.from({ length: skeletonCount }, (_, i) => (
-              <div key={i} className={styles.skeleton} />
-            ))}
+      <div className={styles.railWrap}>
+        <div className={styles.rail}>
+          {list.length > 0
+            ? list.map((movie) => <MovieCard key={movie.id} movie={movie} />)
+            : Array.from({ length: skeletonCount }, (_, i) => (
+                <div key={i} className={styles.skeleton} />
+              ))}
+        </div>
       </div>
     </section>
   );

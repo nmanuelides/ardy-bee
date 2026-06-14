@@ -88,6 +88,49 @@
   }
 }
 
+// Accent "soft-UI" pill look (matches the primary Button): flat accent body,
+// radial bevel border (colour → darker, top-left light), a saturated rim light
+// just inside, and top-left light / bottom-right dark outer shadows.
+// Host must already be positioned (relative/absolute).
+@mixin soft-pill-accent {
+  color: var(--color-accent-contrast);
+  background: var(--color-accent);
+  box-shadow:
+    -6px -6px 14px rgba(150, 120, 165, 0.28),
+    7px 7px 16px rgba(0, 0, 0, 0.55);
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    border-radius: inherit;
+    pointer-events: none;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+  &::before {
+    inset: 0;
+    padding: 2px;
+    background: radial-gradient(
+      farthest-corner at top left,
+      var(--color-accent),
+      color-mix(in srgb, var(--color-accent) 30%, #000)
+    );
+  }
+  &::after {
+    inset: 2px;
+    padding: 1.5px;
+    background: radial-gradient(
+      farthest-corner at top left,
+      rgba(255, 120, 200, 0.95),
+      transparent 55%
+    );
+  }
+}
+
 // --- Helpers ------------------------------------------------------------
 @mixin content-width {
   width: 100%;
