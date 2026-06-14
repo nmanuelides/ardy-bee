@@ -1,24 +1,25 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  // z-index 0 (NOT negative): a negative-z backdrop sits outside the backdrop
-  // root, so backdrop-filter on content above can't blur it. Content is
-  // layered above this via .app-shell { z-index: 1 }.
+  // z-index 0 (NOT negative) so it's inside the backdrop root and content
+  // layered above (.app-shell { z-index: 1 }) can blur it.
   z-index: 0;
   overflow: hidden;
   background: var(--color-bg);
 }
 
-// Defined organic shapes with only a hair of edge-softening, so frosted glass
-// on top produces a clear blurred-vs-sharp contrast.
-// NOTE: no `will-change`/transform-promotion — that would put the blobs on
-// their own compositing layer that backdrop-filter skips.
+// Defined organic shapes, edges only just-softened, so frosted glass on top
+// produces clear blurred-vs-sharp contrast.
+//
+// IMPORTANT: these are STATIC. Animating them (transform) promotes each to its
+// own compositing layer, which Chromium's backdrop-filter does NOT sample —
+// that silently disables the frost. Motion lives elsewhere (cursor bee,
+// reveals, hero float), not here.
 .blob {
   position: absolute;
   filter: blur(4px);
 }
 
-// magenta → plum, top right (behind the hero panel)
 .a {
   width: 40vw;
   height: 36vw;
@@ -27,10 +28,8 @@
   background: linear-gradient(135deg, var(--color-accent), var(--color-surface-2));
   border-radius: 42% 58% 60% 40% / 45% 45% 55% 55%;
   opacity: 0.8;
-  animation: drift-a 26s ease-in-out infinite;
 }
 
-// plum depth, bottom left
 .b {
   width: 46vw;
   height: 40vw;
@@ -39,10 +38,8 @@
   background: linear-gradient(135deg, var(--color-surface-2), #480b30);
   border-radius: 60% 40% 45% 55% / 55% 50% 50% 45%;
   opacity: 0.9;
-  animation: drift-b 34s ease-in-out infinite;
 }
 
-// accent blob, bottom right
 .c {
   width: 26vw;
   height: 24vw;
@@ -51,10 +48,8 @@
   background: linear-gradient(140deg, var(--color-accent), #5e1038);
   border-radius: 52% 48% 44% 56% / 56% 44% 56% 44%;
   opacity: 0.55;
-  animation: drift-c 30s ease-in-out infinite;
 }
 
-// small bright accent, mid right — a sharp pop for glass to catch
 .e {
   width: 13vw;
   height: 13vw;
@@ -63,11 +58,9 @@
   background: var(--color-accent);
   border-radius: 50%;
   opacity: 0.5;
-  filter: blur(2px); // sharpest shape — best showcase of the frost
-  animation: drift-c 24s ease-in-out infinite reverse;
+  filter: blur(2px);
 }
 
-// warm cream glow, upper left — kept diffuse (it's light, not a shape)
 .d {
   width: 26vw;
   height: 26vw;
@@ -77,10 +70,8 @@
   border-radius: 50%;
   filter: blur(26px);
   opacity: 0.12;
-  animation: drift-a 30s ease-in-out infinite reverse;
 }
 
-// edge darkening for legibility
 .vignette {
   position: absolute;
   inset: 0;
@@ -89,40 +80,4 @@
     transparent 45%,
     rgba(0, 0, 0, 0.5) 100%
   );
-}
-
-@keyframes drift-a {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate(3vw, 4vw) rotate(8deg);
-  }
-}
-
-@keyframes drift-b {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate(4vw, -3vw) rotate(-6deg);
-  }
-}
-
-@keyframes drift-c {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate(-4vw, -4vw) rotate(10deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .blob {
-    animation: none;
-  }
 }
