@@ -34,6 +34,23 @@
   padding: 1.1rem 0.25rem 0.9rem;
   scroll-snap-type: x mandatory;
 
+  // soft fade at the left/right edges so cards melt toward the panel sides
+  // (horizontal only, so it doesn't clip the vertical hover lift)
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 36px,
+    #000 calc(100% - 36px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 36px,
+    #000 calc(100% - 36px),
+    transparent 100%
+  );
+
   // Firefox
   scrollbar-width: thin;
   scrollbar-color: var(--color-accent) transparent;
