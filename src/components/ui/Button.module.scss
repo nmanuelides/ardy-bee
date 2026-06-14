@@ -21,36 +21,62 @@
   }
 }
 
+// Glossy raised accent pill — top sheen + inner bottom shadow for 3D
+// roundness, neumorphic extrusion, and an accent glow.
 .accent {
-  background: var(--color-accent);
   color: var(--color-accent-contrast);
-  box-shadow: 0 6px 22px var(--color-accent-soft);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-accent) 72%, #fff),
+    var(--color-accent) 55%,
+    color-mix(in srgb, var(--color-accent) 88%, #000)
+  );
+  box-shadow:
+    var(--neu-distance) var(--neu-distance) var(--neu-blur) var(--neu-dark),
+    calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1) var(--neu-blur)
+      var(--neu-light),
+    inset 0 2px 1px rgba(255, 255, 255, 0.45),
+    inset 0 -3px 5px rgba(70, 0, 40, 0.55),
+    0 0 18px var(--color-accent-soft);
 
   &:hover {
-    box-shadow: 0 10px 30px var(--color-accent-soft);
     transform: translateY(-2px);
+  }
+  &:active {
+    transform: translateY(1px) scale(0.99);
+    box-shadow:
+      inset 0 3px 6px rgba(70, 0, 40, 0.6),
+      inset 0 -1px 1px rgba(255, 255, 255, 0.2),
+      0 0 12px var(--color-accent-soft);
   }
 }
 
-.neumorphic {
-  @include neumorphic;
+// Glossy raised surface pill.
+.neumorphic,
+.ghost {
   color: var(--color-text);
+  background: linear-gradient(180deg, var(--tile-hi), var(--tile-lo));
+  box-shadow:
+    var(--neu-distance) var(--neu-distance) var(--neu-blur) var(--neu-dark),
+    calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1) var(--neu-blur)
+      var(--neu-light),
+    inset 0 2px 1px rgba(255, 250, 240, 0.12),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.4);
 
   &:hover {
     color: var(--color-accent);
+    transform: translateY(-2px);
   }
   &:active {
-    @include neumorphic-inset;
+    transform: translateY(1px) scale(0.99);
+    box-shadow:
+      inset var(--neu-distance) var(--neu-distance) var(--neu-blur)
+        var(--neu-dark),
+      inset calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1)
+        var(--neu-blur) var(--neu-light);
   }
 }
 
 .ghost {
-  background: transparent;
   color: var(--color-text-muted);
-  border: 1px solid var(--glass-border);
-
-  &:hover {
-    color: var(--color-text);
-    border-color: var(--rim-light);
-  }
 }
