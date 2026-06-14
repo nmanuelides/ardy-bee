@@ -8,19 +8,19 @@ import styles from "./CursorBee.module.scss";
 // 'A' = accent (its yellow), 'D' = dark plum (its black), 'C' = cream
 // (its eye-white / wings), ' ' = transparent.
 const BEE = [
-  "........CCC.....",
-  "......CCCCCCC...",
-  "...D..CCCCCCC...",
-  "...D.CCCCCCCC...",
-  "..DDDAAAAAAAAD..",
-  ".DCDCDAADAADAD..",
-  ".DCCCDAADAADAD..",
-  ".DCCDDAADAADAAD.",
-  "..DDDAAADAADAD..",
-  "..DDDDDDDDDDDD..",
-  "....D.D.D.D.....",
+  ".......CC......",
+  ".....CCCCCC....",
+  "...D.CCCCCCC...",
+  "...D.CCCCCC....",
+  ".....DDDDDD....",
+  "..DDDAAAAAAAD..",
+  ".DCCDAADAADAAD.",
+  ".DCDDAADAADAAD.",
+  "..DDDAADAADAD..",
+  "....DDDDDDDD...",
+  ".....D.D.D.....",
 ];
-const PX = 3;
+const PX = 2;
 
 function classFor(c: string) {
   if (c === "A") return styles.accent;
@@ -204,9 +204,9 @@ export default function CursorBee() {
             className={styles.trailDot}
             style={{
               transform: "translate3d(-200px, -200px, 0)",
-              opacity: (1 - i / TRAIL_LEN) * 0.5,
-              width: `${7 - i * 0.4}px`,
-              height: `${7 - i * 0.4}px`,
+              opacity: (1 - i / TRAIL_LEN) * 0.45,
+              width: `${5 - i * 0.3}px`,
+              height: `${5 - i * 0.3}px`,
             }}
           />
         ))}

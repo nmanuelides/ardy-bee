@@ -21,13 +21,3 @@
 .accent {
   color: var(--color-accent);
 }
-
-// The bee: a small accent dot with a soft glow standing in for the mascot mark.
-.bee {
-  width: 0.7em;
-  height: 0.7em;
-  border-radius: var(--radius-pill);
-  background: radial-gradient(circle at 35% 30%, var(--c-cream), var(--color-accent));
-  box-shadow: 0 0 0.6em var(--color-accent-soft);
-  flex: none;
-}

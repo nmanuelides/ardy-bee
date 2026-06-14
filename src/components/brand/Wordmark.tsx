@@ -9,7 +9,6 @@ interface WordmarkProps {
 export default function Wordmark({ size = "sm" }: WordmarkProps) {
   return (
     <span className={styles.wordmark} data-size={size} aria-label="Ardy Bee">
-      <span className={styles.bee} aria-hidden="true" />
       <span>Ardy</span>
       <span className={styles.accent}>Bee</span>
     </span>
