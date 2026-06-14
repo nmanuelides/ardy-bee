@@ -68,16 +68,19 @@
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    padding: 1.5px;
+    padding: 2px;
     pointer-events: none;
-    -webkit-backdrop-filter: brightness(1.7) saturate(2);
-    backdrop-filter: brightness(1.7) saturate(2);
+    // Strongly brighten + saturate the backdrop so the edge takes on the
+    // colour/light behind it. Keep the white light-catch tiny (just the very
+    // top-left corner) so it doesn't whitewash the colourful refraction.
+    -webkit-backdrop-filter: brightness(2.1) saturate(2.6);
+    backdrop-filter: brightness(2.1) saturate(2.6);
     background: linear-gradient(
       135deg,
-      rgba(255, 250, 240, 0.6),
-      rgba(255, 250, 240, 0.05) 38%,
-      rgba(255, 250, 240, 0) 62%,
-      rgba(255, 250, 240, 0.28)
+      rgba(255, 250, 240, 0.45),
+      rgba(255, 250, 240, 0) 22%,
+      rgba(255, 250, 240, 0) 88%,
+      rgba(255, 250, 240, 0.12)
     );
     -webkit-mask:
       linear-gradient(#000 0 0) content-box,
