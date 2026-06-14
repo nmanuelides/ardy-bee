@@ -19,16 +19,21 @@ const fragmentShader = /* glsl */ `
   uniform float uAspect;
   varying vec2 vUv;
 
-  // Soft hexagon (honeycomb cell): rotate by rot for variety, measure the
-  // regular-hexagon distance, then a gentle smoothstep so it still blurs
-  // cleanly under glass while reading clearly as a hex.
+  // Soft round-cornered hexagon (honeycomb cell): a true signed-distance
+  // hexagon offset outward by a radius, which rounds the vertices so they
+  // don't read as sharp points (especially once blurred under glass).
   float blob(vec2 p, vec2 c, float r, float rot) {
     vec2 d = p - c;
     float ca = cos(rot), sa = sin(rot);
     d = vec2(d.x * ca - d.y * sa, d.x * sa + d.y * ca);
+    float rad = r * 0.36;            // corner-rounding radius
+    float ir = r - rad;              // inner hexagon apothem
+    const vec3 k = vec3(-0.8660254, 0.5, 0.5773503);
     d = abs(d);
-    float hd = max(dot(d, vec2(0.8660254, 0.5)), d.y);
-    return smoothstep(r, r - 0.05, hd);
+    d -= 2.0 * min(dot(k.xy, d), 0.0) * k.xy;
+    d -= vec2(clamp(d.x, -k.z * ir, k.z * ir), ir);
+    float dist = length(d) * sign(d.y) - rad;
+    return smoothstep(0.0, -0.05, dist);
   }
 
   void main() {
