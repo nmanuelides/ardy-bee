@@ -8,8 +8,7 @@
   pointer-events: none;
 }
 
-.bee,
-.flip {
+.bee {
   will-change: transform;
 }
 
@@ -20,21 +19,19 @@
 // --- the pixel bee ---
 .svg {
   display: block;
-  shape-rendering: crispEdges; // sharp pixels (the detail layer)
-  overflow: visible; // let the contour glow extend past the viewBox
+  shape-rendering: crispEdges; // keep pixels sharp
+  overflow: visible;
+  // glow halo — stripes are opaque so this won't wash out the details
+  filter:
+    drop-shadow(0 0 4px var(--color-accent))
+    drop-shadow(0 0 10px var(--color-accent-soft));
 }
 
-// Detail layer: crisp accent pixels with transparent stripe/eye cut-outs.
-.pixels rect {
+.accent {
   fill: var(--color-accent);
 }
-
-// Glow layer: filled silhouette, turned into a contour-only glow by the filter.
-.glowG rect {
-  fill: var(--color-accent);
-}
-.glowFlood {
-  flood-color: var(--color-accent);
+.dark {
+  fill: var(--color-surface-2); // dark plum (the reference's black)
 }
 
 // --- glow trail ---
@@ -62,28 +59,28 @@
   transform: translate(-50%, -50%);
 }
 
-// --- sting: rotate stinger-down, then jab up & down ---
+// --- sting: stinger is at the bottom, so jab straight up & down ---
 .bee[data-reaction="sting"] .react {
   animation: sting 0.8s ease-in-out;
 }
 
 @keyframes sting {
   0% {
-    transform: translateY(-16px) rotate(-90deg);
+    transform: translateY(-14px);
   }
-  20% {
-    transform: translateY(18px) rotate(-90deg);
+  18% {
+    transform: translateY(14px);
   }
-  40% {
-    transform: translateY(-14px) rotate(-90deg);
+  36% {
+    transform: translateY(-12px);
   }
-  60% {
-    transform: translateY(18px) rotate(-90deg);
+  54% {
+    transform: translateY(14px);
   }
-  80% {
-    transform: translateY(-10px) rotate(-90deg);
+  72% {
+    transform: translateY(-8px);
   }
   100% {
-    transform: translateY(6px) rotate(-90deg);
+    transform: translateY(8px);
   }
 }
