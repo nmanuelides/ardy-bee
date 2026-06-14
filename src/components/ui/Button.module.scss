@@ -24,14 +24,14 @@
   color: var(--color-accent-contrast);
   background: var(--color-accent);
   box-shadow:
-    inset 2px 2px 3px rgba(255, 150, 210, 0.7),
+    inset 2px 2px 1px rgba(255, 74, 178, 0.95),
     inset -2px -2px 4px rgba(120, 0, 70, 0.45),
     -7px -7px 16px rgba(150, 120, 165, 0.28),
     8px 8px 18px rgba(0, 0, 0, 0.55);
 
   &:hover {
     box-shadow:
-      inset 2px 2px 3px rgba(255, 150, 210, 0.7),
+      inset 2px 2px 1px rgba(255, 74, 178, 0.95),
       inset -2px -2px 4px rgba(120, 0, 70, 0.45),
       -9px -9px 20px rgba(150, 120, 165, 0.32),
       11px 11px 24px rgba(0, 0, 0, 0.6);
@@ -48,7 +48,7 @@
   color: var(--color-text);
   background: var(--color-elevated);
   box-shadow:
-    inset 2px 2px 3px rgba(140, 135, 165, 0.4),
+    inset 2px 2px 1px rgba(150, 122, 240, 0.6),
     inset -2px -2px 4px rgba(0, 0, 0, 0.45),
     -7px -7px 16px rgba(150, 120, 165, 0.22),
     8px 8px 18px rgba(0, 0, 0, 0.6);
@@ -56,7 +56,7 @@
   &:hover {
     color: var(--color-accent);
     box-shadow:
-      inset 2px 2px 3px rgba(140, 135, 165, 0.4),
+      inset 2px 2px 1px rgba(150, 122, 240, 0.6),
       inset -2px -2px 4px rgba(0, 0, 0, 0.45),
       -9px -9px 20px rgba(150, 120, 165, 0.26),
       11px 11px 24px rgba(0, 0, 0, 0.66);
