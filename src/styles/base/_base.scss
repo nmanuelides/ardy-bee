@@ -23,10 +23,22 @@ body {
 }
 
 // Custom scrollbar
+html {
+  scrollbar-color: var(--color-surface-2) transparent;
+}
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-surface-2);
+  background: linear-gradient(var(--color-surface-2), var(--color-accent));
   border-radius: var(--radius-pill);
+  border: 3px solid var(--color-bg);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+  background-clip: padding-box;
 }

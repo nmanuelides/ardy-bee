@@ -19,8 +19,11 @@
     box-shadow var(--dur-base) var(--ease-out);
 
   .card:hover & {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-2);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow:
+      var(--shadow-2),
+      0 0 0 1px color-mix(in srgb, var(--color-accent) 50%, transparent),
+      0 12px 34px var(--color-accent-soft);
   }
 }
 

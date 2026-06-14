@@ -20,11 +20,44 @@
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 44%;
-  gap: 1rem;
+  gap: 1.1rem;
   overflow-x: auto;
-  padding-bottom: 1rem;
+  padding: 0.5rem 0 1.1rem;
   scroll-snap-type: x mandatory;
+
+  // soft fade at the left/right edges so cards melt off-screen
+  --edge: 3%;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--edge),
+    #000 calc(100% - var(--edge)),
+    transparent 100%
+  );
+
+  // Firefox
   scrollbar-width: thin;
+  scrollbar-color: var(--color-accent) transparent;
+
+  // WebKit — slim track + accent-gradient thumb
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--color-surface);
+    border-radius: var(--radius-pill);
+    margin-inline: 4%;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: var(--radius-pill);
+    background: linear-gradient(90deg, var(--color-surface-2), var(--color-accent));
+    border: 2px solid var(--color-surface);
+    background-clip: padding-box;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent);
+    background-clip: padding-box;
+  }
 
   @include respond("sm") {
     grid-auto-columns: 28%;
