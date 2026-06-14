@@ -1,0 +1,16 @@
+@use "abstracts" as *;
+
+// Decorative 3D honeycomb sitting behind the hero content (the glass boards
+// frost it for depth). Hidden on small screens.
+.scene {
+  position: absolute;
+  inset: -8% -4% 0 auto;
+  width: min(48%, 640px);
+  z-index: 0;
+  pointer-events: none;
+  display: none;
+
+  @include respond("md") {
+    display: block;
+  }
+}
