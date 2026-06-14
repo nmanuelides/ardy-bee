@@ -67,18 +67,16 @@ export default async function ActorPage({
         </header>
 
         {knownFor.length > 0 && (
-          <Reveal>
-            <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>
-                Filmography <span className={styles.count}>{knownFor.length}</span>
-              </h2>
-              <div className={styles.grid}>
-                {knownFor.map((movie) => (
-                  <MovieCard key={movie.id} movie={movie} />
-                ))}
-              </div>
-            </section>
-          </Reveal>
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>
+              Filmography <span className={styles.count}>{knownFor.length}</span>
+            </h2>
+            <Reveal stagger className={styles.grid}>
+              {knownFor.map((movie) => (
+                <MovieCard key={movie.id} movie={movie} />
+              ))}
+            </Reveal>
+          </section>
         )}
       </main>
       <SiteFooter />

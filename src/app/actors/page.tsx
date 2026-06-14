@@ -28,16 +28,14 @@ export default async function ActorsPage() {
           </p>
         </header>
 
-        <Reveal>
-          <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>Popular this week</h2>
-            <div className={styles.grid}>
-              {actors.map((person) => (
-                <ActorCard key={person.id} person={person} />
-              ))}
-            </div>
-          </section>
-        </Reveal>
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Popular this week</h2>
+          <Reveal stagger className={styles.grid}>
+            {actors.map((person) => (
+              <ActorCard key={person.id} person={person} />
+            ))}
+          </Reveal>
+        </section>
       </main>
       <SiteFooter />
     </>

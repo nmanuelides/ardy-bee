@@ -1,0 +1,64 @@
+@use "abstracts" as *;
+
+.wrap {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.bee {
+  animation: hover 1.2s var(--ease-in-out) infinite;
+  filter: drop-shadow(0 0 14px var(--color-accent-soft));
+}
+
+.track {
+  position: relative;
+  width: 180px;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  @include neumorphic-inset(3px, 5px);
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--color-surface-2), var(--color-accent));
+  box-shadow: 0 0 10px var(--color-accent);
+  animation: slide 1.2s var(--ease-in-out) infinite;
+}
+
+@keyframes hover {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(3deg);
+  }
+}
+
+@keyframes slide {
+  0% {
+    left: -40%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bee,
+  .fill {
+    animation: none;
+  }
+  .fill {
+    left: 0;
+    width: 100%;
+  }
+}

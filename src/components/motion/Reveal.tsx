@@ -39,7 +39,9 @@ export default function Reveal({
         duration: 0.7,
         ease: "power3.out",
         delay,
-        stagger: stagger ? 0.09 : 0,
+        // `amount` spreads the whole stagger over a fixed total time, so big
+        // grids don't animate for many seconds.
+        stagger: stagger ? { amount: 0.5 } : 0,
         scrollTrigger: { trigger: el, start: "top 85%", once: true },
       });
     }, el);

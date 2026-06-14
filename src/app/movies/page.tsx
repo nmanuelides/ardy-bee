@@ -43,16 +43,14 @@ export default async function MoviesPage() {
         </header>
 
         {sections.map((s) => (
-          <Reveal key={s.title}>
-            <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>{s.title}</h2>
-              <div className={styles.grid}>
-                {s.movies.map((movie) => (
-                  <MovieCard key={movie.id} movie={movie} />
-                ))}
-              </div>
-            </section>
-          </Reveal>
+          <section key={s.title} className={styles.section}>
+            <h2 className={styles.sectionTitle}>{s.title}</h2>
+            <Reveal stagger className={styles.grid}>
+              {s.movies.map((movie) => (
+                <MovieCard key={movie.id} movie={movie} />
+              ))}
+            </Reveal>
+          </section>
         ))}
       </main>
       <SiteFooter />

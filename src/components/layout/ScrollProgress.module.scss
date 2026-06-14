@@ -1,0 +1,30 @@
+.bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  z-index: 1001;
+  pointer-events: none;
+  transform-origin: left center;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--color-surface-2), var(--color-accent));
+  box-shadow: 0 0 10px var(--color-accent-soft);
+
+  // CSS scroll-driven animation: fill as the page scrolls (Chrome 115+).
+  // Degrades to an invisible bar where unsupported.
+  animation: grow linear both;
+  animation-timeline: scroll(root block);
+}
+
+@keyframes grow {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    display: none;
+  }
+}
