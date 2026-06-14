@@ -32,7 +32,7 @@ export default function MovieHero({ details }: { details: TmdbMovieDetails }) {
               src={poster}
               alt={details.title}
               fill
-              sizes="(max-width: 768px) 40vw, 200px"
+              sizes="(max-width: 768px) 40vw, 360px"
               className={styles.posterImg}
             />
           </div>
