@@ -11,8 +11,8 @@
   z-index: 0;
   // Fade the banner in from the top (so it melts out of the header instead of
   // starting on a hard line) and out toward the bottom into the blob bg.
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 24%, #000 58%, transparent 94%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 24%, #000 58%, transparent 94%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 9%, #000 60%, transparent 94%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 9%, #000 60%, transparent 94%);
 
   &::after {
     content: "";
