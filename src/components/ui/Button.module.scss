@@ -1,12 +1,11 @@
 @use "abstracts" as *;
 
 .button {
-  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5ch;
-  padding: 0.85rem 1.6rem;
+  padding: 0.85rem 1.7rem;
   border-radius: var(--radius-pill);
   font-family: var(--font-body), system-ui, sans-serif;
   font-weight: 600;
@@ -14,101 +13,58 @@
   letter-spacing: 0.02em;
   transition:
     transform var(--dur-fast) var(--ease-out),
-    box-shadow var(--dur-base) var(--ease-out),
-    background var(--dur-base) var(--ease-out);
-
-  // Bright luminous rim tracing the pill edge — bright along the top, faint
-  // catch at the bottom (lit from above), like the reference date-pills.
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1.5px;
-    pointer-events: none;
-    // faint top highlight + a cool light catch along the lower rim
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.2),
-      rgba(255, 255, 255, 0) 35%,
-      rgba(255, 255, 255, 0) 62%,
-      rgba(200, 208, 255, 0.45)
-    );
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-
-  &:active {
-    transform: translateY(1px) scale(0.99);
-  }
+    box-shadow var(--dur-base) var(--ease-out);
 }
 
-// Strongly extruded accent pill: cast shadow lifts it off the surface;
-// inner top gloss + inner bottom shadow give rounded volume; accent glow.
+// Soft-UI neumorphism, light from the top-left:
+//   1. inset top-left rim light — a brighter shade of the button's own colour
+//   2. soft LIGHT outer shadow on the top-left (a lighter shade of the bg)
+//   3. real DARK outer shadow on the bottom-right
 .accent {
   color: var(--color-accent-contrast);
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--color-accent) 62%, #fff),
-    var(--color-accent) 48%,
-    color-mix(in srgb, var(--color-accent) 78%, #000)
-  );
+  background: var(--color-accent);
   box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.5),
-    0 3px 8px rgba(80, 0, 45, 0.5),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.3),
-    inset 0 1px 1px rgba(255, 255, 255, 0.5),
-    0 0 22px var(--color-accent-soft);
+    inset 2px 2px 3px rgba(255, 150, 210, 0.7),
+    inset -2px -2px 4px rgba(120, 0, 70, 0.45),
+    -7px -7px 16px rgba(150, 120, 165, 0.28),
+    8px 8px 18px rgba(0, 0, 0, 0.55);
 
   &:hover {
-    transform: translateY(-3px);
     box-shadow:
-      0 22px 38px rgba(0, 0, 0, 0.55),
-      0 5px 12px rgba(80, 0, 45, 0.5),
-      inset 0 0 0 1px rgba(0, 0, 0, 0.3),
-      inset 0 1px 1px rgba(255, 255, 255, 0.5),
-      0 0 30px var(--color-accent-soft);
+      inset 2px 2px 3px rgba(255, 150, 210, 0.7),
+      inset -2px -2px 4px rgba(120, 0, 70, 0.45),
+      -9px -9px 20px rgba(150, 120, 165, 0.32),
+      11px 11px 24px rgba(0, 0, 0, 0.6);
   }
   &:active {
-    transform: translateY(2px) scale(0.99);
     box-shadow:
-      0 4px 10px rgba(0, 0, 0, 0.45),
-      inset 0 0 0 1px rgba(0, 0, 0, 0.3),
-      inset 0 3px 6px rgba(60, 0, 35, 0.6),
-      0 0 12px var(--color-accent-soft);
+      inset 3px 3px 6px rgba(120, 0, 70, 0.55),
+      inset -2px -2px 5px rgba(255, 150, 210, 0.4);
   }
 }
 
-// Strongly extruded surface pill.
 .neumorphic,
 .ghost {
   color: var(--color-text);
-  // dark glossy "obsidian" face — a touch lighter toward the top
-  background: radial-gradient(140% 140% at 50% 12%, var(--color-elevated), #100e1a 92%);
+  background: var(--color-elevated);
   box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.62),
-    0 3px 8px rgba(0, 0, 0, 0.5),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.55),
-    inset 0 1px 1px rgba(255, 255, 255, 0.08);
+    inset 2px 2px 3px rgba(140, 135, 165, 0.4),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.45),
+    -7px -7px 16px rgba(150, 120, 165, 0.22),
+    8px 8px 18px rgba(0, 0, 0, 0.6);
 
   &:hover {
     color: var(--color-accent);
-    transform: translateY(-3px);
     box-shadow:
-      0 22px 38px rgba(0, 0, 0, 0.66),
-      0 5px 12px rgba(0, 0, 0, 0.5),
-      inset 0 0 0 1px rgba(0, 0, 0, 0.55),
-      inset 0 1px 1px rgba(255, 255, 255, 0.08);
+      inset 2px 2px 3px rgba(140, 135, 165, 0.4),
+      inset -2px -2px 4px rgba(0, 0, 0, 0.45),
+      -9px -9px 20px rgba(150, 120, 165, 0.26),
+      11px 11px 24px rgba(0, 0, 0, 0.66);
   }
   &:active {
-    transform: translateY(2px) scale(0.99);
     box-shadow:
-      0 4px 10px rgba(0, 0, 0, 0.5),
-      inset 0 0 0 1px rgba(0, 0, 0, 0.55),
-      inset 0 3px 6px rgba(0, 0, 0, 0.6);
+      inset 3px 3px 6px rgba(0, 0, 0, 0.55),
+      inset -2px -2px 5px rgba(140, 135, 165, 0.3);
   }
 }
 
