@@ -19,8 +19,8 @@
 // outer shadow so the panel reads as floating.
 @mixin glass($blur: 24px) {
   background: var(--glass-bg);
-  backdrop-filter: blur($blur) saturate(150%);
   -webkit-backdrop-filter: blur($blur) saturate(150%);
+  backdrop-filter: blur($blur) saturate(150%);
   border: 1px solid var(--glass-border);
   box-shadow:
     0 18px 50px rgba(0, 0, 0, 0.45),
