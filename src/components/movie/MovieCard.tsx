@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import Tilt from "@/components/motion/Tilt";
 import { tmdbImage } from "@/lib/tmdb/image";
 import type { TmdbMovie } from "@/lib/tmdb/types";
 import styles from "./MovieCard.module.scss";
@@ -13,7 +14,8 @@ export default function MovieCard({ movie }: { movie: TmdbMovie }) {
       : null;
 
   return (
-    <Link href={`/movies/${movie.id}`} className={styles.card}>
+    <Tilt className={styles.card}>
+    <Link href={`/movies/${movie.id}`} className={styles.cardLink}>
       <div className={styles.posterWrap}>
         {poster ? (
           <Image
@@ -48,5 +50,6 @@ export default function MovieCard({ movie }: { movie: TmdbMovie }) {
         <span className={styles.cta}>Rate the cast →</span>
       </div>
     </Link>
+    </Tilt>
   );
 }

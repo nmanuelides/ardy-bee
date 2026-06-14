@@ -1,0 +1,48 @@
+@use "abstracts" as *;
+
+.tilt {
+  perspective: 900px;
+}
+
+.inner {
+  position: relative;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+// snappier follow while the pointer is actually over the card
+.tilt:hover .inner {
+  transition-duration: 0.1s;
+}
+
+// cursor-tracked sheen; localized so it doesn't wash out the title
+.glare {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: var(--radius-lg);
+  opacity: 0;
+  background: radial-gradient(
+    circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--c-cream) 30%, transparent),
+    transparent 42%
+  );
+  mix-blend-mode: soft-light;
+  transition: opacity 0.3s ease;
+}
+
+.tilt:hover .glare {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inner {
+    transform: none !important;
+  }
+  .glare {
+    display: none;
+  }
+}
