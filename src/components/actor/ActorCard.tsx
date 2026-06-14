@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import Tilt from "@/components/motion/Tilt";
 import { tmdbImage } from "@/lib/tmdb/image";
 import type { TmdbPerson } from "@/lib/tmdb/types";
 import styles from "./ActorCard.module.scss";
@@ -8,7 +9,8 @@ export default function ActorCard({ person }: { person: TmdbPerson }) {
   const photo = tmdbImage(person.profile_path, "w342");
 
   return (
-    <Link href={`/actors/${person.id}`} className={styles.card}>
+    <Tilt className={styles.card}>
+    <Link href={`/actors/${person.id}`} className={styles.cardLink}>
       <div className={styles.photoWrap}>
         {photo ? (
           <Image
@@ -30,5 +32,6 @@ export default function ActorCard({ person }: { person: TmdbPerson }) {
         </div>
       </div>
     </Link>
+    </Tilt>
   );
 }
