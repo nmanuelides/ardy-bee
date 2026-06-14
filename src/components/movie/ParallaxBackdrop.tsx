@@ -4,8 +4,8 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import styles from "./MovieHero.module.scss";
 
-const SCALE = 1.7;
-const TRAVEL = 32; // % of layer height the image drifts as the banner leaves
+const SCALE = 1.9;
+const FACTOR = 0.5; // image moves at (1 - FACTOR)x the page → a clear half-speed parallax
 
 /**
  * Movie-hero backdrop that drifts slower than the page scroll (parallax).
@@ -28,13 +28,13 @@ export default function ParallaxBackdrop({ src }: { src: string }) {
       raf = 0;
       const rect = wrap.getBoundingClientRect();
       const h = rect.height || 1;
-      // q ramps 0 → 1 as the banner scrolls from top-aligned to fully past the
-      // top — i.e. exactly while it's visibly leaving. Concentrating the drift
-      // here (rather than across the whole on-screen lifetime) is what makes
-      // the parallax actually perceptible.
-      const q = Math.max(0, Math.min(1, -rect.top / h));
-      const y = q * TRAVEL;
-      layer.style.transform = `translate3d(0, ${y}%, 0) scale(${SCALE})`;
+      // how far the banner has scrolled up past the top of the viewport
+      const scrolled = Math.max(0, -rect.top);
+      // push the image down at FACTOR× that, so it travels at (1-FACTOR)× the
+      // page. Clamp to the scale headroom so an edge never shows.
+      const maxTravel = ((SCALE - 1) / 2) * h * 0.95;
+      const yPx = Math.min(FACTOR * scrolled, maxTravel);
+      layer.style.transform = `translate3d(0, ${(yPx / h) * 100}%, 0) scale(${SCALE})`;
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
