@@ -9,7 +9,6 @@
 
 .card {
   @include glass;
-  @include rim-light;
   width: 100%;
   max-width: 420px;
   padding: clamp(1.75rem, 5vw, 2.75rem);

@@ -10,7 +10,6 @@
 .inner {
   @include content-width;
   @include glass;
-  @include rim-light;
   display: flex;
   align-items: center;
   gap: 1.5rem;

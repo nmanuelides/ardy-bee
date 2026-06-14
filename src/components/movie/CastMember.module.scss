@@ -2,7 +2,6 @@
 
 .card {
   @include glass;
-  @include rim-light;
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
