@@ -72,12 +72,13 @@
     pointer-events: none;
     -webkit-backdrop-filter: brightness(1.7) saturate(2);
     backdrop-filter: brightness(1.7) saturate(2);
+    // Light from above: bright along the top edge, fading out toward the
+    // bottom so every glass element shares the same light direction.
     background: linear-gradient(
-      135deg,
+      180deg,
       rgba(255, 250, 240, 0.6),
-      rgba(255, 250, 240, 0.05) 38%,
-      rgba(255, 250, 240, 0) 62%,
-      rgba(255, 250, 240, 0.28)
+      rgba(255, 250, 240, 0.1) 45%,
+      rgba(255, 250, 240, 0) 100%
     );
     -webkit-mask:
       linear-gradient(#000 0 0) content-box,
