@@ -74,7 +74,7 @@
 
 .rank {
   flex: none;
-  width: 1.4rem;
+  width: 1.2rem;
   text-align: center;
   font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 800;
@@ -84,6 +84,26 @@
   &[data-top] {
     color: var(--color-accent);
   }
+}
+
+.thumb {
+  position: relative;
+  flex: none;
+  width: 24px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-surface-2);
+
+  &[data-round] {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+}
+
+.thumbImg {
+  object-fit: cover;
 }
 
 .name {

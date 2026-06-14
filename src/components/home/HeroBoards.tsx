@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import { tmdbImage } from "@/lib/tmdb/image";
 import type { ActorRank, MovieRank } from "@/lib/rankings/queries";
 import styles from "./HeroBoards.module.scss";
 
@@ -7,6 +9,8 @@ interface Row {
   href: string;
   name: string;
   score: number;
+  image: string | null;
+  round: boolean;
 }
 
 function Board({ title, rows }: { title: string; rows: Row[] }) {
@@ -15,17 +19,25 @@ function Board({ title, rows }: { title: string; rows: Row[] }) {
       <h2 className={styles.boardTitle}>{title}</h2>
       {rows.length > 0 ? (
         <ol className={styles.list}>
-          {rows.map((r) => (
-            <li key={r.href}>
-              <Link href={r.href} className={styles.row}>
-                <span className={styles.rank} data-top={r.rank <= 3 || undefined}>
-                  {r.rank}
-                </span>
-                <span className={styles.name}>{r.name}</span>
-                <span className={styles.score}>{r.score.toFixed(1)}</span>
-              </Link>
-            </li>
-          ))}
+          {rows.map((r) => {
+            const img = tmdbImage(r.image, "w185");
+            return (
+              <li key={r.href}>
+                <Link href={r.href} className={styles.row}>
+                  <span className={styles.rank} data-top={r.rank <= 3 || undefined}>
+                    {r.rank}
+                  </span>
+                  <span className={styles.thumb} data-round={r.round || undefined}>
+                    {img && (
+                      <Image src={img} alt={r.name} fill sizes="32px" className={styles.thumbImg} />
+                    )}
+                  </span>
+                  <span className={styles.name}>{r.name}</span>
+                  <span className={styles.score}>{r.score.toFixed(1)}</span>
+                </Link>
+              </li>
+            );
+          })}
         </ol>
       ) : (
         <p className={styles.none}>Nothing rated yet</p>
@@ -59,6 +71,8 @@ export default function HeroBoards({
               href: `/actors/${a.personId}`,
               name: a.name,
               score: a.weighted,
+              image: a.profilePath,
+              round: true,
             }))}
           />
           <Board
@@ -68,6 +82,8 @@ export default function HeroBoards({
               href: `/movies/${m.movieId}`,
               name: m.title,
               score: m.weighted,
+              image: m.posterPath,
+              round: false,
             }))}
           />
         </div>
