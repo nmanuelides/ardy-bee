@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { tmdbImage } from "@/lib/tmdb/image";
@@ -13,7 +14,10 @@ export default function SearchBar() {
   const [results, setResults] = useState<SearchHit[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
+  const [coords, setCoords] = useState<{ left: number; top: number; width: number } | null>(null);
+
+  const fieldRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLUListElement>(null);
 
   // debounced search
   useEffect(() => {
@@ -39,15 +43,33 @@ export default function SearchBar() {
     return () => clearTimeout(t);
   }, [query]);
 
-  // close on outside click
+  // position the portalled dropdown under the field; track scroll/resize
   useEffect(() => {
-    function onClick(e: MouseEvent) {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
+    if (!open) return;
+    const update = () => {
+      const el = fieldRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      setCoords({ left: r.left, top: r.bottom + 8, width: r.width });
+    };
+    update();
+    window.addEventListener("scroll", update, true);
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update, true);
+      window.removeEventListener("resize", update);
+    };
+  }, [open, results]);
+
+  // close on outside click (account for the portalled dropdown)
+  useEffect(() => {
+    function onDown(e: MouseEvent) {
+      const t = e.target as Node;
+      if (fieldRef.current?.contains(t) || dropdownRef.current?.contains(t)) return;
+      setOpen(false);
     }
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
   }, []);
 
   function go(hit: SearchHit) {
@@ -56,9 +78,11 @@ export default function SearchBar() {
     router.push(hit.type === "movie" ? `/movies/${hit.id}` : `/actors/${hit.id}`);
   }
 
+  const showDropdown = open && query.trim().length >= 2 && coords;
+
   return (
-    <div className={styles.root} ref={rootRef}>
-      <div className={styles.field}>
+    <div className={styles.root}>
+      <div className={styles.field} ref={fieldRef}>
         <svg viewBox="0 0 24 24" width="16" height="16" className={styles.icon} aria-hidden="true">
           <path
             d="M10 4a6 6 0 104.5 9.9l4.3 4.3 1.4-1.4-4.3-4.3A6 6 0 0010 4zm0 2a4 4 0 110 8 4 4 0 010-8z"
@@ -76,33 +100,39 @@ export default function SearchBar() {
         />
       </div>
 
-      {open && (query.trim().length >= 2) && (
-        <ul className={styles.dropdown}>
-          {results.length === 0 && !loading && (
-            <li className={styles.empty}>No matches</li>
-          )}
-          {results.map((hit) => {
-            const img = tmdbImage(hit.image, "w185");
-            return (
-              <li key={`${hit.type}-${hit.id}`}>
-                <button className={styles.hit} onClick={() => go(hit)} type="button">
-                  <span className={styles.thumb} data-person={hit.type === "person" || undefined}>
-                    {img && (
-                      <Image src={img} alt={hit.title} fill sizes="40px" className={styles.thumbImg} />
-                    )}
-                  </span>
-                  <span className={styles.hitInfo}>
-                    <span className={styles.hitTitle}>{hit.title}</span>
-                    <span className={styles.hitSub}>
-                      {hit.type === "person" ? "Actor" : "Movie"} · {hit.sub}
+      {showDropdown &&
+        createPortal(
+          <ul
+            ref={dropdownRef}
+            className={styles.dropdown}
+            style={{ left: coords.left, top: coords.top, width: coords.width }}
+          >
+            {results.length === 0 && !loading && (
+              <li className={styles.empty}>No matches</li>
+            )}
+            {results.map((hit) => {
+              const img = tmdbImage(hit.image, "w185");
+              return (
+                <li key={`${hit.type}-${hit.id}`}>
+                  <button className={styles.hit} onClick={() => go(hit)} type="button">
+                    <span className={styles.thumb} data-person={hit.type === "person" || undefined}>
+                      {img && (
+                        <Image src={img} alt={hit.title} fill sizes="40px" className={styles.thumbImg} />
+                      )}
                     </span>
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+                    <span className={styles.hitInfo}>
+                      <span className={styles.hitTitle}>{hit.title}</span>
+                      <span className={styles.hitSub}>
+                        {hit.type === "person" ? "Actor" : "Movie"} · {hit.sub}
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>,
+          document.body,
+        )}
     </div>
   );
 }

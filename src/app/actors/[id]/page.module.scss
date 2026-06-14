@@ -87,6 +87,13 @@
   margin-bottom: 1.25rem;
 }
 
+.count {
+  font-size: var(--text-base);
+  color: var(--color-accent);
+  font-weight: 700;
+  vertical-align: super;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

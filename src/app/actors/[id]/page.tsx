@@ -25,16 +25,21 @@ export default async function ActorPage({
 
   const photo = tmdbImage(person.profile_path, "h632");
 
-  // de-dupe by movie id, prefer those with a poster, sort by popularity
+  // Full filmography: de-dupe by movie id; poster-bearing titles first, then
+  // by popularity. No cap — show every film they acted in.
   const seen = new Set<number>();
   const knownFor = [...credits.cast]
     .filter((m) => {
-      if (!m.poster_path || seen.has(m.id)) return false;
+      if (seen.has(m.id)) return false;
       seen.add(m.id);
       return true;
     })
-    .sort((a, b) => (b.popularity ?? 0) - (a.popularity ?? 0))
-    .slice(0, 18);
+    .sort((a, b) => {
+      const ap = a.poster_path ? 1 : 0;
+      const bp = b.poster_path ? 1 : 0;
+      if (ap !== bp) return bp - ap;
+      return (b.popularity ?? 0) - (a.popularity ?? 0);
+    });
 
   const facts = [person.known_for_department, person.place_of_birth]
     .filter(Boolean)
@@ -64,7 +69,9 @@ export default async function ActorPage({
         {knownFor.length > 0 && (
           <Reveal>
             <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>Known for</h2>
+              <h2 className={styles.sectionTitle}>
+                Filmography <span className={styles.count}>{knownFor.length}</span>
+              </h2>
               <div className={styles.grid}>
                 {knownFor.map((movie) => (
                   <MovieCard key={movie.id} movie={movie} />

@@ -40,10 +40,8 @@
 
 .dropdown {
   @include glass;
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  left: 0;
-  right: 0;
+  // portalled to <body>; positioned via inline left/top/width
+  position: fixed;
   z-index: $z-overlay;
   padding: 0.4rem;
   border-radius: var(--radius-md);

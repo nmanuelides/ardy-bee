@@ -18,7 +18,11 @@ export default async function HomePage() {
   ]);
 
   const popularMovies = popular.status === "fulfilled" ? popular.value : [];
-  const upcomingMovies = upcoming.status === "fulfilled" ? upcoming.value : [];
+  // TMDb "upcoming" includes already-released titles — keep only future ones.
+  const today = new Date().toISOString().slice(0, 10);
+  const upcomingMovies = (upcoming.status === "fulfilled" ? upcoming.value : [])
+    .filter((m) => m.release_date && m.release_date > today)
+    .sort((a, b) => a.release_date.localeCompare(b.release_date));
 
   // Feature the top-billed actor of the #1 popular movie for the live demo.
   let featured: Featured | null = null;

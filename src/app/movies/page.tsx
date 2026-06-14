@@ -18,10 +18,17 @@ export default async function MoviesPage() {
     getUpcomingMovies(),
   ]);
 
+  // TMDb's "upcoming" list includes already-released titles, so keep only
+  // genuinely future releases, soonest first.
+  const today = new Date().toISOString().slice(0, 10);
+  const upcoming = (up.status === "fulfilled" ? up.value : [])
+    .filter((m) => m.release_date && m.release_date > today)
+    .sort((a, b) => a.release_date.localeCompare(b.release_date));
+
   const sections = [
     { title: "Popular", movies: pop.status === "fulfilled" ? pop.value : [] },
     { title: "Top rated", movies: top.status === "fulfilled" ? top.value : [] },
-    { title: "Coming soon", movies: up.status === "fulfilled" ? up.value : [] },
+    { title: "Coming soon", movies: upcoming },
   ].filter((s) => s.movies.length > 0);
 
   return (
