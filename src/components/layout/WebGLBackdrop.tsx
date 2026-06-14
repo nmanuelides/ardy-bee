@@ -18,11 +18,11 @@ const fragmentShader = /* glsl */ `
   uniform float uTime;
   varying vec2 vUv;
 
-  // radial blob with a DEFINED edge (thin AA band at the rim) so glass on top
-  // produces a clear blurred-vs-sharp contrast
+  // crisp filled circle — only a ~2% anti-aliased band at the rim, so glass
+  // on top produces an obvious blurred-vs-sharp contrast as the edges drift
   float blob(vec2 uv, vec2 c, float r) {
     float d = distance(uv, c);
-    return smoothstep(r, r * 0.9, d);
+    return smoothstep(r, r - 0.02, d);
   }
 
   void main() {
@@ -32,14 +32,15 @@ const fragmentShader = /* glsl */ `
     vec3 ACC   = vec3(0.8196, 0.0,    0.4627); // #D10076
     vec3 CREAM = vec3(0.9294, 0.8392, 0.6784); // #EDD6AD
 
-    float t = uTime * 0.06;
+    float t = uTime * 0.08;
     vec3 col = INK;
 
-    col = mix(col, PLUM,  blob(uv, vec2(0.12 + 0.05 * cos(t * 0.8), 0.82 + 0.05 * sin(t)),       0.55) * 0.9);
-    col = mix(col, ACC,   blob(uv, vec2(0.86 + 0.05 * sin(t),       0.16 + 0.05 * cos(t * 1.1)), 0.50) * 0.55);
-    col = mix(col, ACC,   blob(uv, vec2(0.70 + 0.07 * sin(t * 0.7), 0.82 + 0.05 * cos(t * 0.9)), 0.32) * 0.35);
-    col = mix(col, PLUM,  blob(uv, vec2(0.55 + 0.06 * cos(t * 0.6), 0.30 + 0.06 * sin(t * 0.8)), 0.42) * 0.4);
-    col = mix(col, CREAM, blob(uv, vec2(0.10 + 0.04 * sin(t * 1.2), 0.20),                       0.22) * 0.07);
+    col = mix(col, PLUM,  blob(uv, vec2(0.15 + 0.08 * cos(t),       0.80 + 0.06 * sin(t * 0.9)), 0.34) * 0.85);
+    col = mix(col, ACC,   blob(uv, vec2(0.85 + 0.07 * sin(t * 1.1), 0.20 + 0.07 * cos(t)),       0.30) * 0.60);
+    col = mix(col, ACC,   blob(uv, vec2(0.70 + 0.10 * sin(t * 0.6), 0.78 + 0.06 * cos(t * 0.8)), 0.22) * 0.45);
+    col = mix(col, PLUM,  blob(uv, vec2(0.45 + 0.10 * cos(t * 0.7), 0.35 + 0.08 * sin(t * 0.9)), 0.26) * 0.55);
+    col = mix(col, ACC,   blob(uv, vec2(0.30 + 0.08 * sin(t * 0.5), 0.62 + 0.07 * cos(t * 1.2)), 0.18) * 0.4);
+    col = mix(col, CREAM, blob(uv, vec2(0.12 + 0.06 * sin(t * 1.2), 0.25),                       0.14) * 0.08);
 
     gl_FragColor = vec4(col, 1.0);
   }

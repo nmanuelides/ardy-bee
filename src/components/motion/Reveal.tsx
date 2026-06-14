@@ -42,6 +42,9 @@ export default function Reveal({
         // `amount` spreads the whole stagger over a fixed total time, so big
         // grids don't animate for many seconds.
         stagger: stagger ? { amount: 0.5 } : 0,
+        // Drop the inline transform when done — a lingering transform would
+        // disable backdrop-filter on any glass inside (e.g. the carousel).
+        clearProps: "transform",
         scrollTrigger: { trigger: el, start: "top 85%", once: true },
       });
     }, el);
