@@ -4,14 +4,14 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import styles from "./MovieHero.module.scss";
 
-const SCALE = 1.4;
-const TRAVEL = 30; // % of layer height the image drifts across the hero's scroll
+const SCALE = 1.7;
+const TRAVEL = 32; // % of layer height the image drifts as the banner leaves
 
 /**
  * Movie-hero backdrop that drifts slower than the page scroll (parallax).
- * Driven directly from scroll position each frame (rAF-throttled) so it
- * doesn't depend on any layout-measurement timing. The layer is scaled up so
- * the drift never exposes an edge. No-ops under prefers-reduced-motion.
+ * As the banner scrolls up past the top of the viewport, the image is pushed
+ * down so it lags well behind the foreground card/text. The layer is scaled
+ * up so the drift never exposes an edge. No-ops under prefers-reduced-motion.
  */
 export default function ParallaxBackdrop({ src }: { src: string }) {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -27,16 +27,13 @@ export default function ParallaxBackdrop({ src }: { src: string }) {
     const update = () => {
       raf = 0;
       const rect = wrap.getBoundingClientRect();
-      const vh = window.innerHeight || 1;
-      // progress across the whole time the hero is on screen: 0 just as it
-      // enters from the bottom, 1 once it has fully scrolled past the top.
-      const p = Math.max(
-        0,
-        Math.min(1, (vh - rect.top) / (vh + rect.height)),
-      );
-      // symmetric drift: image is centered mid-scroll, lagging the page by
-      // ±TRAVEL/2 at the extremes (so it reads as a slower, deeper plane).
-      const y = (p - 0.5) * TRAVEL;
+      const h = rect.height || 1;
+      // q ramps 0 → 1 as the banner scrolls from top-aligned to fully past the
+      // top — i.e. exactly while it's visibly leaving. Concentrating the drift
+      // here (rather than across the whole on-screen lifetime) is what makes
+      // the parallax actually perceptible.
+      const q = Math.max(0, Math.min(1, -rect.top / h));
+      const y = q * TRAVEL;
       layer.style.transform = `translate3d(0, ${y}%, 0) scale(${SCALE})`;
     };
     const onScroll = () => {
