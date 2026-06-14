@@ -1,4 +1,5 @@
 import Button from "@/components/ui/Button";
+import BeeMascot from "@/components/brand/BeeMascot";
 import { ratingLabel } from "@/lib/ratings";
 import styles from "./Hero.module.scss";
 
@@ -23,6 +24,7 @@ export default function Hero() {
 
       {/* Floating preview card — demonstrates the rating language. */}
       <aside className={styles.card} aria-hidden="true">
+        <BeeMascot />
         <div className={styles.cardTop}>
           <div className={styles.poster} />
           <div>
