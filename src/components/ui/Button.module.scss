@@ -1,6 +1,7 @@
 @use "abstracts" as *;
 
 .button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -15,6 +16,29 @@
     transform var(--dur-fast) var(--ease-out),
     box-shadow var(--dur-base) var(--ease-out),
     background var(--dur-base) var(--ease-out);
+
+  // Bright luminous rim tracing the pill edge — bright along the top, faint
+  // catch at the bottom (lit from above), like the reference date-pills.
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 250, 240, 0.7),
+      rgba(255, 250, 240, 0.06) 45%,
+      rgba(255, 250, 240, 0) 72%,
+      rgba(255, 250, 240, 0.2)
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
 
   &:active {
     transform: translateY(1px) scale(0.99);
