@@ -53,6 +53,20 @@ export interface TmdbCredits {
 
 export interface TmdbPersonDetails extends TmdbPerson {
   popularity: number;
+  biography?: string;
+  birthday?: string | null;
+  place_of_birth?: string | null;
+}
+
+export interface TmdbSearchResult {
+  id: number;
+  media_type: "movie" | "person" | "tv";
+  title?: string;
+  name?: string;
+  poster_path?: string | null;
+  profile_path?: string | null;
+  release_date?: string;
+  known_for_department?: string;
 }
 
 export interface TmdbPersonMovieCredit extends TmdbMovie {

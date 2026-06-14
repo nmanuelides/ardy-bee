@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Wordmark from "@/components/brand/Wordmark";
 import Button from "@/components/ui/Button";
+import SearchBar from "@/components/search/SearchBar";
 import UserMenu from "./UserMenu";
 import { createClient } from "@/lib/supabase/server";
 import styles from "./SiteHeader.module.scss";
@@ -37,6 +38,10 @@ export default async function SiteHeader() {
             </Link>
           ))}
         </nav>
+
+        <div className={styles.search}>
+          <SearchBar />
+        </div>
 
         <div className={styles.actions}>
           {user ? (

@@ -25,11 +25,22 @@
 
 .nav {
   display: none;
-  margin-inline: auto;
   gap: 0.5rem;
 
   @include respond("md") {
     display: flex;
+  }
+}
+
+// search takes the flexible middle space (desktop only)
+.search {
+  display: none;
+
+  @include respond("lg") {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    margin-inline: auto;
   }
 }
 
@@ -50,8 +61,5 @@
 
 .actions {
   margin-left: auto;
-
-  @include respond("md") {
-    margin-left: 0;
-  }
+  flex: none;
 }

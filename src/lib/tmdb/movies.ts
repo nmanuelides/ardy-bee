@@ -25,6 +25,15 @@ export async function getUpcomingMovies(): Promise<TmdbMovie[]> {
   return data.results;
 }
 
+/** Highest-rated movies of all time. */
+export async function getTopRatedMovies(): Promise<TmdbMovie[]> {
+  const data = await tmdbFetch<TmdbPaginated<TmdbMovie>>("/movie/top_rated", {
+    language: "en-US",
+    page: 1,
+  });
+  return data.results;
+}
+
 /** Full details for a single movie. */
 export async function getMovieDetails(id: number): Promise<TmdbMovieDetails> {
   return tmdbFetch<TmdbMovieDetails>(`/movie/${id}`, { language: "en-US" });

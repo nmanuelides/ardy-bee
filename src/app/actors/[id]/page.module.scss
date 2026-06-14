@@ -1,0 +1,107 @@
+@use "abstracts" as *;
+
+.page {
+  @include content-width;
+  padding-block: clamp(2rem, 5vw, 3.5rem);
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+
+  @include respond("md") {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2.5rem;
+  }
+}
+
+.photo {
+  position: relative;
+  width: 160px;
+  aspect-ratio: 3 / 4;
+  flex: none;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-surface);
+  display: grid;
+  place-items: center;
+  box-shadow:
+    var(--shadow-2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.18);
+
+  @include respond("md") {
+    width: 220px;
+  }
+}
+
+.photoImg {
+  object-fit: cover;
+}
+
+.initial {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--text-3xl);
+  color: var(--color-text-muted);
+}
+
+.meta {
+  @include glass;
+  flex: 1;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border-radius: var(--radius-lg);
+}
+
+.name {
+  font-size: var(--text-3xl);
+  margin-bottom: 0.5rem;
+}
+
+.facts {
+  color: var(--color-accent);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  margin-bottom: 1rem;
+}
+
+.bio {
+  max-width: 70ch;
+  color: var(--color-text);
+  line-height: 1.65;
+  // clamp very long bios
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.section {
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+}
+
+.sectionTitle {
+  font-size: var(--text-2xl);
+  margin-bottom: 1.25rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1rem, 2vw, 1.5rem);
+
+  @include respond("sm") {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @include respond("md") {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @include respond("lg") {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  @include respond("xl") {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}

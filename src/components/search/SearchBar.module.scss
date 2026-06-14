@@ -1,0 +1,113 @@
+@use "abstracts" as *;
+
+.root {
+  position: relative;
+  flex: 1;
+  max-width: 320px;
+  margin-left: auto;
+}
+
+.field {
+  @include neumorphic-inset(4px, 8px);
+  display: flex;
+  align-items: center;
+  gap: 0.5ch;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-pill);
+}
+
+.icon {
+  color: var(--color-text-faint);
+  flex: none;
+}
+
+.input {
+  width: 100%;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--color-text);
+  font-size: var(--text-sm);
+
+  &::placeholder {
+    color: var(--color-text-faint);
+  }
+  // hide the native search clear button
+  &::-webkit-search-cancel-button {
+    appearance: none;
+  }
+}
+
+.dropdown {
+  @include glass;
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
+  z-index: $z-overlay;
+  padding: 0.4rem;
+  border-radius: var(--radius-md);
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.empty {
+  padding: 0.9rem;
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.hit {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.45rem 0.5rem;
+  border-radius: var(--radius-sm);
+  text-align: left;
+  transition: background var(--dur-fast) var(--ease-out);
+
+  &:hover {
+    background: var(--color-accent-soft);
+  }
+}
+
+.thumb {
+  position: relative;
+  width: 38px;
+  height: 52px;
+  flex: none;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-surface);
+
+  &[data-person] {
+    height: 38px;
+    border-radius: 50%;
+  }
+}
+
+.thumbImg {
+  object-fit: cover;
+}
+
+.hitInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.hitTitle {
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hitSub {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}

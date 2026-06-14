@@ -1,0 +1,45 @@
+@use "abstracts" as *;
+
+.page {
+  @include content-width;
+  padding-block: clamp(2rem, 5vw, 3.5rem);
+}
+
+.header {
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.lead {
+  margin-top: 0.5rem;
+  max-width: 56ch;
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+}
+
+.section {
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+}
+
+.sectionTitle {
+  font-size: var(--text-2xl);
+  margin-bottom: 1.25rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1rem, 2vw, 1.5rem);
+
+  @include respond("sm") {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @include respond("md") {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @include respond("lg") {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  @include respond("xl") {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
