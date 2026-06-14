@@ -4,8 +4,11 @@
 // frost it for depth). Hidden on small screens.
 .scene {
   position: absolute;
-  inset: -8% -4% 0 auto;
-  width: min(48%, 640px);
+  // float in the open top-right; only the lower edge dips behind the board
+  top: -16%;
+  right: -3%;
+  width: min(46%, 580px);
+  height: 62%;
   z-index: 0;
   pointer-events: none;
   display: none;

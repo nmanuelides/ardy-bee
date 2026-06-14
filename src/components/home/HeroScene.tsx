@@ -47,6 +47,7 @@ function Cluster({ animate }: { animate: boolean }) {
     if (!g) return;
     if (!animate) {
       g.rotation.set(-0.12, 0.25, 0.08);
+      g.position.y = 0.5;
       return;
     }
     const t = state.clock.elapsedTime;
@@ -56,7 +57,8 @@ function Cluster({ animate }: { animate: boolean }) {
     g.rotation.y += (targetY - g.rotation.y) * 0.06;
     g.rotation.x += (targetX - g.rotation.x) * 0.06;
     g.rotation.z = Math.sin(t * 0.12) * 0.08;
-    g.position.y = Math.sin(t * 0.6) * 0.07;
+    // sit a little high so it floats above the board, with a gentle bob
+    g.position.y = 0.5 + Math.sin(t * 0.6) * 0.07;
   });
 
   return (

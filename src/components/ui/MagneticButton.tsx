@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
+import Button from "./Button";
 import styles from "./MagneticButton.module.scss";
 
 interface Props {
@@ -10,23 +11,22 @@ interface Props {
 }
 
 /**
- * A pointer-reactive button: it leans toward the cursor (magnetic), an accent
+ * The standard ghost Button at rest — identical look — that becomes
+ * pointer-reactive on hover: it leans toward the cursor (magnetic), an accent
  * glow follows the pointer, and a honeycomb mesh lights up where you hover.
- * All driven by CSS custom properties set on pointer move (cheap, no re-render).
+ * Effects are overlays, so the resting button is untouched.
  */
 export default function MagneticButton({ children, onClick, disabled }: Props) {
-  const ref = useRef<HTMLButtonElement>(null);
+  const ref = useRef<HTMLSpanElement>(null);
 
-  function onMove(e: React.PointerEvent<HTMLButtonElement>) {
+  function onMove(e: React.PointerEvent<HTMLSpanElement>) {
     const el = ref.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
     const x = e.clientX - r.left;
     const y = e.clientY - r.top;
-    // pointer position (for the glow + honeycomb mask)
     el.style.setProperty("--mx", `${x}px`);
     el.style.setProperty("--my", `${y}px`);
-    // magnetic pull: lean a few px toward the cursor from center
     el.style.setProperty("--tx", `${(x / r.width - 0.5) * 12}px`);
     el.style.setProperty("--ty", `${(y / r.height - 0.5) * 10}px`);
   }
@@ -39,18 +39,19 @@ export default function MagneticButton({ children, onClick, disabled }: Props) {
   }
 
   return (
-    <button
+    <span
       ref={ref}
-      type="button"
-      className={styles.btn}
+      className={styles.wrap}
       onPointerMove={onMove}
       onPointerLeave={reset}
-      onClick={onClick}
-      disabled={disabled}
     >
-      <span className={styles.mesh} aria-hidden />
-      <span className={styles.glow} aria-hidden />
-      <span className={styles.label}>{children}</span>
-    </button>
+      <Button variant="ghost" onClick={onClick} disabled={disabled}>
+        {children}
+      </Button>
+      <span className={styles.fx} aria-hidden>
+        <span className={styles.glow} />
+        <span className={styles.mesh} />
+      </span>
+    </span>
   );
 }
