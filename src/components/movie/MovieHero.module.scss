@@ -3,19 +3,16 @@
 .hero {
   position: relative;
   overflow: hidden;
-  // tuck the banner up behind the transparent header so there's no seam;
-  // the header's glass frosts the image. Inner content is padded back down.
-  margin-top: calc(-1 * var(--header-h));
 }
 
 .backdrop {
   position: absolute;
   inset: 0;
   z-index: 0;
-  // Fade the banner out toward the bottom + right so it melts into the
-  // gradient-blob background instead of sitting in a solid dark block.
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 28%, transparent 92%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 28%, transparent 92%);
+  // Fade the banner in from the top (so it melts out of the header instead of
+  // starting on a hard line) and out toward the bottom into the blob bg.
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 24%, #000 58%, transparent 94%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 24%, #000 58%, transparent 94%);
 
   &::after {
     content: "";
@@ -42,8 +39,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  // clear the header (banner tucks behind it) + breathing room
-  padding-top: calc(var(--header-h) + clamp(2rem, 6vw, 4.5rem));
+  padding-top: clamp(2.5rem, 7vw, 5rem);
   padding-bottom: clamp(2rem, 5vw, 4rem);
 
   @include respond("md") {
