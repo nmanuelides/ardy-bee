@@ -57,8 +57,9 @@
     inset 0 1px 2px rgba(255, 255, 255, 0.18);
 
   @include respond("md") {
-    // stretch to the meta panel's height; width follows the 2:3 ratio
-    width: auto;
+    // match the meta panel's height; fixed width, image cover-crops
+    width: 230px;
+    aspect-ratio: auto;
     align-self: stretch;
   }
 }
