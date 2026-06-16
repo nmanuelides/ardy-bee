@@ -59,10 +59,10 @@ export default function CustomCursor() {
           </linearGradient>
         </defs>
         <polygon
-          points="3,3 3,18 18,3"
+          points="3,3 20,13 13,20"
           fill="url(#ardyCursorGrad)"
           stroke="url(#ardyCursorGrad)"
-          strokeWidth="5"
+          strokeWidth="4"
           strokeLinejoin="round"
         />
       </svg>
