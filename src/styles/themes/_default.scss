@@ -9,16 +9,16 @@
 :root,
 [data-theme="ardy"] {
   // --- Raw brand colors ---
-  --c-ink: #13121e; // near-black base
-  --c-plum: #300223; // dark plum
+  --c-ink: #0e0d0c; // near-black base
+  --c-plum: #ff5900; // ember
   --c-cream: #edd6ad; // warm cream
-  --c-accent: #d10076; // magenta accent
+  --c-accent: #ff9500; // amber accent
 
   // --- Semantic surfaces ---
   --color-bg: var(--c-ink);
-  --color-surface: #1b1929; // lifted from bg so neumorphism reads
+  --color-surface: #0c0908; // lifted from bg so neumorphism reads
   --color-surface-2: var(--c-plum);
-  --color-elevated: #232038;
+  --color-elevated: #0e0d0c;
   // Pillow gradient pair (top-left lighter → bottom-right darker) for soft tiles
   --tile-hi: #24213a;
   --tile-lo: #15131f;
@@ -30,7 +30,7 @@
 
   // --- Accent ---
   --color-accent: var(--c-accent);
-  --color-accent-soft: rgba(209, 0, 118, 0.16);
+  --color-accent-soft: rgba(255, 149, 0, 0.16);
   --color-accent-contrast: #fff5fb;
 
   // --- Glass (frosted) ---
@@ -45,9 +45,9 @@
   --vignette: rgba(0, 0, 0, 0.5);
 
   // animated WebGL backdrop field colors (read by WebGLBackdrop)
-  --bg-blob-base: #13121e;
-  --bg-blob-a: #300223;
-  --bg-blob-b: #d10076;
+  --bg-blob-base: #0d0908;
+  --bg-blob-a: #a81900;
+  --bg-blob-b: #ffae00;
 
   // --- Neumorphic shadow pair — pronounced "pillow" on dark surfaces.
   //     Warm cream-tinted highlight (top-left), near-black shadow (bottom-right).
