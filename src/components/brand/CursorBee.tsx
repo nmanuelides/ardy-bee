@@ -7,6 +7,42 @@ import styles from "./CursorBee.module.scss";
 
 const PX = 2;
 
+// A small connected honeycomb tile (pointy-top hexes, 2 rows, edge-sharing).
+const HONEYCOMB = (() => {
+  const R = 4.5; // hex radius (small)
+  const rows = 2;
+  const cols = 3;
+  const w = Math.sqrt(3) * R; // hex width
+  const vstep = 1.5 * R; // row pitch (offset rows interlock → shared edges)
+  let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
+  const polys: string[] = [];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const cx = c * w + (r % 2) * (w / 2) + w / 2;
+      const cy = r * vstep + R;
+      const pts: [number, number][] = [
+        [cx, cy - R],
+        [cx + w / 2, cy - R / 2],
+        [cx + w / 2, cy + R / 2],
+        [cx, cy + R],
+        [cx - w / 2, cy + R / 2],
+        [cx - w / 2, cy - R / 2],
+      ];
+      for (const [x, y] of pts) {
+        minX = Math.min(minX, x); minY = Math.min(minY, y);
+        maxX = Math.max(maxX, x); maxY = Math.max(maxY, y);
+      }
+      polys.push(pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" "));
+    }
+  }
+  const W = (maxX - minX).toFixed(1);
+  const H = (maxY - minY).toFixed(1);
+  const body = polys
+    .map((p) => `<polygon points='${p}' fill='none' stroke='currentColor' stroke-width='1'/>`)
+    .join("");
+  return `<svg viewBox='${minX.toFixed(1)} ${minY.toFixed(1)} ${W} ${H}' width='${W}' height='${H}'>${body}</svg>`;
+})();
+
 function BeePixels() {
   const { sprite, palette } = useBee();
   const rects: React.ReactElement[] = [];
@@ -85,15 +121,14 @@ export default function CursorBee() {
       el.className = styles.hex;
       el.style.left = `${x}px`;
       el.style.top = `${y}px`;
-      el.innerHTML =
-        "<svg viewBox='0 0 24 28' width='20' height='23'><polygon points='12,1 23,7 23,21 12,27 1,21 1,7' fill='none' stroke='currentColor' stroke-width='2'/></svg>";
+      el.innerHTML = HONEYCOMB;
       layer.appendChild(el);
       el.animate(
         [
-          { opacity: 0.85, transform: "translate(-50%, -50%) scale(0.55)" },
-          { opacity: 0, transform: "translate(-50%, -50%) scale(1.25)" },
+          { opacity: 0.8, transform: "translate(-50%, -50%) scale(0.7)" },
+          { opacity: 0, transform: "translate(-50%, -50%) scale(1.15)" },
         ],
-        { duration: 950, easing: "ease-out" },
+        { duration: 1000, easing: "ease-out" },
       ).onfinish = () => el.remove();
     }
 
@@ -172,12 +207,16 @@ export default function CursorBee() {
         const bob = Math.sin(now / 220) * 4;
         wrap.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y + bob}px, 0) scaleX(${facing.current})`;
 
-        // drop a honeycomb cell every ~26px of travel → a fading hex trail
-        const tx = pos.current.x - lastTrail.current.x;
-        const ty = pos.current.y - lastTrail.current.y;
-        if (tx * tx + ty * ty > 26 * 26) {
-          spawnHex(pos.current.x, pos.current.y);
-          lastTrail.current = { x: pos.current.x, y: pos.current.y };
+        // leave honeycomb behind Ardy: from her body center, offset to her rear
+        // (opposite the way she faces). facing 1 = faces right → rear is left.
+        const bx = pos.current.x + 19; // sprite is ~38px wide
+        const by = pos.current.y + 19;
+        const rearX = bx - facing.current * 16;
+        const tx = rearX - lastTrail.current.x;
+        const ty = by - lastTrail.current.y;
+        if (tx * tx + ty * ty > 14 * 14) {
+          spawnHex(rearX, by);
+          lastTrail.current = { x: rearX, y: by };
         }
       }
 
