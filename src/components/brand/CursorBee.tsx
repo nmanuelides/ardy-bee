@@ -40,6 +40,8 @@ export default function CursorBee() {
   const reactCenter = useRef({ x: 0, y: 0 });
   const reactStart = useRef(0);
   const seenMove = useRef(false);
+  // 1 = facing left (sprite default), -1 = mirrored to face right
+  const facing = useRef(1);
 
   const [reaction, setReaction] = useState<BeeReaction | null>(null);
   const [enabled, setEnabled] = useState(false);
@@ -135,10 +137,14 @@ export default function CursorBee() {
 
       if (wrap && seenMove.current) {
         const speed = mode.current === "react" ? 0.2 : 0.13;
-        pos.current.x += (targetPos.current.x - pos.current.x) * speed;
+        const dx = targetPos.current.x - pos.current.x;
+        // face the way he's heading (toward the cursor); hysteresis avoids jitter
+        if (dx > 3) facing.current = -1;
+        else if (dx < -3) facing.current = 1;
+        pos.current.x += dx * speed;
         pos.current.y += (targetPos.current.y - pos.current.y) * speed;
         const bob = Math.sin(now / 220) * 4;
-        wrap.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y + bob}px, 0)`;
+        wrap.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y + bob}px, 0) scaleX(${facing.current})`;
       }
 
       raf = requestAnimationFrame(tick);
