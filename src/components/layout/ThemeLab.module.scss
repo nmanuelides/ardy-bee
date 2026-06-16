@@ -3,7 +3,7 @@
 .launcher {
   position: fixed;
   bottom: 1.1rem;
-  left: 1.1rem;
+  right: 1.1rem;
   z-index: 9999;
   width: 2.8rem;
   height: 2.8rem;
@@ -27,7 +27,7 @@
 .panel {
   position: fixed;
   bottom: 1.1rem;
-  left: 1.1rem;
+  right: 1.1rem;
   z-index: 9999;
   width: min(320px, calc(100vw - 2.2rem));
   max-height: min(80vh, 640px);
