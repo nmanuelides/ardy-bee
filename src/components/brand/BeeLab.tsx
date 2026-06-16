@@ -23,6 +23,8 @@ const fill: Record<Char, string> = {
 export default function BeeLab() {
   const [open, setOpen] = useState(false);
   const [grid, setGrid] = useState<string[]>([...BEE_SPRITE]);
+  const [past, setPast] = useState<string[][]>([]);
+  const [future, setFuture] = useState<string[][]>([]);
   const [paint, setPaint] = useState<Char>("A");
   const [painting, setPainting] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -35,6 +37,47 @@ export default function BeeLab() {
 
   const cols = grid[0]?.length ?? 0;
 
+  // snapshot the current grid onto the undo stack (and drop redo history)
+  function snapshot() {
+    setPast((p) => [...p, grid]);
+    setFuture([]);
+  }
+
+  function undo() {
+    setPast((p) => {
+      if (!p.length) return p;
+      setFuture((f) => [grid, ...f]);
+      setGrid(p[p.length - 1]);
+      return p.slice(0, -1);
+    });
+  }
+
+  function redo() {
+    setFuture((f) => {
+      if (!f.length) return f;
+      setPast((p) => [...p, grid]);
+      setGrid(f[0]);
+      return f.slice(1);
+    });
+  }
+
+  // keyboard undo/redo while the panel is open
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      const mod = e.ctrlKey || e.metaKey;
+      if (!mod || e.key.toLowerCase() !== "z" && e.key.toLowerCase() !== "y") return;
+      e.preventDefault();
+      if (e.key.toLowerCase() === "y" || (e.key.toLowerCase() === "z" && e.shiftKey)) {
+        redo();
+      } else {
+        undo();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
   function setCell(r: number, c: number) {
     setGrid((g) =>
       g.map((row, ri) =>
@@ -43,13 +86,25 @@ export default function BeeLab() {
     );
   }
 
-  const addRow = () => setGrid((g) => [...g, ".".repeat(cols || 1)]);
-  const removeRow = () => setGrid((g) => (g.length > 1 ? g.slice(0, -1) : g));
-  const addCol = () => setGrid((g) => g.map((row) => row + "."));
-  const removeCol = () =>
+  const addRow = () => {
+    snapshot();
+    setGrid((g) => [...g, ".".repeat(cols || 1)]);
+  };
+  const removeRow = () => {
+    snapshot();
+    setGrid((g) => (g.length > 1 ? g.slice(0, -1) : g));
+  };
+  const addCol = () => {
+    snapshot();
+    setGrid((g) => g.map((row) => row + "."));
+  };
+  const removeCol = () => {
+    snapshot();
     setGrid((g) => (cols > 1 ? g.map((row) => row.slice(0, -1)) : g));
+  };
 
   function reset() {
+    snapshot();
     setGrid([...BEE_SPRITE]);
   }
 
@@ -121,6 +176,7 @@ export default function BeeLab() {
               className={styles.cell}
               style={{ background: fill[(ch as Char) ?? "."] }}
               onPointerDown={() => {
+                snapshot();
                 setPainting(true);
                 setCell(r, c);
               }}
@@ -152,6 +208,12 @@ export default function BeeLab() {
       </div>
 
       <footer className={styles.foot}>
+        <button type="button" onClick={undo} disabled={!past.length} title="Undo (Ctrl+Z)">
+          ↶ Undo
+        </button>
+        <button type="button" onClick={redo} disabled={!future.length} title="Redo (Ctrl+Shift+Z)">
+          ↷ Redo
+        </button>
         <button type="button" onClick={copy}>
           {copied ? "Copied!" : "Copy sprite"}
         </button>
