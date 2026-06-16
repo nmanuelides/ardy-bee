@@ -11,6 +11,27 @@
   will-change: transform;
 }
 
+// --- honeycomb trail (hex outlines Ardy leaves behind) ---
+.hexLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.hex {
+  position: absolute;
+  color: var(--color-accent);
+  pointer-events: none;
+  filter:
+    drop-shadow(0 0 5px var(--color-accent))
+    drop-shadow(0 0 9px var(--color-accent-soft));
+
+  svg {
+    display: block;
+  }
+}
+
 .react {
   transform-origin: center;
 }

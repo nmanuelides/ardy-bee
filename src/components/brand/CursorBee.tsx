@@ -32,6 +32,8 @@ function BeePixels() {
 export default function CursorBee() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const sparkLayer = useRef<HTMLDivElement>(null);
+  const hexLayer = useRef<HTMLDivElement>(null);
+  const lastTrail = useRef({ x: -100, y: -100 });
 
   const pos = useRef({ x: -200, y: -200 });
   const targetPos = useRef({ x: -200, y: -200 });
@@ -74,6 +76,25 @@ export default function CursorBee() {
         ],
         { duration: 420 + Math.random() * 220, easing: "ease-out" },
       ).onfinish = () => s.remove();
+    }
+
+    function spawnHex(x: number, y: number) {
+      const layer = hexLayer.current;
+      if (!layer) return;
+      const el = document.createElement("div");
+      el.className = styles.hex;
+      el.style.left = `${x}px`;
+      el.style.top = `${y}px`;
+      el.innerHTML =
+        "<svg viewBox='0 0 24 28' width='20' height='23'><polygon points='12,1 23,7 23,21 12,27 1,21 1,7' fill='none' stroke='currentColor' stroke-width='2'/></svg>";
+      layer.appendChild(el);
+      el.animate(
+        [
+          { opacity: 0.85, transform: "translate(-50%, -50%) scale(0.55)" },
+          { opacity: 0, transform: "translate(-50%, -50%) scale(1.25)" },
+        ],
+        { duration: 950, easing: "ease-out" },
+      ).onfinish = () => el.remove();
     }
 
     const onMove = (e: MouseEvent) => {
@@ -150,6 +171,14 @@ export default function CursorBee() {
         pos.current.y += (targetPos.current.y - pos.current.y) * speed;
         const bob = Math.sin(now / 220) * 4;
         wrap.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y + bob}px, 0) scaleX(${facing.current})`;
+
+        // drop a honeycomb cell every ~26px of travel → a fading hex trail
+        const tx = pos.current.x - lastTrail.current.x;
+        const ty = pos.current.y - lastTrail.current.y;
+        if (tx * tx + ty * ty > 26 * 26) {
+          spawnHex(pos.current.x, pos.current.y);
+          lastTrail.current = { x: pos.current.x, y: pos.current.y };
+        }
       }
 
       raf = requestAnimationFrame(tick);
@@ -169,6 +198,7 @@ export default function CursorBee() {
 
   return (
     <>
+      <div ref={hexLayer} className={styles.hexLayer} aria-hidden="true" />
       <div ref={sparkLayer} className={styles.sparkLayer} aria-hidden="true" />
       <div
         ref={wrapRef}
