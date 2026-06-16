@@ -47,6 +47,11 @@
   // edge vignette: a soft warm darken instead of black
   --vignette: rgba(90, 55, 15, 0.14);
 
+  // animated WebGL backdrop field colors (read by WebGLBackdrop)
+  --bg-blob-base: #edd6ad;
+  --bg-blob-a: #e6bd8c;
+  --bg-blob-b: #f4b5d4;
+
   --header-h: 6rem;
 
   --radius-sm: 8px;

@@ -44,6 +44,11 @@
   // edge vignette
   --vignette: rgba(0, 0, 0, 0.5);
 
+  // animated WebGL backdrop field colors (read by WebGLBackdrop)
+  --bg-blob-base: #13121e;
+  --bg-blob-a: #300223;
+  --bg-blob-b: #d10076;
+
   // --- Neumorphic shadow pair — pronounced "pillow" on dark surfaces.
   //     Warm cream-tinted highlight (top-left), near-black shadow (bottom-right).
   --neu-light: rgba(255, 250, 240, 0.07);

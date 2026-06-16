@@ -56,33 +56,32 @@ const fragmentShader = /* glsl */ `
   }
 `;
 
-// Per-theme field colors (linear floats, no color management applied).
-const PALETTES: Record<string, { base: number[]; a: number[]; b: number[] }> = {
-  ardy: {
-    base: [0.0745, 0.0706, 0.1176], // ink
-    a: [0.1882, 0.0078, 0.1373], // plum
-    b: [0.8196, 0.0, 0.4627], // accent
-  },
-  light: {
-    base: [0.929, 0.839, 0.678], // cream
-    a: [0.902, 0.741, 0.549], // warm peach
-    b: [0.957, 0.71, 0.831], // soft pink
-  },
-};
+const FALLBACK = { base: [0.0745, 0.0706, 0.1176], a: [0.1882, 0.0078, 0.1373], b: [0.8196, 0.0, 0.4627] };
 
-function paletteFor(theme: string | undefined) {
-  return PALETTES[theme ?? "ardy"] ?? PALETTES.ardy;
+function hexToRgb(hex: string): number[] | null {
+  const m = hex.trim().match(/^#?([0-9a-f]{6})$/i);
+  if (!m) return null;
+  const n = parseInt(m[1], 16);
+  return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+}
+
+// Read the field colors from CSS custom properties so they live in the same
+// token system as the rest of the theme (and can be edited live).
+function readPalette() {
+  if (typeof document === "undefined") return FALLBACK;
+  const s = getComputedStyle(document.documentElement);
+  return {
+    base: hexToRgb(s.getPropertyValue("--bg-blob-base")) ?? FALLBACK.base,
+    a: hexToRgb(s.getPropertyValue("--bg-blob-a")) ?? FALLBACK.a,
+    b: hexToRgb(s.getPropertyValue("--bg-blob-b")) ?? FALLBACK.b,
+  };
 }
 
 function Blobs({ animate }: { animate: boolean }) {
   const matRef = useRef<ShaderMaterial>(null);
   const invalidate = useThree((s) => s.invalidate);
   const uniforms = useMemo(() => {
-    const p = paletteFor(
-      typeof document !== "undefined"
-        ? document.documentElement.dataset.theme
-        : "ardy",
-    );
+    const p = readPalette();
     return {
       uTime: { value: 0 },
       uAspect: { value: 1 },
@@ -92,13 +91,13 @@ function Blobs({ animate }: { animate: boolean }) {
     };
   }, []);
 
-  // Re-tint when the theme attribute changes (so it works under reduced motion
-  // too, where the loop is on-demand — we invalidate to force one render).
+  // Re-tint when the theme changes OR a live edit fires (so it works under
+  // reduced motion too, where the loop is on-demand — invalidate to repaint).
   useEffect(() => {
     const apply = () => {
       const m = matRef.current;
       if (!m) return;
-      const p = paletteFor(document.documentElement.dataset.theme);
+      const p = readPalette();
       m.uniforms.uBase.value.set(p.base[0], p.base[1], p.base[2]);
       m.uniforms.uColA.value.set(p.a[0], p.a[1], p.a[2]);
       m.uniforms.uColB.value.set(p.b[0], p.b[1], p.b[2]);
@@ -108,9 +107,13 @@ function Blobs({ animate }: { animate: boolean }) {
     const obs = new MutationObserver(apply);
     obs.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["data-theme"],
+      attributeFilter: ["data-theme", "style"],
     });
-    return () => obs.disconnect();
+    window.addEventListener("ardy-theme-colors", apply);
+    return () => {
+      obs.disconnect();
+      window.removeEventListener("ardy-theme-colors", apply);
+    };
   }, [invalidate]);
 
   useFrame((state) => {

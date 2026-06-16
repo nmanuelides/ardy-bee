@@ -3,6 +3,7 @@ import { Bricolage_Grotesque, Manrope } from "next/font/google";
 import CursorBee from "@/components/brand/CursorBee";
 import Backdrop from "@/components/layout/Backdrop";
 import ScrollProgress from "@/components/layout/ScrollProgress";
+import ThemeLab from "@/components/layout/ThemeLab";
 import "../styles/main.scss";
 
 // Display: characterful, contemporary, very readable. Body: clean geometric sans.
@@ -49,6 +50,7 @@ export default function RootLayout({
         <ScrollProgress />
         <div className="app-shell">{children}</div>
         <CursorBee />
+        {process.env.NODE_ENV !== "production" && <ThemeLab />}
       </body>
     </html>
   );
