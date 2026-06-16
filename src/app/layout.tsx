@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Bricolage_Grotesque, Manrope } from "next/font/google";
 import CursorBee from "@/components/brand/CursorBee";
 import Backdrop from "@/components/layout/Backdrop";
@@ -40,12 +41,9 @@ export default function RootLayout({
       className={`${display.variable} ${body.variable}`}
     >
       <body>
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}",
-          }}
-        />
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}`}
+        </Script>
         <Backdrop />
         <ScrollProgress />
         <div className="app-shell">{children}</div>
