@@ -40,8 +40,10 @@ export default function CursorBee() {
   const reactCenter = useRef({ x: 0, y: 0 });
   const reactStart = useRef(0);
   const seenMove = useRef(false);
-  // 1 = facing left (sprite default), -1 = mirrored to face right
-  const facing = useRef(1);
+  // raw cursor position (Ardy faces toward it)
+  const cursor = useRef({ x: -200, y: -200 });
+  // scaleX applied to the sprite: 1 = as drawn (faces right), -1 = faces left
+  const facing = useRef(-1);
 
   const [reaction, setReaction] = useState<BeeReaction | null>(null);
   const [enabled, setEnabled] = useState(false);
@@ -75,6 +77,7 @@ export default function CursorBee() {
     }
 
     const onMove = (e: MouseEvent) => {
+      cursor.current = { x: e.clientX, y: e.clientY };
       if (!seenMove.current) {
         seenMove.current = true;
         pos.current = { x: e.clientX + 16, y: e.clientY - 16 };
@@ -138,9 +141,11 @@ export default function CursorBee() {
       if (wrap && seenMove.current) {
         const speed = mode.current === "react" ? 0.2 : 0.13;
         const dx = targetPos.current.x - pos.current.x;
-        // face the way he's heading (toward the cursor); hysteresis avoids jitter
-        if (dx > 3) facing.current = -1;
-        else if (dx < -3) facing.current = 1;
+        // always look toward the actual cursor; hysteresis avoids jitter when
+        // she's roughly level with it horizontally
+        const toCursor = cursor.current.x - pos.current.x;
+        if (toCursor > 4) facing.current = 1; // cursor to the right → face right
+        else if (toCursor < -4) facing.current = -1; // cursor left → face left
         pos.current.x += dx * speed;
         pos.current.y += (targetPos.current.y - pos.current.y) * speed;
         const bob = Math.sin(now / 220) * 4;
