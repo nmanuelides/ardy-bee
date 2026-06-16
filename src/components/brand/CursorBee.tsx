@@ -205,7 +205,7 @@ export default function CursorBee() {
       const ctx = ctxRef.current;
       if (ctx) {
         ctx.clearRect(0, 0, vp.current.w, vp.current.h);
-        const LIFE = 900; // ms a cell takes to fade out
+        const LIFE = 450; // ms a cell takes to fade out
         const arr = cells.current;
         ctx.strokeStyle = accentRef.current;
         let w = 0;
