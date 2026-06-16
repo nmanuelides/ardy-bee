@@ -96,7 +96,7 @@
   color: var(--color-accent-contrast);
   background: var(--color-accent);
   box-shadow:
-    -6px -6px 14px rgba(150, 120, 165, 0.28),
+    -6px -6px 14px var(--neu-hi),
     7px 7px 16px rgba(0, 0, 0, 0.55);
 
   &::before,
@@ -125,7 +125,7 @@
     padding: 1.5px;
     background: radial-gradient(
       farthest-corner at top left,
-      rgba(255, 120, 200, 0.95),
+      color-mix(in srgb, var(--color-accent) 65%, #fff),
       transparent 55%
     );
   }

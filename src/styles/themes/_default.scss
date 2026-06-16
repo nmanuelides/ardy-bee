@@ -57,6 +57,10 @@
   --neu-blur: 22px;
   --neu-distance-lg: 14px;
   --neu-blur-lg: 32px;
+  // colored highlight for raised/soft-UI buttons (top-left light) + the
+  // neutral inner rim on neumorphic surfaces — warm to match the palette.
+  --neu-hi: rgba(237, 214, 173, 0.22);
+  --rim-neutral: rgba(237, 214, 173, 0.5);
 
   // approximate sticky-header height (for content that tucks behind it)
   --header-h: 6rem;

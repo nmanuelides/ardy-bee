@@ -47,7 +47,7 @@
   color: var(--color-accent-contrast);
   background: var(--color-accent);
   box-shadow:
-    -7px -7px 16px rgba(150, 120, 165, 0.28),
+    -7px -7px 16px var(--neu-hi),
     8px 8px 18px rgba(0, 0, 0, 0.55);
 
   // bevel border: button colour at the top-left corner → much darker at the
@@ -63,21 +63,21 @@
   &::after {
     background: radial-gradient(
       farthest-corner at top left,
-      rgba(255, 120, 200, 0.95),
+      color-mix(in srgb, var(--color-accent) 65%, #fff),
       transparent 55%
     );
   }
 
   &:hover {
     box-shadow:
-      -9px -9px 20px rgba(150, 120, 165, 0.32),
+      -9px -9px 20px var(--neu-hi),
       11px 11px 24px rgba(0, 0, 0, 0.6);
   }
   &:active {
     transform: translateY(1px);
     box-shadow:
-      inset 3px 3px 6px rgba(120, 0, 70, 0.55),
-      inset -2px -2px 5px rgba(255, 120, 200, 0.35);
+      inset 3px 3px 6px color-mix(in srgb, var(--color-accent) 55%, transparent),
+      inset -2px -2px 5px color-mix(in srgb, var(--color-accent) 35%, #fff);
   }
 }
 
@@ -86,20 +86,20 @@
   color: var(--color-text);
   background: var(--color-elevated);
   box-shadow:
-    -7px -7px 16px rgba(150, 120, 165, 0.22),
+    -7px -7px 16px var(--neu-hi),
     8px 8px 18px rgba(0, 0, 0, 0.6);
 
   &::before {
     background: radial-gradient(
       farthest-corner at top left,
       var(--color-elevated),
-      #0a0810
+      color-mix(in srgb, var(--color-bg) 70%, #000)
     );
   }
   &::after {
     background: radial-gradient(
       farthest-corner at top left,
-      rgba(160, 140, 250, 0.7),
+      var(--rim-neutral),
       transparent 55%
     );
   }
@@ -107,14 +107,14 @@
   &:hover {
     color: var(--color-accent);
     box-shadow:
-      -9px -9px 20px rgba(150, 120, 165, 0.26),
+      -9px -9px 20px var(--neu-hi),
       11px 11px 24px rgba(0, 0, 0, 0.66);
   }
   &:active {
     transform: translateY(1px);
     box-shadow:
       inset 3px 3px 6px rgba(0, 0, 0, 0.55),
-      inset -2px -2px 5px rgba(160, 140, 250, 0.4);
+      inset -2px -2px 5px var(--rim-neutral);
   }
 }
 
