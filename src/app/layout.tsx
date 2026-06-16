@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Bricolage_Grotesque, Manrope } from "next/font/google";
 import BeeLab from "@/components/brand/BeeLab";
 import CursorBee from "@/components/brand/CursorBee";
+import CustomCursor from "@/components/brand/CustomCursor";
 import Backdrop from "@/components/layout/Backdrop";
 import ScrollProgress from "@/components/layout/ScrollProgress";
 import ThemeLab from "@/components/layout/ThemeLab";
@@ -48,6 +49,7 @@ export default function RootLayout({
         <Backdrop />
         <ScrollProgress />
         <div className="app-shell">{children}</div>
+        <CustomCursor />
         <CursorBee />
         {process.env.NODE_ENV !== "production" && <ThemeLab />}
         {process.env.NODE_ENV !== "production" && <BeeLab />}
