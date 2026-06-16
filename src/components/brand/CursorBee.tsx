@@ -63,6 +63,8 @@ export default function CursorBee() {
   const vp = useRef({ w: 0, h: 0 });
   const accentRef = useRef("#ff9500");
   const lastCellKey = useRef("");
+  // live honeycomb cells (cleared + redrawn each frame so nothing lingers)
+  const cells = useRef<{ cx: number; cy: number; born: number }[]>([]);
 
   const pos = useRef({ x: -200, y: -200 });
   const targetPos = useRef({ x: -200, y: -200 });
@@ -199,13 +201,29 @@ export default function CursorBee() {
     const tick = (now: number) => {
       const wrap = wrapRef.current;
 
-      // fade the honeycomb trail toward transparent every frame
+      // clear + redraw only the still-alive honeycomb cells (no lingering marks)
       const ctx = ctxRef.current;
       if (ctx) {
-        ctx.globalCompositeOperation = "destination-out";
-        ctx.fillStyle = "rgba(0,0,0,0.05)";
-        ctx.fillRect(0, 0, vp.current.w, vp.current.h);
-        ctx.globalCompositeOperation = "source-over";
+        ctx.clearRect(0, 0, vp.current.w, vp.current.h);
+        const LIFE = 900; // ms a cell takes to fade out
+        const arr = cells.current;
+        ctx.strokeStyle = accentRef.current;
+        let w = 0;
+        for (let i = 0; i < arr.length; i++) {
+          const c = arr[i];
+          const age = now - c.born;
+          if (age >= LIFE) continue; // expired → dropped
+          const a = 1 - age / LIFE;
+          ctx.globalAlpha = a * 0.3; // soft outer glow
+          ctx.lineWidth = 3.5;
+          strokeHex(ctx, c.cx, c.cy);
+          ctx.globalAlpha = a; // crisp edge
+          ctx.lineWidth = 1.3;
+          strokeHex(ctx, c.cx, c.cy);
+          arr[w++] = c; // keep survivor
+        }
+        arr.length = w;
+        ctx.globalAlpha = 1;
       }
 
       if (mode.current === "react" && reactionRef.current === "honey") {
@@ -234,23 +252,20 @@ export default function CursorBee() {
 
         // leave honeycomb behind Ardy: from her body center, offset to her rear
         // (opposite the way she faces). facing 1 = faces right → rear is left.
-        if (ctx) {
+        {
           const bx = pos.current.x + 19 - facing.current * 16; // sprite ~38px
           const by = pos.current.y + 19;
           const cell = snapCell(bx, by);
           const key = `${cell.q}:${cell.r}`;
           if (key !== lastCellKey.current) {
             lastCellKey.current = key;
-            ctx.strokeStyle = accentRef.current;
-            ctx.lineWidth = 1.5;
-            ctx.shadowColor = accentRef.current;
-            ctx.shadowBlur = 6;
-            strokeHex(ctx, cell.cx, cell.cy);
+            const arr = cells.current;
+            arr.push({ cx: cell.cx, cy: cell.cy, born: now });
             // a second row below → a 2-row honeycomb band
             const r2 = cell.r + 1;
             const rr2 = ((r2 % 2) + 2) % 2;
-            strokeHex(ctx, HEX_W * (cell.q + 0.5 * rr2), HEX_V * r2);
-            ctx.shadowBlur = 0;
+            arr.push({ cx: HEX_W * (cell.q + 0.5 * rr2), cy: HEX_V * r2, born: now });
+            if (arr.length > 200) arr.splice(0, arr.length - 200);
           }
         }
       }
