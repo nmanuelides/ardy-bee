@@ -7,41 +7,31 @@ import styles from "./CursorBee.module.scss";
 
 const PX = 2;
 
-// A small connected honeycomb tile (pointy-top hexes, 2 rows, edge-sharing).
-const HONEYCOMB = (() => {
-  const R = 4.5; // hex radius (small)
-  const rows = 2;
-  const cols = 3;
-  const w = Math.sqrt(3) * R; // hex width
-  const vstep = 1.5 * R; // row pitch (offset rows interlock → shared edges)
-  let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
-  const polys: string[] = [];
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      const cx = c * w + (r % 2) * (w / 2) + w / 2;
-      const cy = r * vstep + R;
-      const pts: [number, number][] = [
-        [cx, cy - R],
-        [cx + w / 2, cy - R / 2],
-        [cx + w / 2, cy + R / 2],
-        [cx, cy + R],
-        [cx - w / 2, cy + R / 2],
-        [cx - w / 2, cy - R / 2],
-      ];
-      for (const [x, y] of pts) {
-        minX = Math.min(minX, x); minY = Math.min(minY, y);
-        maxX = Math.max(maxX, x); maxY = Math.max(maxY, y);
-      }
-      polys.push(pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" "));
-    }
+// Honeycomb lattice (pointy-top). The trail snaps cells to this fixed grid so
+// consecutive cells share edges and read as one continuous honeycomb.
+const TRAIL_R = 6; // hex radius (small)
+const HEX_W = Math.sqrt(3) * TRAIL_R; // column pitch
+const HEX_V = 1.5 * TRAIL_R; // row pitch
+
+function snapCell(px: number, py: number) {
+  const r = Math.round(py / HEX_V);
+  const rr = ((r % 2) + 2) % 2; // 0/1, handles negatives
+  const q = Math.round(px / HEX_W - 0.5 * rr);
+  return { q, r, cx: HEX_W * (q + 0.5 * rr), cy: HEX_V * r };
+}
+
+function strokeHex(ctx: CanvasRenderingContext2D, cx: number, cy: number) {
+  ctx.beginPath();
+  for (let k = 0; k < 6; k++) {
+    const a = (Math.PI / 180) * (60 * k - 90);
+    const x = cx + TRAIL_R * Math.cos(a);
+    const y = cy + TRAIL_R * Math.sin(a);
+    if (k === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
   }
-  const W = (maxX - minX).toFixed(1);
-  const H = (maxY - minY).toFixed(1);
-  const body = polys
-    .map((p) => `<polygon points='${p}' fill='none' stroke='currentColor' stroke-width='1'/>`)
-    .join("");
-  return `<svg viewBox='${minX.toFixed(1)} ${minY.toFixed(1)} ${W} ${H}' width='${W}' height='${H}'>${body}</svg>`;
-})();
+  ctx.closePath();
+  ctx.stroke();
+}
 
 function BeePixels() {
   const { sprite, palette } = useBee();
@@ -68,8 +58,11 @@ function BeePixels() {
 export default function CursorBee() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const sparkLayer = useRef<HTMLDivElement>(null);
-  const hexLayer = useRef<HTMLDivElement>(null);
-  const lastTrail = useRef({ x: -100, y: -100 });
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
+  const vp = useRef({ w: 0, h: 0 });
+  const accentRef = useRef("#ff9500");
+  const lastCellKey = useRef("");
 
   const pos = useRef({ x: -200, y: -200 });
   const targetPos = useRef({ x: -200, y: -200 });
@@ -85,6 +78,47 @@ export default function CursorBee() {
 
   const [reaction, setReaction] = useState<BeeReaction | null>(null);
   const [enabled, setEnabled] = useState(false);
+
+  // Canvas setup for the honeycomb trail (one element; cheap to draw on).
+  useEffect(() => {
+    if (!enabled) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+    ctxRef.current = ctx;
+    const dpr = Math.min(1.5, window.devicePixelRatio || 1);
+    const resize = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      vp.current = { w, h };
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+    const readAccent = () => {
+      accentRef.current =
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--color-accent")
+          .trim() || "#ff9500";
+    };
+    readAccent();
+    const obs = new MutationObserver(readAccent);
+    obs.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme", "style"],
+    });
+    window.addEventListener("resize", resize);
+    window.addEventListener("ardy-theme-colors", readAccent);
+    return () => {
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("ardy-theme-colors", readAccent);
+      obs.disconnect();
+      ctxRef.current = null;
+    };
+  }, [enabled]);
 
   useEffect(() => {
     const fine = window.matchMedia("(pointer: fine)").matches;
@@ -112,24 +146,6 @@ export default function CursorBee() {
         ],
         { duration: 420 + Math.random() * 220, easing: "ease-out" },
       ).onfinish = () => s.remove();
-    }
-
-    function spawnHex(x: number, y: number) {
-      const layer = hexLayer.current;
-      if (!layer) return;
-      const el = document.createElement("div");
-      el.className = styles.hex;
-      el.style.left = `${x}px`;
-      el.style.top = `${y}px`;
-      el.innerHTML = HONEYCOMB;
-      layer.appendChild(el);
-      el.animate(
-        [
-          { opacity: 0.8, transform: "translate(-50%, -50%) scale(0.7)" },
-          { opacity: 0, transform: "translate(-50%, -50%) scale(1.15)" },
-        ],
-        { duration: 1000, easing: "ease-out" },
-      ).onfinish = () => el.remove();
     }
 
     const onMove = (e: MouseEvent) => {
@@ -183,6 +199,15 @@ export default function CursorBee() {
     const tick = (now: number) => {
       const wrap = wrapRef.current;
 
+      // fade the honeycomb trail toward transparent every frame
+      const ctx = ctxRef.current;
+      if (ctx) {
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.fillStyle = "rgba(0,0,0,0.05)";
+        ctx.fillRect(0, 0, vp.current.w, vp.current.h);
+        ctx.globalCompositeOperation = "source-over";
+      }
+
       if (mode.current === "react" && reactionRef.current === "honey") {
         const t = (now - reactStart.current) / 1000;
         const ang = t * 7;
@@ -209,14 +234,24 @@ export default function CursorBee() {
 
         // leave honeycomb behind Ardy: from her body center, offset to her rear
         // (opposite the way she faces). facing 1 = faces right → rear is left.
-        const bx = pos.current.x + 19; // sprite is ~38px wide
-        const by = pos.current.y + 19;
-        const rearX = bx - facing.current * 16;
-        const tx = rearX - lastTrail.current.x;
-        const ty = by - lastTrail.current.y;
-        if (tx * tx + ty * ty > 14 * 14) {
-          spawnHex(rearX, by);
-          lastTrail.current = { x: rearX, y: by };
+        if (ctx) {
+          const bx = pos.current.x + 19 - facing.current * 16; // sprite ~38px
+          const by = pos.current.y + 19;
+          const cell = snapCell(bx, by);
+          const key = `${cell.q}:${cell.r}`;
+          if (key !== lastCellKey.current) {
+            lastCellKey.current = key;
+            ctx.strokeStyle = accentRef.current;
+            ctx.lineWidth = 1.5;
+            ctx.shadowColor = accentRef.current;
+            ctx.shadowBlur = 6;
+            strokeHex(ctx, cell.cx, cell.cy);
+            // a second row below → a 2-row honeycomb band
+            const r2 = cell.r + 1;
+            const rr2 = ((r2 % 2) + 2) % 2;
+            strokeHex(ctx, HEX_W * (cell.q + 0.5 * rr2), HEX_V * r2);
+            ctx.shadowBlur = 0;
+          }
         }
       }
 
@@ -237,7 +272,7 @@ export default function CursorBee() {
 
   return (
     <>
-      <div ref={hexLayer} className={styles.hexLayer} aria-hidden="true" />
+      <canvas ref={canvasRef} className={styles.trailCanvas} aria-hidden="true" />
       <div ref={sparkLayer} className={styles.sparkLayer} aria-hidden="true" />
       <div
         ref={wrapRef}
