@@ -1,14 +1,22 @@
-// Shared pixel-art bee bitmap (single source of truth for the cursor bee and
-// the logo). 'A' = accent, 'D' = dark plum, 'C' = cream (eye/wings),
-// ' ' = transparent. Facing left. Short, rounded torso (compact abdomen).
+// Pixel-art bee bitmap + palette (single source of truth for the logo + the
+// cursor bee). Each sprite character is a palette slot "1".."5"; "." = transparent.
+// Colors are customizable in the dev Bee Lab — edit BEE_PALETTE to recolor.
+export const BEE_PALETTE = [
+  "#ff9500", // 1 — accent (amber)
+  "#ff5900", // 2 — ember
+  "#edd6ad", // 3 — cream
+  "#7a3a00", // 4
+  "#ffffff", // 5
+];
+
 export const BEE_SPRITE = [
-  ".......CC......",
-  ".....CCCCCC....",
-  "...D.CCCCCCC...",
-  "...D.CCCCCC....",
-  ".....DDDDDD....",
-  "..DDDAAAAAAD...",
-  ".DCCDAADAAD....",
-  "....DDDDDDD....",
-  ".....D.D.D.....",
+  ".......33......",
+  ".....333333....",
+  "...2.3333333...",
+  "...2.333333....",
+  ".....222222....",
+  "..2221111112...",
+  ".2332112112....",
+  "....2222222....",
+  ".....2.2.2.....",
 ];

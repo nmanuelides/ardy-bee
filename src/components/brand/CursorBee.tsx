@@ -2,29 +2,22 @@
 
 import { useEffect, useRef, useState } from "react";
 import { BEE_EVENT, type BeeReaction, type BeeReactionDetail } from "@/lib/bee/events";
-import { useBeeSprite } from "./liveSprite";
+import { useBee } from "./liveSprite";
 import styles from "./CursorBee.module.scss";
 
 const PX = 2;
 
-function classFor(c: string) {
-  if (c === "A") return styles.accent;
-  if (c === "D") return styles.dark;
-  if (c === "C") return styles.cream;
-  return null;
-}
-
 function BeePixels() {
-  const sprite = useBeeSprite();
+  const { sprite, palette } = useBee();
   const rects: React.ReactElement[] = [];
   sprite.forEach((row, y) => {
     [...row].forEach((c, x) => {
-      const cls = classFor(c);
-      if (cls) {
-        rects.push(
-          <rect key={`${x}-${y}`} className={cls} x={x * PX} y={y * PX} width={PX} height={PX} />,
-        );
-      }
+      if (c === ".") return;
+      const fill = palette[Number(c) - 1];
+      if (!fill) return;
+      rects.push(
+        <rect key={`${x}-${y}`} x={x * PX} y={y * PX} width={PX} height={PX} fill={fill} />,
+      );
     });
   });
   const w = sprite[0].length * PX;

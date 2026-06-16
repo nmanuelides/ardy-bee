@@ -1,15 +1,22 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { BEE_SPRITE } from "./beeSprite";
+import { BEE_PALETTE, BEE_SPRITE } from "./beeSprite";
 
-// In-memory live override for the bee sprite (set by the dev Bee Lab). Not
-// persisted — a reload falls back to BEE_SPRITE in the code.
-let override: string[] | null = null;
+export interface BeeData {
+  sprite: string[];
+  palette: string[];
+}
+
+const DEFAULT: BeeData = { sprite: BEE_SPRITE, palette: BEE_PALETTE };
+
+// In-memory live override (set by the dev Bee Lab). Not persisted — a reload
+// falls back to the sprite/palette in the code.
+let override: BeeData | null = null;
 const listeners = new Set<() => void>();
 
-export function setLiveSprite(s: string[] | null) {
-  override = s;
+export function setLiveSprite(sprite: string[] | null, palette?: string[]) {
+  override = sprite ? { sprite, palette: palette ?? BEE_PALETTE } : null;
   listeners.forEach((l) => l());
 }
 
@@ -19,10 +26,10 @@ function subscribe(cb: () => void) {
 }
 
 function getSnapshot() {
-  return override ?? BEE_SPRITE;
+  return override ?? DEFAULT;
 }
 
-/** The sprite to render: the live override if one is set, else the code one. */
-export function useBeeSprite(): string[] {
-  return useSyncExternalStore(subscribe, getSnapshot, () => BEE_SPRITE);
+/** The bee to render: the live override if one is set, else the code one. */
+export function useBee(): BeeData {
+  return useSyncExternalStore(subscribe, getSnapshot, () => DEFAULT);
 }
