@@ -63,7 +63,7 @@ export async function ratePerformance(
     getPersonDetails(input.personId),
   ]);
 
-  await admin.from("movies").upsert({
+  const { error: movieErr } = await admin.from("movies").upsert({
     id: movie.id,
     title: movie.title,
     original_title: movie.original_title ?? null,
@@ -76,13 +76,20 @@ export async function ratePerformance(
     tmdb_vote_average: movie.vote_average,
   });
 
-  await admin.from("people").upsert({
+  const { error: personErr } = await admin.from("people").upsert({
     id: person.id,
     name: person.name,
     profile_path: person.profile_path,
     known_for_department: person.known_for_department,
     popularity: person.popularity,
   });
+
+  if (movieErr || personErr) {
+    return {
+      ok: false,
+      error: `Could not cache film/actor. (${(movieErr ?? personErr)?.message})`,
+    };
+  }
 
   // Upsert the performance and get its id.
   const { data: performance, error: perfError } = await admin
@@ -100,7 +107,10 @@ export async function ratePerformance(
     .single();
 
   if (perfError || !performance) {
-    return { ok: false, error: "Could not save the performance." };
+    return {
+      ok: false,
+      error: `Could not save the performance.${perfError ? ` (${perfError.message})` : ""}`,
+    };
   }
 
   // Upsert the rating AS THE USER, so RLS owner checks apply.
