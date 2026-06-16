@@ -6,37 +6,27 @@ import styles from "./CustomCursor.module.scss";
 const INTERACTIVE = "a,button,input,textarea,select,label,[role='button'],[data-cursor]";
 
 /**
- * Custom themed cursor: an accent ring (trails slightly) + a cream dot (exact).
- * Uses CSS variables so it follows the active theme. Hides the native cursor on
- * fine-pointer devices; no-ops on touch.
+ * Custom themed cursor: a rounded triangle with a yellow→orange gradient and a
+ * subtle glow. Follows the pointer exactly (tip = hotspot), swells over
+ * interactive elements, squishes on click. Fine-pointer only.
  */
 export default function CustomCursor() {
-  const ringRef = useRef<HTMLDivElement>(null);
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ring = useRef({ x: -100, y: -100 });
-  const target = useRef({ x: -100, y: -100 });
-
+  const elRef = useRef<HTMLDivElement>(null);
   const [enabled, setEnabled] = useState(false);
   const [active, setActive] = useState(false);
   const [down, setDown] = useState(false);
 
   useEffect(() => {
     if (!window.matchMedia("(pointer: fine)").matches) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     setEnabled(true);
     document.body.classList.add("custom-cursor");
 
-    const center = "translate(-50%, -50%)";
     const move = (e: PointerEvent) => {
-      target.current = { x: e.clientX, y: e.clientY };
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) ${center}`;
-      }
+      const el = elRef.current;
+      if (el) el.style.transform = `translate3d(${e.clientX - 3}px, ${e.clientY - 3}px, 0)`;
     };
-    const over = (e: PointerEvent) => {
-      const el = (e.target as HTMLElement)?.closest?.(INTERACTIVE);
-      setActive(!!el);
-    };
+    const over = (e: PointerEvent) =>
+      setActive(!!(e.target as HTMLElement)?.closest?.(INTERACTIVE));
     const dn = () => setDown(true);
     const up = () => setDown(false);
 
@@ -44,25 +34,11 @@ export default function CustomCursor() {
     window.addEventListener("pointerover", over);
     window.addEventListener("pointerdown", dn);
     window.addEventListener("pointerup", up);
-
-    const lerp = reduced ? 1 : 0.22;
-    let raf = 0;
-    const tick = () => {
-      ring.current.x += (target.current.x - ring.current.x) * lerp;
-      ring.current.y += (target.current.y - ring.current.y) * lerp;
-      if (ringRef.current) {
-        ringRef.current.style.transform = `translate3d(${ring.current.x}px, ${ring.current.y}px, 0) ${center}`;
-      }
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-
     return () => {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerover", over);
       window.removeEventListener("pointerdown", dn);
       window.removeEventListener("pointerup", up);
-      cancelAnimationFrame(raf);
       document.body.classList.remove("custom-cursor");
     };
   }, []);
@@ -70,13 +46,26 @@ export default function CustomCursor() {
   if (!enabled) return null;
 
   return (
-    <>
-      <div
-        ref={ringRef}
-        className={`${styles.ring} ${active ? styles.active : ""} ${down ? styles.down : ""}`}
-        aria-hidden="true"
-      />
-      <div ref={dotRef} className={styles.dot} aria-hidden="true" />
-    </>
+    <div
+      ref={elRef}
+      className={`${styles.cursor} ${active ? styles.active : ""} ${down ? styles.down : ""}`}
+      aria-hidden="true"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" className={styles.tri}>
+        <defs>
+          <linearGradient id="ardyCursorGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#ffd166" />
+            <stop offset="100%" stopColor="#ff7a00" />
+          </linearGradient>
+        </defs>
+        <polygon
+          points="3,3 3,18 18,3"
+          fill="url(#ardyCursorGrad)"
+          stroke="url(#ardyCursorGrad)"
+          strokeWidth="5"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </div>
   );
 }

@@ -1,46 +1,28 @@
-.ring {
+.cursor {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 10000;
-  width: 22px;
-  height: 22px;
-  border: 2px solid var(--color-accent);
-  border-radius: 50%;
-  pointer-events: none;
-  will-change: transform, width, height;
-  transition:
-    width 0.18s var(--ease-out),
-    height 0.18s var(--ease-out),
-    background-color 0.18s var(--ease-out),
-    border-color 0.18s var(--ease-out),
-    opacity 0.2s var(--ease-out);
-  // box on top-left; the JS transform centers it on the pointer
-  margin: 0;
-}
-
-.dot {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10001;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--c-cream);
   pointer-events: none;
   will-change: transform;
 }
 
-// over links/buttons: ring swells + fills faintly with accent
-.active {
-  width: 38px;
-  height: 38px;
-  background: var(--color-accent-soft);
+.tri {
+  display: block;
+  transform-origin: 3px 3px; // the tip (hotspot)
+  transition: transform 0.16s var(--ease-out);
+  // subtle glow + a touch of depth
+  filter:
+    drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35))
+    drop-shadow(0 0 5px color-mix(in srgb, var(--color-accent) 65%, transparent));
 }
 
-// pressed: quick squish
-.down {
-  width: 16px;
-  height: 16px;
+// over links/buttons: swell
+.active .tri {
+  transform: scale(1.45);
+}
+
+// pressed: quick squish (wins over .active)
+.down .tri {
+  transform: scale(0.85);
 }
