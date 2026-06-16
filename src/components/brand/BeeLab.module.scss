@@ -52,7 +52,7 @@
 
 .x,
 .foot button,
-.steppers button {
+.sideRow button {
   cursor: pointer;
   color: var(--color-text);
   background: transparent;
@@ -119,18 +119,35 @@
   cursor: crosshair;
 }
 
-.dims {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 0.8rem;
+.canvasCtl {
+  margin-top: 0.85rem;
+}
+
+.dimLabel {
+  display: block;
+  margin-bottom: 0.5rem;
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
 
-.steppers {
-  display: flex;
-  gap: 0.35rem;
+.sides {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 0.7rem;
+}
+
+.sideRow {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: var(--text-sm);
+
+  button {
+    width: 1.9rem;
+    text-align: center;
+    padding: 0.25rem 0;
+  }
 }
 
 .foot {

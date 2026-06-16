@@ -94,22 +94,46 @@ export default function BeeLab() {
     );
   }
 
-  const addRow = () => {
+  const pad = (n: number) => ".".repeat(Math.max(1, n));
+  const addTop = () => {
     snapshot();
-    setGrid((g) => [...g, ".".repeat(cols || 1)]);
+    setGrid((g) => [pad(cols), ...g]);
   };
-  const removeRow = () => {
+  const addBottom = () => {
+    snapshot();
+    setGrid((g) => [...g, pad(cols)]);
+  };
+  const addLeft = () => {
+    snapshot();
+    setGrid((g) => g.map((r) => "." + r));
+  };
+  const addRight = () => {
+    snapshot();
+    setGrid((g) => g.map((r) => r + "."));
+  };
+  const removeTop = () => {
+    snapshot();
+    setGrid((g) => (g.length > 1 ? g.slice(1) : g));
+  };
+  const removeBottom = () => {
     snapshot();
     setGrid((g) => (g.length > 1 ? g.slice(0, -1) : g));
   };
-  const addCol = () => {
+  const removeLeft = () => {
     snapshot();
-    setGrid((g) => g.map((row) => row + "."));
+    setGrid((g) => (cols > 1 ? g.map((r) => r.slice(1)) : g));
   };
-  const removeCol = () => {
+  const removeRight = () => {
     snapshot();
-    setGrid((g) => (cols > 1 ? g.map((row) => row.slice(0, -1)) : g));
+    setGrid((g) => (cols > 1 ? g.map((r) => r.slice(0, -1)) : g));
   };
+
+  const SIDES = [
+    { name: "Top", add: addTop, rem: removeTop },
+    { name: "Bottom", add: addBottom, rem: removeBottom },
+    { name: "Left", add: addLeft, rem: removeLeft },
+    { name: "Right", add: addRight, rem: removeRight },
+  ];
 
   function reset() {
     snapshot();
@@ -195,23 +219,30 @@ export default function BeeLab() {
         )}
       </div>
 
-      <div className={styles.dims}>
-        <span>
-          {cols}×{grid.length}
+      <div className={styles.canvasCtl}>
+        <span className={styles.dimLabel}>
+          Canvas {cols}×{grid.length}
         </span>
-        <div className={styles.steppers}>
-          <button type="button" onClick={removeCol}>
-            −W
-          </button>
-          <button type="button" onClick={addCol}>
-            +W
-          </button>
-          <button type="button" onClick={removeRow}>
-            −H
-          </button>
-          <button type="button" onClick={addRow}>
-            +H
-          </button>
+        <div className={styles.sides}>
+          {SIDES.map((s) => (
+            <div key={s.name} className={styles.sideRow}>
+              <span>{s.name}</span>
+              <button
+                type="button"
+                onClick={s.add}
+                title={`Add space on ${s.name.toLowerCase()}`}
+              >
+                ＋
+              </button>
+              <button
+                type="button"
+                onClick={s.rem}
+                title={`Remove from ${s.name.toLowerCase()}`}
+              >
+                −
+              </button>
+            </div>
+          ))}
         </div>
       </div>
 
