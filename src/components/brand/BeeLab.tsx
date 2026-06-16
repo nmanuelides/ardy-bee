@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { BEE_SPRITE } from "./beeSprite";
+import { setLiveSprite } from "./liveSprite";
 import styles from "./BeeLab.module.scss";
 
 type Char = "A" | "D" | "C" | ".";
@@ -34,6 +35,13 @@ export default function BeeLab() {
     window.addEventListener("pointerup", up);
     return () => window.removeEventListener("pointerup", up);
   }, []);
+
+  // push edits to the live bee (logo + cursor) so they update in real time;
+  // clear the override on unmount so the code sprite takes over again.
+  useEffect(() => {
+    setLiveSprite(grid);
+  }, [grid]);
+  useEffect(() => () => setLiveSprite(null), []);
 
   const cols = grid[0]?.length ?? 0;
 

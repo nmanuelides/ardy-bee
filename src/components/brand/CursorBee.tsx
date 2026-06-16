@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { BEE_EVENT, type BeeReaction, type BeeReactionDetail } from "@/lib/bee/events";
-import { BEE_SPRITE as BEE } from "./beeSprite";
+import { useBeeSprite } from "./liveSprite";
 import styles from "./CursorBee.module.scss";
 
 const PX = 2;
@@ -15,8 +15,9 @@ function classFor(c: string) {
 }
 
 function BeePixels() {
+  const sprite = useBeeSprite();
   const rects: React.ReactElement[] = [];
-  BEE.forEach((row, y) => {
+  sprite.forEach((row, y) => {
     [...row].forEach((c, x) => {
       const cls = classFor(c);
       if (cls) {
@@ -26,8 +27,8 @@ function BeePixels() {
       }
     });
   });
-  const w = BEE[0].length * PX;
-  const h = BEE.length * PX;
+  const w = sprite[0].length * PX;
+  const h = sprite.length * PX;
   return (
     <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className={styles.svg} role="presentation">
       {rects}
