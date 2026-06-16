@@ -1,6 +1,5 @@
 import Button from "@/components/ui/Button";
 import HeroBoards from "./HeroBoards";
-import HeroScene from "./HeroScene";
 import type { ActorRank, MovieRank } from "@/lib/rankings/queries";
 import styles from "./Hero.module.scss";
 
@@ -13,7 +12,6 @@ export default function Hero({
 }) {
   return (
     <section className={styles.hero}>
-      <HeroScene />
       <div className={styles.copy}>
         <p className={styles.eyebrow}>ARDB · Actors Ratings Data Base</p>
         <h1 className={styles.headline}>
@@ -30,9 +28,7 @@ export default function Hero({
         </div>
       </div>
 
-      <div className={styles.boards}>
-        <HeroBoards actors={topActors} movies={topMovies} />
-      </div>
+      <HeroBoards actors={topActors} movies={topMovies} />
     </section>
   );
 }

@@ -2,7 +2,6 @@
 
 .hero {
   @include content-width;
-  position: relative;
   display: grid;
   gap: 3rem;
   align-items: center;
@@ -13,13 +12,6 @@
     grid-template-columns: 1.1fr 0.9fr;
     gap: 4rem;
   }
-}
-
-// keep hero content above the decorative 3D honeycomb
-.copy,
-.boards {
-  position: relative;
-  z-index: 1;
 }
 
 // --- Copy (staggered entrance) -----------------------------------------
