@@ -15,6 +15,6 @@
   background: radial-gradient(
     130% 110% at 50% 35%,
     transparent 45%,
-    rgba(0, 0, 0, 0.5) 100%
+    var(--vignette) 100%
   );
 }

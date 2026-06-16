@@ -41,6 +41,9 @@
   // --- Rim light ---
   --rim-light: rgba(237, 214, 173, 0.55);
 
+  // edge vignette
+  --vignette: rgba(0, 0, 0, 0.5);
+
   // --- Neumorphic shadow pair — pronounced "pillow" on dark surfaces.
   //     Warm cream-tinted highlight (top-left), near-black shadow (bottom-right).
   --neu-light: rgba(255, 250, 240, 0.07);

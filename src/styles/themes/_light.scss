@@ -1,0 +1,67 @@
+// ===========================================================================
+// Theme: "light" — warm cream daylight. Same brand palette, inverted for a
+// light surface. Activated via [data-theme="light"] on <html>.
+// ===========================================================================
+
+[data-theme="light"] {
+  // --- Raw brand colors (unchanged) ---
+  --c-ink: #13121e;
+  --c-plum: #300223;
+  --c-cream: #edd6ad;
+  --c-accent: #d10076;
+
+  // --- Semantic surfaces (cream base, lighter lifts) ---
+  --color-bg: var(--c-cream);
+  --color-surface: #f4e7cd; // lifted above cream
+  --color-surface-2: var(--c-plum); // dark badge still reads with cream text
+  --color-elevated: #f8eedb;
+  --tile-hi: #fcf3df;
+  --tile-lo: #e7d2a4;
+
+  // --- Text (deep ink on cream) ---
+  --color-text: #1b1426;
+  --color-text-muted: rgba(27, 20, 38, 0.62);
+  --color-text-faint: rgba(27, 20, 38, 0.4);
+
+  // --- Accent ---
+  --color-accent: var(--c-accent);
+  --color-accent-soft: rgba(209, 0, 118, 0.14);
+  --color-accent-contrast: #fff5fb;
+
+  // --- Glass (frosted, light) ---
+  --glass-bg: rgba(255, 250, 240, 0.45);
+  --glass-border: rgba(48, 2, 35, 0.14);
+  --glass-blur: 22px;
+
+  // --- Rim light (bright white on light surfaces) ---
+  --rim-light: rgba(255, 255, 255, 0.75);
+
+  // --- Neumorphic shadow pair — white highlight, warm soft shadow ---
+  --neu-light: rgba(255, 255, 255, 0.9);
+  --neu-dark: rgba(120, 88, 40, 0.22);
+  --neu-distance: 9px;
+  --neu-blur: 22px;
+  --neu-distance-lg: 14px;
+  --neu-blur-lg: 32px;
+
+  // edge vignette: a soft warm darken instead of black
+  --vignette: rgba(90, 55, 15, 0.14);
+
+  --header-h: 6rem;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
+
+  --shadow-1: 0 2px 8px rgba(70, 45, 12, 0.18);
+  --shadow-2: 0 12px 40px rgba(70, 45, 12, 0.22);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms;
+  --dur-base: 280ms;
+  --dur-slow: 520ms;
+
+  color-scheme: light;
+}

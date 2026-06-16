@@ -1,6 +1,7 @@
 // Global stylesheet entry point — imported once in app/layout.tsx.
 // Order matters: tokens first, then reset, then base styling.
 @use "themes/default";
+@use "themes/light";
 @use "base/reset";
 @use "base/typography";
 @use "base/base";

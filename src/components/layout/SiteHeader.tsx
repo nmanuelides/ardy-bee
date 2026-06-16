@@ -2,6 +2,7 @@ import Link from "next/link";
 import Wordmark from "@/components/brand/Wordmark";
 import Button from "@/components/ui/Button";
 import SearchBar from "@/components/search/SearchBar";
+import ThemeToggle from "./ThemeToggle";
 import UserMenu from "./UserMenu";
 import { createClient } from "@/lib/supabase/server";
 import styles from "./SiteHeader.module.scss";
@@ -44,6 +45,7 @@ export default async function SiteHeader() {
         </div>
 
         <div className={styles.actions}>
+          <ThemeToggle />
           {user ? (
             <UserMenu label={label} />
           ) : (

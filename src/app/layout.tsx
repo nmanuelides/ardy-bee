@@ -39,6 +39,12 @@ export default function RootLayout({
       className={`${display.variable} ${body.variable}`}
     >
       <body>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}",
+          }}
+        />
         <Backdrop />
         <ScrollProgress />
         <div className="app-shell">{children}</div>
