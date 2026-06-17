@@ -4,11 +4,12 @@
 // ===========================================================================
 
 [data-theme="light"] {
-  // --- Raw brand colors (unchanged) ---
-  --c-ink: #13121e;
+  // --- Raw brand colors. --c-ink is the deep text ink on cream; the semantic
+  //     text tokens below derive from it so the theme lab can recolor text. ---
+  --c-ink: #1b1426;
   --c-plum: #300223;
   --c-cream: #edd6ad;
-  --c-accent: #d10076;
+  --c-accent: #ff9500;
 
   // --- Semantic surfaces (cream base, lighter lifts) ---
   --color-bg: var(--c-cream);
@@ -18,14 +19,14 @@
   --tile-hi: #fcf3df;
   --tile-lo: #e7d2a4;
 
-  // --- Text (deep ink on cream) ---
-  --color-text: #1b1426;
-  --color-text-muted: rgba(27, 20, 38, 0.62);
-  --color-text-faint: rgba(27, 20, 38, 0.4);
+  // --- Text (deep ink on cream) — derived from --c-ink so it's editable ---
+  --color-text: var(--c-ink);
+  --color-text-muted: color-mix(in srgb, var(--c-ink) 62%, transparent);
+  --color-text-faint: color-mix(in srgb, var(--c-ink) 40%, transparent);
 
   // --- Accent ---
   --color-accent: var(--c-accent);
-  --color-accent-soft: rgba(209, 0, 118, 0.14);
+  --color-accent-soft: color-mix(in srgb, var(--c-accent) 14%, transparent);
   --color-accent-contrast: #fff5fb;
 
   // --- Glass (frosted, light) ---
@@ -52,7 +53,7 @@
   // animated WebGL backdrop field colors (read by WebGLBackdrop)
   --bg-blob-base: #edd6ad;
   --bg-blob-a: #e6bd8c;
-  --bg-blob-b: #f4b5d4;
+  --bg-blob-b: #ff9500;
 
   --header-h: 6rem;
 
