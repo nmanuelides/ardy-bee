@@ -38,6 +38,50 @@
   }
 }
 
+.passwordWrap {
+  position: relative;
+  display: flex;
+
+  input {
+    flex: 1;
+    width: 100%;
+    padding-right: 3rem; // room for the reveal toggle
+  }
+}
+
+.reveal {
+  position: absolute;
+  top: 50%;
+  right: 0.45rem;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-faint);
+  cursor: pointer;
+  transition: color var(--dur-base) var(--ease-out);
+
+  &:hover {
+    color: var(--color-text-muted);
+  }
+  &:focus-visible {
+    outline: none;
+    color: var(--color-accent);
+    box-shadow: 0 0 0 1px var(--color-accent);
+  }
+
+  svg {
+    display: block;
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+}
+
 .submit {
   margin-top: 0.4rem;
   width: 100%;

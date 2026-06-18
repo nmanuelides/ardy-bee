@@ -50,8 +50,8 @@
   color: var(--color-text-muted);
 }
 
-// TMDb rating badge, top-left
-.vote {
+// Ardy rating badge (our own score, derived from rated performances), top-left
+.score {
   position: absolute;
   top: 0.6rem;
   left: 0.6rem;
@@ -63,8 +63,8 @@
   border-radius: var(--radius-pill);
   font-size: var(--text-xs);
   font-weight: 700;
-  color: var(--c-cream);
-  background: var(--color-surface-2);
+  color: var(--color-accent-contrast);
+  background: var(--color-accent);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
 }
 

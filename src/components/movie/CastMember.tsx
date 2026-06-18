@@ -26,9 +26,9 @@ export default function CastMember({
   const profile = tmdbImage(member.profile_path, "w185");
 
   return (
-    <article className={styles.card}>
+    <article className={styles.card} data-cast-card>
       <div className={styles.head}>
-        <div className={styles.avatar}>
+        <div className={styles.avatar} data-bee-target>
           {profile ? (
             <Image
               src={profile}

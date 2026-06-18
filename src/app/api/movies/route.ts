@@ -3,6 +3,7 @@ import {
   getMoviesByCategory,
   type MovieCategory,
 } from "@/lib/tmdb/movies";
+import { getMovieScores } from "@/lib/rankings/queries";
 
 const VALID: MovieCategory[] = ["popular", "top-rated", "upcoming"];
 
@@ -28,7 +29,8 @@ export async function GET(request: Request) {
       movies = results.filter((m) => m.release_date && m.release_date > today);
     }
 
-    return NextResponse.json({ results: movies, page: current, totalPages });
+    const scores = await getMovieScores(movies.map((m) => m.id));
+    return NextResponse.json({ results: movies, page: current, totalPages, scores });
   } catch {
     return NextResponse.json({ error: "fetch failed" }, { status: 502 });
   }

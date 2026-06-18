@@ -6,6 +6,7 @@ import Reveal from "@/components/motion/Reveal";
 import MagneticButton from "@/components/ui/MagneticButton";
 import type { TmdbMovie } from "@/lib/tmdb/types";
 import type { MovieCategory } from "@/lib/tmdb/movies";
+import type { MovieScore } from "@/lib/rankings/queries";
 import styles from "./MovieSection.module.scss";
 
 interface Props {
@@ -14,6 +15,8 @@ interface Props {
   initialMovies: TmdbMovie[];
   initialPage: number;
   totalPages: number;
+  /** Ardy scores for the initial movies, keyed by id. */
+  initialScores?: Record<number, MovieScore>;
   /** Coming-soon list is kept sorted soonest-first as more pages load. */
   sortByDate?: boolean;
 }
@@ -24,9 +27,11 @@ export default function MovieSection({
   initialMovies,
   initialPage,
   totalPages,
+  initialScores = {},
   sortByDate = false,
 }: Props) {
   const [movies, setMovies] = useState(initialMovies);
+  const [scores, setScores] = useState<Record<number, MovieScore>>(initialScores);
   const [page, setPage] = useState(initialPage);
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +43,11 @@ export default function MovieSection({
     try {
       const res = await fetch(`/api/movies?category=${category}&page=${page + 1}`);
       if (!res.ok) return;
-      const data: { results: TmdbMovie[]; page: number } = await res.json();
+      const data: {
+        results: TmdbMovie[];
+        page: number;
+        scores?: Record<number, MovieScore>;
+      } = await res.json();
       setMovies((prev) => {
         const seen = new Set(prev.map((m) => m.id));
         const merged = [...prev, ...data.results.filter((m) => !seen.has(m.id))];
@@ -46,6 +55,7 @@ export default function MovieSection({
           ? merged.sort((a, b) => a.release_date.localeCompare(b.release_date))
           : merged;
       });
+      if (data.scores) setScores((prev) => ({ ...prev, ...data.scores }));
       setPage(data.page);
     } finally {
       setLoading(false);
@@ -57,7 +67,7 @@ export default function MovieSection({
       <h2 className={styles.sectionTitle}>{title}</h2>
       <Reveal stagger className={styles.grid}>
         {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
+          <MovieCard key={movie.id} movie={movie} appScore={scores[movie.id] ?? null} />
         ))}
       </Reveal>
       {hasMore && (

@@ -40,6 +40,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme="ardy"
+      data-scroll-behavior="smooth"
       className={`${display.variable} ${body.variable}`}
     >
       <body>

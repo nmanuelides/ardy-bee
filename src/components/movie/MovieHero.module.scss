@@ -98,7 +98,7 @@
 }
 
 .facts {
-  color: var(--color-accent);
+  color: var(--color-meta);
   font-weight: 700;
   font-size: var(--text-sm);
   letter-spacing: 0.02em;
@@ -122,9 +122,9 @@
   border-radius: var(--radius-pill);
   font-size: var(--text-xs);
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--color-meta);
   background: var(--color-accent-soft);
-  border: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-meta) 45%, transparent);
   backdrop-filter: blur(12px) saturate(150%);
   -webkit-backdrop-filter: blur(12px) saturate(150%);
 }

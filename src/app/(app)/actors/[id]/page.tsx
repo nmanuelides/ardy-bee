@@ -4,6 +4,7 @@ import MovieCard from "@/components/movie/MovieCard";
 import Reveal from "@/components/motion/Reveal";
 import { tmdbImage } from "@/lib/tmdb/image";
 import { getPersonDetails, getPersonMovieCredits } from "@/lib/tmdb/people";
+import { getMovieScores } from "@/lib/rankings/queries";
 import styles from "./page.module.scss";
 
 export default async function ActorPage({
@@ -39,6 +40,8 @@ export default async function ActorPage({
       return (b.popularity ?? 0) - (a.popularity ?? 0);
     });
 
+  const scores = await getMovieScores(knownFor.map((m) => m.id));
+
   const facts = [person.known_for_department, person.place_of_birth]
     .filter(Boolean)
     .join("  ·  ");
@@ -67,7 +70,11 @@ export default async function ActorPage({
           </h2>
           <Reveal stagger className={styles.grid}>
             {knownFor.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
+              <MovieCard
+                key={movie.id}
+                movie={movie}
+                appScore={scores[movie.id] ?? null}
+              />
             ))}
           </Reveal>
         </section>

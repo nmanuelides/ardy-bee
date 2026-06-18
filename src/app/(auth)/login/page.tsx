@@ -8,9 +8,9 @@ import styles from "../auth.module.scss";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; message?: string }>;
+  searchParams: Promise<{ error?: string; message?: string; email?: string }>;
 }) {
-  const { error, message } = await searchParams;
+  const { error, message, email } = await searchParams;
 
   return (
     <div className={styles.card}>
@@ -29,6 +29,7 @@ export default async function LoginPage({
         action={signInWithPassword}
         error={error}
         message={message}
+        defaultEmail={email}
       />
 
       <div className={styles.divider}>or</div>

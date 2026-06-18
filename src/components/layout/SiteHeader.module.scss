@@ -45,17 +45,32 @@
 }
 
 .link {
+  position: relative;
   padding: 0.5rem 0.9rem;
   border-radius: var(--radius-pill);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
   font-weight: 600;
   transition: color var(--dur-fast) var(--ease-out),
-    background var(--dur-fast) var(--ease-out);
+    background var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+
+  // luminous glass rim (same as the panels), faded in on hover
+  @include rim-light;
+  &::after {
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
 
   &:hover {
     color: var(--color-text);
     background: var(--color-accent-soft);
+    // shadow behind so the chip lifts off the nav bar
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+
+    &::after {
+      opacity: 1;
+    }
   }
 }
 

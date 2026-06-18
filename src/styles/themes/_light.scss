@@ -7,14 +7,14 @@
   // --- Raw brand colors. --c-ink is the deep text ink on cream; the semantic
   //     text tokens below derive from it so the theme lab can recolor text. ---
   --c-ink: #1b1426;
-  --c-plum: #300223;
+  --c-plum: #e04300; // high-contrast foreground accent for meta text/tags
   --c-cream: #edd6ad;
   --c-accent: #ff9500;
 
   // --- Semantic surfaces (cream base, lighter lifts) ---
   --color-bg: var(--c-cream);
-  --color-surface: #f4e7cd; // lifted above cream
-  --color-surface-2: var(--c-plum); // dark badge still reads with cream text
+  --color-surface: #dac395; // lifted above cream
+  --color-surface-2: var(--c-plum);
   --color-elevated: #f8eedb;
   --tile-hi: #fcf3df;
   --tile-lo: #e7d2a4;
@@ -28,6 +28,8 @@
   --color-accent: var(--c-accent);
   --color-accent-soft: color-mix(in srgb, var(--c-accent) 14%, transparent);
   --color-accent-contrast: #fff5fb;
+  // meta text/tags use the high-contrast plum on the cream surface
+  --color-meta: var(--c-plum);
 
   // --- Glass (frosted, light) ---
   --glass-bg: rgba(255, 250, 240, 0.45);

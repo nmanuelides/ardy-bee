@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { BEE_EVENT, type BeeReaction, type BeeReactionDetail } from "@/lib/bee/events";
 import { useBee } from "./liveSprite";
+import { BEE_STING_SPRITE } from "./beeSprite";
 import styles from "./CursorBee.module.scss";
 
 const PX = 2;
+const STING_DURATION = 1100; // ms: enough for 4 down-jabs + settle
 
 // Honeycomb lattice (pointy-top). The trail snaps cells to this fixed grid so
 // consecutive cells share edges and read as one continuous honeycomb.
@@ -33,8 +35,9 @@ function strokeHex(ctx: CanvasRenderingContext2D, cx: number, cy: number) {
   ctx.stroke();
 }
 
-function BeePixels() {
-  const { sprite, palette } = useBee();
+function BeePixels({ sprite: override }: { sprite?: string[] }) {
+  const { sprite: live, palette } = useBee();
+  const sprite = override ?? live;
   const rects: React.ReactElement[] = [];
   sprite.forEach((row, y) => {
     [...row].forEach((c, x) => {
@@ -65,6 +68,9 @@ export default function CursorBee() {
   const lastCellKey = useRef("");
   // live honeycomb cells (cleared + redrawn each frame so nothing lingers)
   const cells = useRef<{ cx: number; cy: number; born: number }[]>([]);
+  // whether the canvas had anything painted last frame (so we clear once more
+  // when the trail empties, then leave the idle canvas untouched)
+  const hadCells = useRef(false);
 
   const pos = useRef({ x: -200, y: -200 });
   const targetPos = useRef({ x: -200, y: -200 });
@@ -167,7 +173,9 @@ export default function CursorBee() {
       const { type, x, y } = (e as CustomEvent<BeeReactionDetail>).detail;
       mode.current = "react";
       reactionRef.current = type;
-      reactCenter.current = { x, y };
+      // Events give the avatar's centre; pos is the sprite's top-left, so shift
+      // by ~half the 38px sprite to centre her body (and the honey orbit) on it.
+      reactCenter.current = { x: x - 19, y: y - 19 };
       reactStart.current = performance.now();
       setReaction(type);
 
@@ -175,8 +183,10 @@ export default function CursorBee() {
       stingTimers.length = 0;
 
       if (type === "sting") {
-        targetPos.current = { x, y: y - 24 };
-        [150, 360, 560].forEach((t) =>
+        // hover centred just above the avatar so the down-pointing stinger lands on it
+        targetPos.current = { x: x - 19, y: y - 40 };
+        // a spark burst on each of the 4 downward jabs
+        [300, 500, 700, 900].forEach((t) =>
           stingTimers.push(
             window.setTimeout(() => {
               for (let i = 0; i < 6; i++) spawnSpark(x, y);
@@ -185,7 +195,7 @@ export default function CursorBee() {
         );
       }
 
-      const duration = type === "honey" ? 1700 : 800;
+      const duration = type === "honey" ? 1700 : STING_DURATION;
       window.clearTimeout(revertTimer);
       revertTimer = window.setTimeout(() => {
         mode.current = "follow";
@@ -201,12 +211,15 @@ export default function CursorBee() {
     const tick = (now: number) => {
       const wrap = wrapRef.current;
 
-      // clear + redraw only the still-alive honeycomb cells (no lingering marks)
+      // clear + redraw only the still-alive honeycomb cells (no lingering marks).
+      // When the trail is empty we skip the full-viewport clearRect entirely —
+      // that's the common (idle) case, and clearing a screen-sized canvas 60x/s
+      // for nothing was the bulk of this loop's cost.
       const ctx = ctxRef.current;
-      if (ctx) {
+      const arr = cells.current;
+      if (ctx && (arr.length > 0 || hadCells.current)) {
         ctx.clearRect(0, 0, vp.current.w, vp.current.h);
         const LIFE = 450; // ms a cell takes to fade out
-        const arr = cells.current;
         ctx.strokeStyle = accentRef.current;
         let w = 0;
         for (let i = 0; i < arr.length; i++) {
@@ -224,6 +237,7 @@ export default function CursorBee() {
         }
         arr.length = w;
         ctx.globalAlpha = 1;
+        hadCells.current = w > 0;
       }
 
       if (mode.current === "react" && reactionRef.current === "honey") {
@@ -238,7 +252,9 @@ export default function CursorBee() {
       }
 
       if (wrap && seenMove.current) {
-        const speed = mode.current === "react" ? 0.2 : 0.13;
+        const stinging = mode.current === "react" && reactionRef.current === "sting";
+        // snap up to the avatar fast so she stings from above, not mid-flight
+        const speed = stinging ? 0.32 : mode.current === "react" ? 0.2 : 0.13;
         const dx = targetPos.current.x - pos.current.x;
         // always look toward the actual cursor; hysteresis avoids jitter when
         // she's roughly level with it horizontally
@@ -248,7 +264,31 @@ export default function CursorBee() {
         pos.current.x += dx * speed;
         pos.current.y += (targetPos.current.y - pos.current.y) * speed;
         const bob = Math.sin(now / 220) * 4;
-        wrap.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y + bob}px, 0) scaleX(${facing.current})`;
+
+        if (stinging) {
+          // Rotate so her stinger (sideways at rest) points straight down, then
+          // thrust down→up 4× in screen space (decaying). Done here, not in CSS,
+          // because the wrapper's scaleX would mirror a CSS rotation. rotate is
+          // innermost so she spins in place; the translateY before it stays
+          // screen-vertical, so stabs go down. The `near` gate suppresses the
+          // stab until she's parked above the avatar, so she never stings the
+          // side mid-flight.
+          const dist = Math.hypot(
+            targetPos.current.x - pos.current.x,
+            targetPos.current.y - pos.current.y,
+          );
+          const near = Math.max(0, Math.min(1, 1 - dist / 60));
+          const p = Math.min(1, (now - reactStart.current) / STING_DURATION);
+          // 4 equal up/down jabs (no decay): -sin gives full cycles that start
+          // and end at rest, so every stab is the same size.
+          const stab = -Math.sin(p * Math.PI * 8) * 15 * near;
+          const lunge = stab * 0.4; // rock in sync with each jab
+          wrap.style.transform =
+            `translate3d(${pos.current.x}px, ${pos.current.y + bob}px, 0) ` +
+            `translateY(${stab}px) rotate(${-90 + lunge}deg)`;
+        } else {
+          wrap.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y + bob}px, 0) scaleX(${facing.current})`;
+        }
 
         // leave honeycomb behind Ardy: from her body center, offset to her rear
         // (opposite the way she faces). facing 1 = faces right → rear is left.
@@ -259,7 +299,6 @@ export default function CursorBee() {
           const key = `${cell.q}:${cell.r}`;
           if (key !== lastCellKey.current) {
             lastCellKey.current = key;
-            const arr = cells.current;
             arr.push({ cx: cell.cx, cy: cell.cy, born: now });
             // a second row below → a 2-row honeycomb band
             const r2 = cell.r + 1;
@@ -298,7 +337,7 @@ export default function CursorBee() {
         aria-hidden="true"
       >
         <div className={styles.react}>
-          <BeePixels />
+          <BeePixels sprite={reaction === "sting" ? BEE_STING_SPRITE : undefined} />
         </div>
       </div>
     </>

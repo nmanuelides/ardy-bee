@@ -8,9 +8,9 @@ import styles from "../auth.module.scss";
 export default async function SignupPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; email?: string; display_name?: string }>;
 }) {
-  const { error } = await searchParams;
+  const { error, email, display_name } = await searchParams;
 
   return (
     <div className={styles.card}>
@@ -24,7 +24,13 @@ export default async function SignupPage({
         </p>
       </div>
 
-      <AuthForm mode="signup" action={signUp} error={error} />
+      <AuthForm
+        mode="signup"
+        action={signUp}
+        error={error}
+        defaultEmail={email}
+        defaultName={display_name}
+      />
 
       <div className={styles.divider}>or</div>
       <GoogleButton />

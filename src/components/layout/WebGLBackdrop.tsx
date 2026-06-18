@@ -116,6 +116,25 @@ function Blobs({ animate }: { animate: boolean }) {
     };
   }, [invalidate]);
 
+  // Drive the on-demand loop at a capped ~30fps. The blobs drift very slowly
+  // (uTime * 0.08), so half the frames are imperceptible but cost half the GPU.
+  // rAF auto-pauses when the tab is hidden, so this also stops draining battery
+  // in the background.
+  useEffect(() => {
+    if (!animate) return;
+    let raf = 0;
+    let last = 0;
+    const minDelta = 1000 / 30;
+    const loop = (t: number) => {
+      raf = requestAnimationFrame(loop);
+      if (t - last < minDelta) return;
+      last = t;
+      invalidate();
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [animate, invalidate]);
+
   useFrame((state) => {
     if (!matRef.current) return;
     matRef.current.uniforms.uAspect.value = state.size.width / state.size.height;
@@ -147,8 +166,8 @@ export default function WebGLBackdrop() {
     <div className={styles.canvas}>
       <Canvas
         gl={{ antialias: false, alpha: false }}
-        dpr={[1, 1.5]}
-        frameloop={reduced ? "demand" : "always"}
+        dpr={1}
+        frameloop="demand"
       >
         <Blobs animate={!reduced} />
       </Canvas>

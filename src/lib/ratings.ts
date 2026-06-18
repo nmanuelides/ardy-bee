@@ -13,6 +13,11 @@ export const RATING_VALUES: number[] = Array.from(
 
 export const STING_THRESHOLD = 1; // a rating of 1 triggers the sting animation
 
+// A movie only shows an Ardy score once at least this many distinct
+// performances in it have been rated — otherwise a single rating would
+// masquerade as "the movie's" rating. Tune freely.
+export const MIN_RATED_PERFORMANCES = 3;
+
 export function isStinger(score: number): boolean {
   return score <= STING_THRESHOLD;
 }

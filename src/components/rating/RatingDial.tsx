@@ -8,7 +8,7 @@ import {
   MAX_RATING,
   ratingLabel,
 } from "@/lib/ratings";
-import { ratePerformance } from "@/lib/ratings/actions";
+import { ratePerformance, removeRating } from "@/lib/ratings/actions";
 import { emitBeeReaction } from "@/lib/bee/events";
 import styles from "./RatingDial.module.scss";
 
@@ -22,6 +22,14 @@ interface RatingDialProps {
 }
 
 const CELLS = Array.from({ length: MAX_RATING }, (_, i) => i + 1); // 1..10
+
+// Upload "comet": a dense trail of dots riding the track border via offset-path.
+// Round dots (vs one rigid streak) trace the rounded corners cleanly, and
+// packing them tightly so they overlap makes the trail read as one continuous
+// streak rather than separate dots. Negative staggered delays form a head→tail
+// gradient trail. (COMET_DOTS - 1) * COMET_STEP / duration ≈ trail length.
+const COMET_DOTS = 40;
+const COMET_STEP = 0.006; // seconds between consecutive dots (small → overlap)
 
 export default function RatingDial({
   movieId,
@@ -40,9 +48,11 @@ export default function RatingDial({
 
   const display = hover ?? score ?? 0;
 
-  // Summon the cursor bee to the score: sting a 1, drop honey on a 9+.
+  // Summon the cursor bee to the actor's avatar: sting a 1, dance honey on a 9+.
   function reactWithBee(value: number) {
-    const rect = scoreRef.current?.getBoundingClientRect();
+    const card = scoreRef.current?.closest("[data-cast-card]");
+    const target = card?.querySelector("[data-bee-target]") ?? scoreRef.current;
+    const rect = target?.getBoundingClientRect();
     if (!rect) return;
     const x = rect.left + rect.width / 2;
     const y = rect.top + rect.height / 2;
@@ -76,6 +86,22 @@ export default function RatingDial({
         score: value,
       });
       if (!res.ok) {
+        setError(res.error);
+        if (res.needsAuth) router.push("/login");
+      }
+    });
+  }
+
+  function remove() {
+    const previous = score;
+    setScore(null);
+    setHover(null);
+    setError(null);
+
+    startTransition(async () => {
+      const res = await removeRating({ movieId, personId });
+      if (!res.ok) {
+        setScore(previous); // roll back the optimistic clear
         setError(res.error);
         if (res.needsAuth) router.push("/login");
       }
@@ -124,6 +150,28 @@ export default function RatingDial({
             </button>
           );
         })}
+
+        {isPending && (
+          <span className={styles.comet} aria-hidden="true">
+            {Array.from({ length: COMET_DOTS }, (_, i) => {
+              // headness: 0 at the trailing dot → 1 at the leading (most ahead).
+              const headness = i / (COMET_DOTS - 1);
+              return (
+                <span
+                  key={i}
+                  className={styles.dot}
+                  style={{
+                    animationDelay: `${(-(i * COMET_STEP)).toFixed(3)}s`,
+                    background: `color-mix(in srgb, var(--color-surface-2) ${Math.round(
+                      (1 - headness) * 100,
+                    )}%, var(--color-accent))`,
+                    opacity: 0.1 + headness * 0.9,
+                  }}
+                />
+              );
+            })}
+          </span>
+        )}
       </div>
 
       <div className={styles.readout}>
@@ -138,6 +186,17 @@ export default function RatingDial({
         <span className={styles.label}>
           {display > 0 ? ratingLabel(display) : "Rate"}
         </span>
+        {score !== null && (
+          <button
+            type="button"
+            className={styles.remove}
+            onClick={remove}
+            disabled={isPending}
+            aria-label="Remove your rating"
+          >
+            Remove
+          </button>
+        )}
       </div>
 
       {error && <p className={styles.error}>{error}</p>}

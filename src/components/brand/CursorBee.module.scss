@@ -55,28 +55,6 @@
   transform: translate(-50%, -50%);
 }
 
-// --- sting: stinger is at the bottom, so jab straight up & down ---
-.bee[data-reaction="sting"] .react {
-  animation: sting 0.8s ease-in-out;
-}
-
-@keyframes sting {
-  0% {
-    transform: translateY(-14px);
-  }
-  18% {
-    transform: translateY(14px);
-  }
-  36% {
-    transform: translateY(-12px);
-  }
-  54% {
-    transform: translateY(14px);
-  }
-  72% {
-    transform: translateY(-8px);
-  }
-  100% {
-    transform: translateY(8px);
-  }
-}
+// --- sting: the rotate-to-stinger-down + downward thrusts are driven in JS
+// (CursorBee.tsx), because the wrapper's scaleX flip would mirror a CSS
+// rotation. Nothing to animate here. ---

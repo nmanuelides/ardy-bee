@@ -128,3 +128,53 @@ export async function ratePerformance(
   revalidatePath(`/movies/${input.movieId}`);
   return { ok: true };
 }
+
+/**
+ * Removes the signed-in user's rating for a performance (identified by the
+ * movie+person pairing). The ratings_aggregate trigger decrements the cached
+ * counts on DELETE, so movie/actor scores self-correct. Idempotent: removing a
+ * rating that doesn't exist still succeeds.
+ */
+export async function removeRating(input: {
+  movieId: number;
+  personId: number;
+}): Promise<RateResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { ok: false, error: "Please sign in to manage ratings.", needsAuth: true };
+  }
+
+  // Find the performance for this movie+person (unique pairing).
+  const { data: performance, error: perfError } = await supabase
+    .from("performances")
+    .select("id")
+    .eq("movie_id", input.movieId)
+    .eq("person_id", input.personId)
+    .maybeSingle();
+
+  if (perfError) {
+    return { ok: false, error: perfError.message };
+  }
+  // No performance row → nothing was ever rated; already "removed".
+  if (!performance) {
+    return { ok: true };
+  }
+
+  // RLS (ratings_delete_own) ensures users can only delete their own rating.
+  const { error: deleteError } = await supabase
+    .from("ratings")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("performance_id", performance.id);
+
+  if (deleteError) {
+    return { ok: false, error: deleteError.message };
+  }
+
+  revalidatePath(`/movies/${input.movieId}`);
+  return { ok: true };
+}

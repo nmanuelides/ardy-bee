@@ -32,6 +32,10 @@
   --color-accent: var(--c-accent);
   --color-accent-soft: rgba(255, 149, 0, 0.16);
   --color-accent-contrast: #fff5fb;
+  // Foreground accent for small meta text/tags. On the dark theme the amber
+  // accent reads fine; the light theme overrides this with a higher-contrast
+  // plum (amber-on-cream is too faint).
+  --color-meta: var(--color-accent);
 
   // --- Glass (frosted) ---
   --glass-bg: rgba(28, 21, 13, 0.36);

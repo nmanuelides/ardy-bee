@@ -1,5 +1,6 @@
 import MovieSection from "@/components/movie/MovieSection";
 import { getMoviesByCategory } from "@/lib/tmdb/movies";
+import { getMovieScores } from "@/lib/rankings/queries";
 import styles from "./browse.module.scss";
 
 export const metadata = { title: "Movies · Ardy Bee" };
@@ -37,6 +38,11 @@ export default async function MoviesPage() {
     },
   ].filter((s) => s.data.results.length > 0);
 
+  // One batched score lookup for every movie across all visible sections.
+  const scores = await getMovieScores(
+    sections.flatMap((s) => s.data.results.map((m) => m.id)),
+  );
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
@@ -54,6 +60,7 @@ export default async function MoviesPage() {
           initialMovies={s.data.results}
           initialPage={s.data.page}
           totalPages={s.data.totalPages}
+          initialScores={scores}
           sortByDate={s.sortByDate}
         />
       ))}
