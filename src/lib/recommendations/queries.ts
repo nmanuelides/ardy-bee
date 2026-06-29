@@ -26,6 +26,7 @@ export interface RecommendationResult {
 
 const FAVORITE_MIN_AVG = 7; // an actor you rated this well, on average, is a "favorite"
 const MAX_FAVORITES = 12;
+const DOCUMENTARY_GENRE_ID = 99; // TMDb genre id — documentaries are excluded
 
 /**
  * The signed-in user's favorite actors, derived from the performances they've
@@ -91,6 +92,20 @@ export async function getRecommendations(
     return { recommendations: [], favorites, isAuthenticated };
   }
 
+  // Movies the user has already rated a performance in — excluded below so we
+  // only ever recommend films they haven't seen/scored yet.
+  const ratedMovieIds = new Set<number>();
+  if (user) {
+    const { data: ratedRows } = await supabase
+      .from("ratings")
+      .select("performances!inner(movie_id)")
+      .eq("user_id", user.id);
+    for (const row of ratedRows ?? []) {
+      const perf = row.performances as unknown as { movie_id: number };
+      if (perf?.movie_id != null) ratedMovieIds.add(Number(perf.movie_id));
+    }
+  }
+
   const favName = new Map(favorites.map((f) => [f.personId, f.name]));
 
   const creditsArr = await Promise.all(
@@ -114,6 +129,7 @@ export async function getRecommendations(
     const personId = favorites[idx].personId;
     for (const m of credits.cast) {
       if (!m.id || !m.title) continue;
+      if (m.genre_ids?.includes(DOCUMENTARY_GENRE_ID)) continue; // skip documentaries
       let entry = movies.get(m.id);
       if (!entry) {
         entry = {
@@ -130,7 +146,7 @@ export async function getRecommendations(
   });
 
   const recommendations: Recommendation[] = [...movies.entries()]
-    .filter(([, m]) => m.featuring.size >= 2)
+    .filter(([movieId, m]) => m.featuring.size >= 2 && !ratedMovieIds.has(movieId))
     .map(([movieId, m]) => ({
       movieId,
       title: m.title,
