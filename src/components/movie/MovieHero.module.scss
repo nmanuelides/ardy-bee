@@ -65,7 +65,9 @@
   width: 140px;
   aspect-ratio: 2 / 3;
   flex: none;
-  border-radius: var(--radius-lg);
+  // angled-but-rounded hexagon corners, matching the glass panels
+  border-radius: var(--corner-cut-lg);
+  corner-shape: superellipse(0.2);
   overflow: hidden;
   box-shadow:
     var(--shadow-2),
@@ -89,7 +91,6 @@
   @include glass;
   flex: 1;
   padding: clamp(1.5rem, 3vw, 2.25rem);
-  border-radius: var(--radius-lg);
 }
 
 .title {
@@ -119,7 +120,9 @@
 
 .genre {
   padding: 0.3rem 0.85rem;
-  border-radius: var(--radius-pill);
+  // hexagon corners, matching the rest of the UI
+  border-radius: var(--corner-cut);
+  corner-shape: superellipse(0.2);
   font-size: var(--text-xs);
   font-weight: 700;
   color: var(--color-meta);

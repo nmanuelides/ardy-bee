@@ -14,7 +14,8 @@
   align-items: center;
   gap: 1.5rem;
   padding: 0.65rem 1.1rem;
-  border-radius: var(--radius-pill);
+  // corner cut comes from the glass mixin (--corner-cut); a pill radius here
+  // would collapse the bevel into sharp points, so let the chamfer govern
   // glass already sets a max-width via content-width's inner; keep nav pill snug
   max-width: calc(#{$content-max} - 2rem);
 }
@@ -47,7 +48,9 @@
 .link {
   position: relative;
   padding: 0.5rem 0.9rem;
-  border-radius: var(--radius-pill);
+  // hexagon corners (the honey-glow rim inherits corner-shape and follows it)
+  border-radius: var(--corner-cut);
+  corner-shape: superellipse(0.2);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
   font-weight: 600;

@@ -7,7 +7,9 @@
   justify-content: center;
   gap: 0.5ch;
   padding: 0.85rem 1.7rem;
-  border-radius: var(--radius-pill);
+  // hexagon corners (the bevel-border + rim rings below inherit corner-shape)
+  border-radius: var(--corner-cut);
+  corner-shape: superellipse(0.2);
   font-family: var(--font-body), system-ui, sans-serif;
   font-weight: 600;
   font-size: var(--text-sm);
@@ -23,6 +25,7 @@
     content: "";
     position: absolute;
     border-radius: inherit;
+    corner-shape: inherit;
     pointer-events: none;
     -webkit-mask:
       linear-gradient(#000 0 0) content-box,

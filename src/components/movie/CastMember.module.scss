@@ -6,7 +6,6 @@
   flex-direction: column;
   gap: 1.1rem;
   padding: 1.25rem;
-  border-radius: var(--radius-lg);
 }
 
 .head {
@@ -20,14 +19,13 @@
   width: 56px;
   height: 56px;
   flex: none;
-  border-radius: var(--radius-pill);
+  // honeycomb avatar (clip-path eats box-shadow, so depth comes from a filter)
+  @include hexagon;
   overflow: hidden;
   background: var(--color-surface-2);
   display: grid;
   place-items: center;
-  box-shadow:
-    0 4px 10px rgba(0, 0, 0, 0.45),
-    inset 0 1px 2px rgba(255, 255, 255, 0.18);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));
 }
 
 .img {
