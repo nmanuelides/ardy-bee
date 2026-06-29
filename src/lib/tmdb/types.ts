@@ -71,6 +71,8 @@ export interface TmdbSearchResult {
 
 export interface TmdbPersonMovieCredit extends TmdbMovie {
   character: string;
+  // present on list/credits endpoints (not on detail endpoints, which use `genres`)
+  genre_ids?: number[];
 }
 
 export interface TmdbPersonMovieCredits {
