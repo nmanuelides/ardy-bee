@@ -1,23 +1,26 @@
 import Image from "next/image";
 import Link from "next/link";
 import { tmdbImage } from "@/lib/tmdb/image";
+import { getT } from "@/lib/i18n/server";
 import type { PerformanceRank } from "@/lib/rankings/queries";
 import styles from "./rankings.module.scss";
 
-export default function PerformanceRow({
+export default async function PerformanceRow({
   rank,
   perf,
-  scoreLabel = "weighted",
+  personal = false,
 }: {
   rank: number;
   perf: PerformanceRank;
-  /** "weighted" for global rankings, "your score" for personal. */
-  scoreLabel?: string;
+  /** Personal section shows the user's own score; otherwise the weighted one. */
+  personal?: boolean;
 }) {
+  const t = await getT();
   const img = tmdbImage(perf.posterPath, "w185");
-  const score = scoreLabel === "weighted" ? perf.weighted : (perf.ratingAvg ?? 0);
+  const score = personal ? (perf.ratingAvg ?? 0) : perf.weighted;
+  const scoreLabel = personal ? t.rankings.yourScore : t.rankings.weighted;
   const sub = perf.characterName
-    ? `as ${perf.characterName} · ${perf.movieTitle}`
+    ? `${t.movie.as} ${perf.characterName} · ${perf.movieTitle}`
     : perf.movieTitle;
 
   return (

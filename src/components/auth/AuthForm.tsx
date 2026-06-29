@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import Button from "@/components/ui/Button";
+import { useT } from "@/lib/i18n/provider";
 import styles from "./AuthForm.module.scss";
 
 type Mode = "login" | "signup";
@@ -53,10 +54,11 @@ function EyeOffIcon() {
 }
 
 function SubmitButton({ label }: { label: string }) {
+  const t = useT();
   const { pending } = useFormStatus();
   return (
     <Button variant="accent" type="submit" disabled={pending} className={styles.submit}>
-      {pending ? "One sec…" : label}
+      {pending ? t.auth.submitting : label}
     </Button>
   );
 }
@@ -69,13 +71,14 @@ export default function AuthForm({
   defaultEmail,
   defaultName,
 }: AuthFormProps) {
+  const t = useT();
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <form action={action} className={styles.form}>
       {mode === "signup" && (
         <label className={styles.field}>
-          <span>Display name</span>
+          <span>{t.auth.displayName}</span>
           <input
             name="display_name"
             type="text"
@@ -87,7 +90,7 @@ export default function AuthForm({
       )}
 
       <label className={styles.field}>
-        <span>Email</span>
+        <span>{t.auth.email}</span>
         <input
           name="email"
           type="email"
@@ -98,7 +101,7 @@ export default function AuthForm({
       </label>
 
       <label className={styles.field}>
-        <span>Password</span>
+        <span>{t.auth.password}</span>
         <div className={styles.passwordWrap}>
           <input
             name="password"
@@ -111,7 +114,7 @@ export default function AuthForm({
             type="button"
             className={styles.reveal}
             onClick={() => setShowPassword((s) => !s)}
-            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-label={showPassword ? t.auth.hidePassword : t.auth.showPassword}
             aria-pressed={showPassword}
           >
             {showPassword ? <EyeOffIcon /> : <EyeIcon />}
@@ -122,7 +125,9 @@ export default function AuthForm({
       {error && <p className={styles.error}>{error}</p>}
       {message && <p className={styles.message}>{message}</p>}
 
-      <SubmitButton label={mode === "signup" ? "Create account" : "Sign in"} />
+      <SubmitButton
+        label={mode === "signup" ? t.auth.submitSignup : t.auth.submitLogin}
+      />
     </form>
   );
 }

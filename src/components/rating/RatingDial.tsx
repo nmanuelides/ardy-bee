@@ -6,10 +6,11 @@ import {
   formatScore,
   isStinger,
   MAX_RATING,
-  ratingLabel,
+  ratingLabelKey,
 } from "@/lib/ratings";
 import { ratePerformance, removeRating } from "@/lib/ratings/actions";
 import { emitBeeReaction } from "@/lib/bee/events";
+import { useT } from "@/lib/i18n/provider";
 import styles from "./RatingDial.module.scss";
 
 interface RatingDialProps {
@@ -39,6 +40,7 @@ export default function RatingDial({
   initialScore,
   isAuthenticated,
 }: RatingDialProps) {
+  const t = useT();
   const router = useRouter();
   const [score, setScore] = useState<number | null>(initialScore);
   const [hover, setHover] = useState<number | null>(null);
@@ -125,7 +127,7 @@ export default function RatingDial({
         className={styles.track}
         role="slider"
         tabIndex={0}
-        aria-label="Rate this performance from 1 to 10"
+        aria-label={t.rating.trackAria}
         aria-valuemin={1}
         aria-valuemax={MAX_RATING}
         aria-valuenow={score ?? undefined}
@@ -141,7 +143,9 @@ export default function RatingDial({
               className={styles.cell}
               onPointerMove={(e) => setHover(valueFromPointer(cell, e))}
               onClick={(e) => commit(valueFromPointer(cell, e))}
-              aria-label={`${cell} out of ${MAX_RATING}`}
+              aria-label={t.rating.cellAria
+                .replace("{n}", String(cell))
+                .replace("{max}", String(MAX_RATING))}
             >
               <span
                 className={styles.cellFill}
@@ -184,7 +188,7 @@ export default function RatingDial({
           {display > 0 ? formatScore(display) : "–"}
         </span>
         <span className={styles.label}>
-          {display > 0 ? ratingLabel(display) : "Rate"}
+          {display > 0 ? t.rating.labels[ratingLabelKey(display)] : t.rating.rate}
         </span>
         {score !== null && (
           <button
@@ -192,9 +196,9 @@ export default function RatingDial({
             className={styles.remove}
             onClick={remove}
             disabled={isPending}
-            aria-label="Remove your rating"
+            aria-label={t.rating.removeAria}
           >
-            Remove
+            {t.rating.remove}
           </button>
         )}
       </div>

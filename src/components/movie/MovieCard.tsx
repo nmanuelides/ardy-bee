@@ -1,8 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import Tilt from "@/components/motion/Tilt";
 import { tmdbImage } from "@/lib/tmdb/image";
 import { formatScore, MIN_RATED_PERFORMANCES } from "@/lib/ratings";
+import { useT } from "@/lib/i18n/provider";
 import type { MovieScore } from "@/lib/rankings/queries";
 import type { TmdbMovie } from "@/lib/tmdb/types";
 import styles from "./MovieCard.module.scss";
@@ -15,6 +18,7 @@ export default function MovieCard({
   /** Ardy's own score for this movie, if enough performances are rated. */
   appScore?: MovieScore | null;
 }) {
+  const t = useT();
   const poster = tmdbImage(movie.poster_path, "w342");
   const year = movie.release_date ? movie.release_date.slice(0, 4) : null;
   // Show our score only once enough performances in the movie are rated.
@@ -42,7 +46,10 @@ export default function MovieCard({
         {score && (
           <span
             className={styles.score}
-            title={`Ardy rating · ${score.ratedPerformances} performances rated`}
+            title={t.movie.ardyRating.replace(
+              "{n}",
+              String(score.ratedPerformances),
+            )}
           >
             <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true">
               <path
@@ -60,7 +67,7 @@ export default function MovieCard({
           {year && <span className={styles.year}>{year}</span>}
         </div>
 
-        <span className={styles.cta}>Rate the cast →</span>
+        <span className={styles.cta}>{t.movie.rateCast}</span>
       </div>
     </Link>
     </Tilt>

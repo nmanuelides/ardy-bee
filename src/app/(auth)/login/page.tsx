@@ -3,6 +3,7 @@ import Wordmark from "@/components/brand/Wordmark";
 import AuthForm from "@/components/auth/AuthForm";
 import GoogleButton from "@/components/auth/GoogleButton";
 import { signInWithPassword } from "@/lib/auth/actions";
+import { getT } from "@/lib/i18n/server";
 import styles from "../auth.module.scss";
 
 export default async function LoginPage({
@@ -10,6 +11,7 @@ export default async function LoginPage({
 }: {
   searchParams: Promise<{ error?: string; message?: string; email?: string }>;
 }) {
+  const t = await getT();
   const { error, message, email } = await searchParams;
 
   return (
@@ -18,10 +20,8 @@ export default async function LoginPage({
         <Link href="/">
           <Wordmark size="sm" />
         </Link>
-        <h1 className={styles.title}>Welcome back</h1>
-        <p className={styles.subtitle}>
-          Sign in to rate performances and track your favorite actors.
-        </p>
+        <h1 className={styles.title}>{t.auth.welcomeBack}</h1>
+        <p className={styles.subtitle}>{t.auth.loginSub}</p>
       </div>
 
       <AuthForm
@@ -32,11 +32,11 @@ export default async function LoginPage({
         defaultEmail={email}
       />
 
-      <div className={styles.divider}>or</div>
+      <div className={styles.divider}>{t.auth.or}</div>
       <GoogleButton />
 
       <p className={styles.alt}>
-        New to Ardy Bee? <Link href="/signup">Create an account</Link>
+        {t.auth.newToArdy} <Link href="/signup">{t.auth.createAccount}</Link>
       </p>
     </div>
   );

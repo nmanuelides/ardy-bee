@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useT } from "@/lib/i18n/provider";
 import styles from "./ThemeToggle.module.scss";
 
 type Theme = "ardy" | "light";
 
 export default function ThemeToggle() {
+  const t = useT();
   const [theme, setTheme] = useState<Theme>("ardy");
 
   useEffect(() => {
@@ -24,14 +26,15 @@ export default function ThemeToggle() {
   }
 
   const isLight = theme === "light";
+  const label = isLight ? t.theme.toDark : t.theme.toLight;
 
   return (
     <button
       type="button"
       className={styles.toggle}
       onClick={toggle}
-      aria-label={`Switch to ${isLight ? "dark" : "light"} theme`}
-      title={`Switch to ${isLight ? "dark" : "light"} theme`}
+      aria-label={label}
+      title={label}
     >
       {isLight ? (
         // moon → switch back to dark

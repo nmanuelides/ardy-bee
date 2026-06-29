@@ -1,8 +1,10 @@
 import { signOut } from "@/lib/auth/actions";
+import { getT } from "@/lib/i18n/server";
 import styles from "./UserMenu.module.scss";
 
 /** Shown in the header when signed in: avatar initial + sign-out. */
-export default function UserMenu({ label }: { label: string }) {
+export default async function UserMenu({ label }: { label: string }) {
+  const t = await getT();
   const initial = label.charAt(0).toUpperCase();
 
   return (
@@ -12,7 +14,7 @@ export default function UserMenu({ label }: { label: string }) {
       </span>
       <form action={signOut}>
         <button className={styles.signout} type="submit">
-          Sign out
+          {t.common.signOut}
         </button>
       </form>
     </div>

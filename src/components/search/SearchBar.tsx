@@ -5,10 +5,12 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { tmdbImage } from "@/lib/tmdb/image";
+import { useT } from "@/lib/i18n/provider";
 import type { SearchHit } from "@/app/api/search/route";
 import styles from "./SearchBar.module.scss";
 
 export default function SearchBar() {
+  const t = useT();
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchHit[]>([]);
@@ -92,11 +94,11 @@ export default function SearchBar() {
         <input
           className={styles.input}
           type="search"
-          placeholder="Search movies & actors…"
+          placeholder={t.search.placeholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => results.length > 0 && setOpen(true)}
-          aria-label="Search movies and actors"
+          aria-label={t.search.aria}
         />
       </div>
 
@@ -108,7 +110,7 @@ export default function SearchBar() {
             style={{ left: coords.left, top: coords.top, width: coords.width }}
           >
             {results.length === 0 && !loading && (
-              <li className={styles.empty}>No matches</li>
+              <li className={styles.empty}>{t.search.noMatches}</li>
             )}
             {results.map((hit) => {
               const img = tmdbImage(hit.image, "w185");
@@ -123,7 +125,7 @@ export default function SearchBar() {
                     <span className={styles.hitInfo}>
                       <span className={styles.hitTitle}>{hit.title}</span>
                       <span className={styles.hitSub}>
-                        {hit.type === "person" ? "Actor" : "Movie"} · {hit.sub}
+                        {hit.type === "person" ? t.search.actor : t.search.movie} · {hit.sub}
                       </span>
                     </span>
                   </button>

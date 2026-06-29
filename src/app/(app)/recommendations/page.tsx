@@ -3,6 +3,7 @@ import Button from "@/components/ui/Button";
 import RecommendationCard from "@/components/recommendations/RecommendationCard";
 import Reveal from "@/components/motion/Reveal";
 import { getRecommendations } from "@/lib/recommendations/queries";
+import { getT } from "@/lib/i18n/server";
 import styles from "./page.module.scss";
 
 export const metadata = {
@@ -10,46 +11,44 @@ export const metadata = {
 };
 
 export default async function RecommendationsPage() {
+  const t = await getT();
   const { recommendations, favorites, isAuthenticated } =
     await getRecommendations();
 
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <h1>For you</h1>
-          <p className={styles.lead}>
-            Movies where two or more of your favorite actors share the screen —
-            drawn from the performances you&apos;ve rated highest.
-          </p>
+        <h1>{t.recommendations.title}</h1>
+          <p className={styles.lead}>{t.recommendations.lead}</p>
         </header>
 
         {!isAuthenticated ? (
           <div className={styles.empty}>
-            <p>Sign in and rate a few performances to unlock recommendations.</p>
+            <p>{t.recommendations.signInPrompt}</p>
             <Link href="/login">
-              <Button variant="accent">Sign in</Button>
+              <Button variant="accent">{t.common.signIn}</Button>
             </Link>
           </div>
         ) : favorites.length < 2 ? (
           <div className={styles.empty}>
-            <p>
-              Rate performances from at least two actors you love (a 7 or
-              higher), and we&apos;ll find films where they co-star.
-            </p>
+            <p>{t.recommendations.needTwo}</p>
             {favorites.length === 1 && (
               <p className={styles.hint}>
-                So far your favorite is <strong>{favorites[0].name}</strong> —
-                rate one more great performance to get started.
+                {t.recommendations.favoriteHintPre}{" "}
+                <strong>{favorites[0].name}</strong>{" "}
+                {t.recommendations.favoriteHintPost}
               </p>
             )}
             <Link href="/rankings">
-              <Button variant="ghost">Browse rankings</Button>
+              <Button variant="ghost">{t.recommendations.browseRankings}</Button>
             </Link>
           </div>
         ) : (
           <>
             <div className={styles.favorites}>
-              <span className={styles.favLabel}>Your favorites</span>
+              <span className={styles.favLabel}>
+                {t.recommendations.yourFavorites}
+              </span>
               {favorites.map((f) => (
                 <span key={f.personId} className={styles.chip}>
                   {f.name}
@@ -65,10 +64,7 @@ export default async function RecommendationsPage() {
               </Reveal>
             ) : (
               <div className={styles.empty}>
-                <p>
-                  None of your favorites have shared the screen yet. Rate more
-                  performances to widen the net!
-                </p>
+                <p>{t.recommendations.noCoStars}</p>
               </div>
             )}
           </>
