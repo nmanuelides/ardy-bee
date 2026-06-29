@@ -9,7 +9,7 @@ import ScrollProgress from "@/components/layout/ScrollProgress";
 import ThemeLab from "@/components/layout/ThemeLab";
 import { I18nProvider } from "@/lib/i18n/provider";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { getLocale } from "@/lib/i18n/server";
+import { getLocale, getT } from "@/lib/i18n/server";
 import "../styles/main.scss";
 
 // Display: characterful, contemporary, very readable. Body: clean geometric sans.
@@ -25,11 +25,13 @@ const body = Manrope({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Ardy Bee — Rate the performance, not the movie",
-  description:
-    "Ardy Bee (ARDB) is the Actors Ratings Data Base: rate actor performances from 1 to 10, build your taste profile, and discover films where your favorites share the screen.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getT();
+  return {
+    title: t.meta.defaultTitle,
+    description: t.meta.description,
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#0e0d0c",

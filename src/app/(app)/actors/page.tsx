@@ -4,7 +4,10 @@ import { getPopularPeople } from "@/lib/tmdb/people";
 import { getT } from "@/lib/i18n/server";
 import styles from "../movies/browse.module.scss";
 
-export const metadata = { title: "Actors · Ardy Bee" };
+export async function generateMetadata() {
+  const t = await getT();
+  return { title: t.meta.actors };
+}
 
 export default async function ActorsPage() {
   const t = await getT();
