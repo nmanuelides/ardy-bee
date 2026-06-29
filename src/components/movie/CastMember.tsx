@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { tmdbImage } from "@/lib/tmdb/image";
 import RatingDial from "@/components/rating/RatingDial";
 import type { TmdbCastMember } from "@/lib/tmdb/types";
@@ -28,21 +29,31 @@ export default function CastMember({
   return (
     <article className={styles.card} data-cast-card>
       <div className={styles.head}>
-        <div className={styles.avatar} data-bee-target>
-          {profile ? (
-            <Image
-              src={profile}
-              alt={member.name}
-              fill
-              sizes="64px"
-              className={styles.img}
-            />
-          ) : (
-            <span className={styles.initial}>{member.name.charAt(0)}</span>
-          )}
-        </div>
+        <Link
+          href={`/actors/${member.id}`}
+          className={styles.avatarLink}
+          aria-label={member.name}
+        >
+          <div className={styles.avatar} data-bee-target>
+            {profile ? (
+              <Image
+                src={profile}
+                alt={member.name}
+                fill
+                sizes="64px"
+                className={styles.img}
+              />
+            ) : (
+              <span className={styles.initial}>{member.name.charAt(0)}</span>
+            )}
+          </div>
+        </Link>
         <div className={styles.who}>
-          <h3 className={styles.name}>{member.name}</h3>
+          <h3 className={styles.name}>
+            <Link href={`/actors/${member.id}`} className={styles.nameLink}>
+              {member.name}
+            </Link>
+          </h3>
           {member.character && (
             <p className={styles.character}>as {member.character}</p>
           )}
