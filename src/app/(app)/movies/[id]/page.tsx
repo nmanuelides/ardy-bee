@@ -5,6 +5,8 @@ import Reveal from "@/components/motion/Reveal";
 import type { PerformanceStat } from "@/components/movie/CastMember";
 import { getMovieCredits, getMovieDetails } from "@/lib/tmdb/movies";
 import { createClient } from "@/lib/supabase/server";
+import { getLocale, getT } from "@/lib/i18n/server";
+import { TMDB_LANG } from "@/lib/i18n/config";
 import styles from "./page.module.scss";
 
 export default async function MoviePage({
@@ -16,11 +18,23 @@ export default async function MoviePage({
   const movieId = Number(id);
   if (!Number.isFinite(movieId)) notFound();
 
-  const [details, credits] = await Promise.all([
-    getMovieDetails(movieId).catch(() => null),
+  const t = await getT();
+  const locale = await getLocale();
+
+  // Localize overview/genres/tagline to the active locale, but keep the movie
+  // title in English (movie names are never translated). For English, one
+  // fetch covers both.
+  const [localized, enDetails, credits] = await Promise.all([
+    getMovieDetails(movieId, TMDB_LANG[locale]).catch(() => null),
+    locale === "en"
+      ? Promise.resolve(null)
+      : getMovieDetails(movieId, "en-US").catch(() => null),
     getMovieCredits(movieId).catch(() => ({ id: movieId, cast: [] })),
   ]);
-  if (!details) notFound();
+  if (!localized) notFound();
+  const details = enDetails
+    ? { ...localized, title: enDetails.title }
+    : localized;
 
   const cast = credits.cast.slice(0, 30);
 
@@ -77,7 +91,7 @@ export default async function MoviePage({
       <MovieHero details={details} />
       <Reveal>
         <section className={styles.cast}>
-          <h2 className={styles.heading}>The cast — rate the performances</h2>
+          <h2 className={styles.heading}>{t.movie.castHeading}</h2>
           {cast.length > 0 ? (
             <CastList
               movieId={movieId}
@@ -86,7 +100,7 @@ export default async function MoviePage({
               isAuthenticated={!!user}
             />
           ) : (
-            <p className={styles.empty}>No cast information available.</p>
+            <p className={styles.empty}>{t.movie.noCast}</p>
           )}
         </section>
       </Reveal>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { tmdbImage } from "@/lib/tmdb/image";
+import { getT } from "@/lib/i18n/server";
 import type { ActorRank, MovieRank } from "@/lib/rankings/queries";
 import styles from "./HeroBoards.module.scss";
 
@@ -13,7 +14,15 @@ interface Row {
   round: boolean;
 }
 
-function Board({ title, rows }: { title: string; rows: Row[] }) {
+function Board({
+  title,
+  rows,
+  emptyLabel,
+}: {
+  title: string;
+  rows: Row[];
+  emptyLabel: string;
+}) {
   return (
     <div className={styles.board}>
       <h2 className={styles.boardTitle}>{title}</h2>
@@ -40,32 +49,34 @@ function Board({ title, rows }: { title: string; rows: Row[] }) {
           })}
         </ol>
       ) : (
-        <p className={styles.none}>Nothing rated yet</p>
+        <p className={styles.none}>{emptyLabel}</p>
       )}
     </div>
   );
 }
 
-export default function HeroBoards({
+export default async function HeroBoards({
   actors,
   movies,
 }: {
   actors: ActorRank[];
   movies: MovieRank[];
 }) {
+  const t = await getT();
   const hasData = actors.length > 0 || movies.length > 0;
 
   return (
     <aside className={styles.panel}>
       <div className={styles.head}>
         <span className={styles.dot} />
-        The leaderboard
+        {t.leaderboard.title}
       </div>
 
       {hasData ? (
         <div className={styles.boards}>
           <Board
-            title="Top actors"
+            title={t.leaderboard.topActors}
+            emptyLabel={t.leaderboard.nothingRated}
             rows={actors.slice(0, 5).map((a, i) => ({
               rank: i + 1,
               href: `/actors/${a.personId}`,
@@ -76,7 +87,8 @@ export default function HeroBoards({
             }))}
           />
           <Board
-            title="Top movies"
+            title={t.leaderboard.topMovies}
+            emptyLabel={t.leaderboard.nothingRated}
             rows={movies.slice(0, 5).map((m, i) => ({
               rank: i + 1,
               href: `/movies/${m.movieId}`,
@@ -88,9 +100,7 @@ export default function HeroBoards({
           />
         </div>
       ) : (
-        <p className={styles.empty}>
-          No performances rated yet — be the first to put an actor on the board.
-        </p>
+        <p className={styles.empty}>{t.leaderboard.empty}</p>
       )}
     </aside>
   );

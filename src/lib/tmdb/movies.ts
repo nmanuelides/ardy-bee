@@ -65,8 +65,11 @@ export async function getMoviesByCategory(
 }
 
 /** Full details for a single movie. */
-export async function getMovieDetails(id: number): Promise<TmdbMovieDetails> {
-  return tmdbFetch<TmdbMovieDetails>(`/movie/${id}`, { language: "en-US" });
+export async function getMovieDetails(
+  id: number,
+  lang = "en-US",
+): Promise<TmdbMovieDetails> {
+  return tmdbFetch<TmdbMovieDetails>(`/movie/${id}`, { language: lang });
 }
 
 /** Cast + crew for a single movie. */

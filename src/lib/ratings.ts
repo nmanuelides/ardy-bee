@@ -33,6 +33,26 @@ export function ratingLabel(score: number): string {
   return "Honey"; // 9.0–10: the sweetest performances
 }
 
+export type RatingLabelKey =
+  | "stings"
+  | "rough"
+  | "shaky"
+  | "solid"
+  | "strong"
+  | "stellar"
+  | "honey";
+
+/** Locale-agnostic key for a score's qualitative label (resolve via i18n). */
+export function ratingLabelKey(score: number): RatingLabelKey {
+  if (score <= 1) return "stings";
+  if (score < 3) return "rough";
+  if (score < 5) return "shaky";
+  if (score < 6.5) return "solid";
+  if (score < 8) return "strong";
+  if (score < 9) return "stellar";
+  return "honey";
+}
+
 /** Format a score for display, e.g. 7 -> "7", 7.5 -> "7.5". */
 export function formatScore(score: number): string {
   return Number.isInteger(score) ? String(score) : score.toFixed(1);

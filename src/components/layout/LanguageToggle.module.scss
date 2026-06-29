@@ -1,0 +1,36 @@
+@use "abstracts" as *;
+
+.toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  flex: 0 0 auto;
+  // true honeycomb hexagon, matching the theme toggle + user avatar
+  @include hexagon;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: var(--color-text);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    background var(--dur-base) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--color-accent);
+    background: var(--color-accent-soft);
+  }
+  &:active {
+    transform: scale(0.94);
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}

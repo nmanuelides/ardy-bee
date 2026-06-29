@@ -1,11 +1,13 @@
 import MovieSection from "@/components/movie/MovieSection";
 import { getMoviesByCategory } from "@/lib/tmdb/movies";
 import { getMovieScores } from "@/lib/rankings/queries";
+import { getT } from "@/lib/i18n/server";
 import styles from "./browse.module.scss";
 
 export const metadata = { title: "Movies · Ardy Bee" };
 
 export default async function MoviesPage() {
+  const t = await getT();
   const [pop, top, up] = await Promise.allSettled([
     getMoviesByCategory("popular"),
     getMoviesByCategory("top-rated"),
@@ -28,10 +30,10 @@ export default async function MoviesPage() {
   };
 
   const sections = [
-    { title: "Popular", category: "popular" as const, data: popular },
-    { title: "Top rated", category: "top-rated" as const, data: topRated },
+    { title: t.movies.popular, category: "popular" as const, data: popular },
+    { title: t.movies.topRated, category: "top-rated" as const, data: topRated },
     {
-      title: "Coming soon",
+      title: t.movies.comingSoon,
       category: "upcoming" as const,
       data: upcoming,
       sortByDate: true,
@@ -46,10 +48,8 @@ export default async function MoviesPage() {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <h1>Movies</h1>
-        <p className={styles.lead}>
-          Browse films and rate the performances inside them.
-        </p>
+        <h1>{t.movies.title}</h1>
+        <p className={styles.lead}>{t.movies.lead}</p>
       </header>
 
       {sections.map((s) => (

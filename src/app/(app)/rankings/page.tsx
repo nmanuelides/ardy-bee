@@ -10,6 +10,7 @@ import {
   getTopPerformances,
 } from "@/lib/rankings/queries";
 import { createClient } from "@/lib/supabase/server";
+import { getT } from "@/lib/i18n/server";
 import styles from "./page.module.scss";
 
 export const metadata = {
@@ -17,6 +18,7 @@ export const metadata = {
 };
 
 export default async function RankingsPage() {
+  const t = await getT();
   const supabase = await createClient();
   const {
     data: { user },
@@ -32,26 +34,23 @@ export default async function RankingsPage() {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <h1>Rankings</h1>
-        <p className={styles.lead}>
-            Ranked by a weighted score — a deep body of strong work outranks a
-            single lucky 10. The more ratings, the more a score is trusted.
-          </p>
+        <h1>{t.rankings.title}</h1>
+        <p className={styles.lead}>{t.rankings.lead}</p>
         </header>
 
         {user && (
           <RankSection
-            title="Your top performances"
-            subtitle="by the score you gave"
+            title={t.rankings.yourTop}
+            subtitle={t.rankings.yourTopSub}
             isEmpty={mine.length === 0}
-            emptyLabel="You haven't rated anything yet. Open a movie and rate the cast!"
+            emptyLabel={t.rankings.emptyMine}
           >
             {mine.map((perf, i) => (
               <PerformanceRow
                 key={perf.performanceId}
                 rank={i + 1}
                 perf={perf}
-                scoreLabel="your score"
+                personal
               />
             ))}
           </RankSection>
@@ -59,10 +58,10 @@ export default async function RankingsPage() {
 
         <Reveal>
           <RankSection
-            title="Best performances"
-            subtitle="across the hive"
+            title={t.rankings.bestPerformances}
+            subtitle={t.rankings.bestPerformancesSub}
             isEmpty={performances.length === 0}
-            emptyLabel="No performances ranked yet — be the first to rate one."
+            emptyLabel={t.rankings.emptyPerformances}
           >
             {performances.map((perf, i) => (
               <PerformanceRow key={perf.performanceId} rank={i + 1} perf={perf} />
@@ -72,9 +71,9 @@ export default async function RankingsPage() {
 
         <div className={styles.cols}>
           <RankSection
-            title="Top actors"
+            title={t.rankings.topActors}
             isEmpty={actors.length === 0}
-            emptyLabel="No actors ranked yet — rate some performances to get the hive buzzing."
+            emptyLabel={t.rankings.emptyActors}
           >
             {actors.map((actor, i) => (
               <ActorRow key={actor.personId} rank={i + 1} actor={actor} />
@@ -82,10 +81,10 @@ export default async function RankingsPage() {
           </RankSection>
 
           <RankSection
-            title="Best movies"
-            subtitle="by ensemble"
+            title={t.rankings.bestMovies}
+            subtitle={t.rankings.bestMoviesSub}
             isEmpty={movies.length === 0}
-            emptyLabel="No movies ranked yet — rate a cast to put a film on the board."
+            emptyLabel={t.rankings.emptyMovies}
           >
             {movies.map((movie, i) => (
               <MovieRow key={movie.movieId} rank={i + 1} movie={movie} />

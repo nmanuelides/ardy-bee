@@ -4,6 +4,7 @@ import { useState } from "react";
 import MovieCard from "./MovieCard";
 import Reveal from "@/components/motion/Reveal";
 import MagneticButton from "@/components/ui/MagneticButton";
+import { useT } from "@/lib/i18n/provider";
 import type { TmdbMovie } from "@/lib/tmdb/types";
 import type { MovieCategory } from "@/lib/tmdb/movies";
 import type { MovieScore } from "@/lib/rankings/queries";
@@ -30,6 +31,7 @@ export default function MovieSection({
   initialScores = {},
   sortByDate = false,
 }: Props) {
+  const t = useT();
   const [movies, setMovies] = useState(initialMovies);
   const [scores, setScores] = useState<Record<number, MovieScore>>(initialScores);
   const [page, setPage] = useState(initialPage);
@@ -73,7 +75,7 @@ export default function MovieSection({
       {hasMore && (
         <div className={styles.more}>
           <MagneticButton onClick={loadMore} disabled={loading}>
-            {loading ? "Loading…" : "See more"}
+            {loading ? t.common.loading : t.common.seeMore}
           </MagneticButton>
         </div>
       )}

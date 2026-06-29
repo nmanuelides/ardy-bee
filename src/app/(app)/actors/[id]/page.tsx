@@ -5,6 +5,8 @@ import Reveal from "@/components/motion/Reveal";
 import { tmdbImage } from "@/lib/tmdb/image";
 import { getPersonDetails, getPersonMovieCredits } from "@/lib/tmdb/people";
 import { getMovieScores } from "@/lib/rankings/queries";
+import { getLocale, getT } from "@/lib/i18n/server";
+import { TMDB_LANG } from "@/lib/i18n/config";
 import styles from "./page.module.scss";
 
 export default async function ActorPage({
@@ -16,8 +18,12 @@ export default async function ActorPage({
   const personId = Number(id);
   if (!Number.isFinite(personId)) notFound();
 
+  const t = await getT();
+  const locale = await getLocale();
+
   const [person, credits] = await Promise.all([
-    getPersonDetails(personId).catch(() => null),
+    // bio localized; filmography kept in English (movie names untranslated)
+    getPersonDetails(personId, TMDB_LANG[locale]).catch(() => null),
     getPersonMovieCredits(personId).catch(() => ({ id: personId, cast: [] })),
   ]);
   if (!person) notFound();
@@ -42,9 +48,10 @@ export default async function ActorPage({
 
   const scores = await getMovieScores(knownFor.map((m) => m.id));
 
-  const facts = [person.known_for_department, person.place_of_birth]
-    .filter(Boolean)
-    .join("  ·  ");
+  const dept = person.known_for_department
+    ? (t.departments[person.known_for_department] ?? person.known_for_department)
+    : null;
+  const facts = [dept, person.place_of_birth].filter(Boolean).join("  ·  ");
 
   return (
     <main className={styles.page}>
@@ -66,7 +73,8 @@ export default async function ActorPage({
       {knownFor.length > 0 && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>
-            Filmography <span className={styles.count}>{knownFor.length}</span>
+            {t.actor.filmography}{" "}
+            <span className={styles.count}>{knownFor.length}</span>
           </h2>
           <Reveal stagger className={styles.grid}>
             {knownFor.map((movie) => (

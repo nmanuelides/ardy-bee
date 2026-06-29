@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { tmdbImage } from "@/lib/tmdb/image";
 import RatingDial from "@/components/rating/RatingDial";
+import { getT } from "@/lib/i18n/server";
 import type { TmdbCastMember } from "@/lib/tmdb/types";
 import styles from "./CastMember.module.scss";
 
@@ -18,12 +19,13 @@ interface CastMemberProps {
   isAuthenticated: boolean;
 }
 
-export default function CastMember({
+export default async function CastMember({
   movieId,
   member,
   stat,
   isAuthenticated,
 }: CastMemberProps) {
+  const t = await getT();
   const profile = tmdbImage(member.profile_path, "w185");
 
   return (
@@ -55,7 +57,9 @@ export default function CastMember({
             </Link>
           </h3>
           {member.character && (
-            <p className={styles.character}>as {member.character}</p>
+            <p className={styles.character}>
+              {t.movie.as} {member.character}
+            </p>
           )}
           {stat.count > 0 && stat.avg != null && (
             <p className={styles.community}>

@@ -1,11 +1,13 @@
 import ActorCard from "@/components/actor/ActorCard";
 import Reveal from "@/components/motion/Reveal";
 import { getPopularPeople } from "@/lib/tmdb/people";
+import { getT } from "@/lib/i18n/server";
 import styles from "../movies/browse.module.scss";
 
 export const metadata = { title: "Actors · Ardy Bee" };
 
 export default async function ActorsPage() {
+  const t = await getT();
   const people = await getPopularPeople().catch(() => []);
   // only actors with a photo, de-duplicated
   const seen = new Set<number>();
@@ -18,14 +20,12 @@ export default async function ActorsPage() {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <h1>Actors</h1>
-        <p className={styles.lead}>
-          Discover performers and rate their work across every film.
-        </p>
+        <h1>{t.actors.title}</h1>
+        <p className={styles.lead}>{t.actors.lead}</p>
       </header>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Popular this week</h2>
+        <h2 className={styles.sectionTitle}>{t.actors.popularThisWeek}</h2>
         <Reveal stagger className={styles.grid}>
           {actors.map((person) => (
             <ActorCard key={person.id} person={person} />

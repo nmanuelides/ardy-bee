@@ -1,18 +1,24 @@
 import Image from "next/image";
 import { tmdbImage } from "@/lib/tmdb/image";
+import { getT } from "@/lib/i18n/server";
 import type { ActorRank } from "@/lib/rankings/queries";
 import styles from "./rankings.module.scss";
 
-export default function ActorRow({
+export default async function ActorRow({
   rank,
   actor,
 }: {
   rank: number;
   actor: ActorRank;
 }) {
+  const t = await getT();
   const img = tmdbImage(actor.profilePath, "w185");
-  const perfLabel = `${actor.ratedPerformances} performance${actor.ratedPerformances === 1 ? "" : "s"}`;
-  const rateLabel = `${actor.totalRatings} rating${actor.totalRatings === 1 ? "" : "s"}`;
+  const perfLabel = `${actor.ratedPerformances} ${
+    actor.ratedPerformances === 1 ? t.common.performance : t.common.performances
+  }`;
+  const rateLabel = `${actor.totalRatings} ${
+    actor.totalRatings === 1 ? t.common.rating : t.common.ratings
+  }`;
 
   return (
     <li className={styles.row}>
@@ -40,7 +46,7 @@ export default function ActorRow({
       </span>
       <span className={styles.score}>
         <span className={styles.scoreNum}>{actor.weighted.toFixed(1)}</span>
-        <span className={styles.scoreLabel}>weighted</span>
+        <span className={styles.scoreLabel}>{t.rankings.weighted}</span>
       </span>
     </li>
   );

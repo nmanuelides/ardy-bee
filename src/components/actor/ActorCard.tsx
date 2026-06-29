@@ -2,11 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 import Tilt from "@/components/motion/Tilt";
 import { tmdbImage } from "@/lib/tmdb/image";
+import { getT } from "@/lib/i18n/server";
 import type { TmdbPerson } from "@/lib/tmdb/types";
 import styles from "./ActorCard.module.scss";
 
-export default function ActorCard({ person }: { person: TmdbPerson }) {
+export default async function ActorCard({ person }: { person: TmdbPerson }) {
+  const t = await getT();
   const photo = tmdbImage(person.profile_path, "w342");
+  const dept = person.known_for_department
+    ? (t.departments[person.known_for_department] ?? person.known_for_department)
+    : null;
 
   return (
     <Tilt className={styles.card}>
@@ -26,9 +31,7 @@ export default function ActorCard({ person }: { person: TmdbPerson }) {
         <div className={styles.scrim} />
         <div className={styles.info}>
           <h3 className={styles.name}>{person.name}</h3>
-          {person.known_for_department && (
-            <span className={styles.dept}>{person.known_for_department}</span>
-          )}
+          {dept && <span className={styles.dept}>{dept}</span>}
         </div>
       </div>
     </Link>

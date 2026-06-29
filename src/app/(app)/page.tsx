@@ -3,8 +3,10 @@ import SectionRail from "@/components/home/SectionRail";
 import Reveal from "@/components/motion/Reveal";
 import { getPopularMovies, getUpcomingMovies } from "@/lib/tmdb/movies";
 import { getTopActors, getTopMovies } from "@/lib/rankings/queries";
+import { getT } from "@/lib/i18n/server";
 
 export default async function HomePage() {
+  const t = await getT();
   const [popular, upcoming, topActors, topMovies] = await Promise.allSettled([
     getPopularMovies(),
     getUpcomingMovies(),
@@ -26,10 +28,10 @@ export default async function HomePage() {
         topMovies={topMovies.status === "fulfilled" ? topMovies.value : []}
       />
       <Reveal>
-        <SectionRail title="Popular now" movies={popularMovies} />
+        <SectionRail title={t.home.popularNow} movies={popularMovies} />
       </Reveal>
       <Reveal>
-        <SectionRail title="Upcoming" movies={upcomingMovies} />
+        <SectionRail title={t.home.upcoming} movies={upcomingMovies} />
       </Reveal>
     </main>
   );

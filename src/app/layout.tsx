@@ -7,6 +7,9 @@ import CustomCursor from "@/components/brand/CustomCursor";
 import Backdrop from "@/components/layout/Backdrop";
 import ScrollProgress from "@/components/layout/ScrollProgress";
 import ThemeLab from "@/components/layout/ThemeLab";
+import { I18nProvider } from "@/lib/i18n/provider";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { getLocale } from "@/lib/i18n/server";
 import "../styles/main.scss";
 
 // Display: characterful, contemporary, very readable. Body: clean geometric sans.
@@ -33,12 +36,15 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
+
   return (
     <html
-      lang="en"
+      lang={locale}
       data-theme="ardy"
       data-scroll-behavior="smooth"
       className={`${display.variable} ${body.variable}`}
@@ -49,7 +55,9 @@ export default function RootLayout({
         </Script>
         <Backdrop />
         <ScrollProgress />
-        <div className="app-shell">{children}</div>
+        <I18nProvider locale={locale} dict={dict}>
+          <div className="app-shell">{children}</div>
+        </I18nProvider>
         <CustomCursor />
         <CursorBee />
         {process.env.NODE_ENV !== "production" && <ThemeLab />}

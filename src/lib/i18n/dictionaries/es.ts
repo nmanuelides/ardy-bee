@@ -1,0 +1,171 @@
+import type { Dictionary } from "./en";
+
+// Spanish dictionary. Typed as `Dictionary` so it must match `en` exactly.
+export const es: Dictionary = {
+  nav: {
+    movies: "Películas",
+    actors: "Actores",
+    rankings: "Clasificaciones",
+    forYou: "Para ti",
+    primary: "Principal",
+  },
+  common: {
+    signIn: "Iniciar sesión",
+    signOut: "Cerrar sesión",
+    seeMore: "Ver más",
+    loading: "Cargando…",
+    loadingShort: "Cargando",
+    rating: "valoración",
+    ratings: "valoraciones",
+    performance: "actuación",
+    performances: "actuaciones",
+  },
+  theme: {
+    toLight: "Cambiar a tema claro",
+    toDark: "Cambiar a tema oscuro",
+  },
+  language: {
+    label: "EN",
+    switchAria: "Cambiar a inglés",
+  },
+  home: {
+    eyebrow: "ARDB · Base de Datos de Valoraciones de Actores",
+    headlineLead: "Califica la",
+    headlineEm: "actuación",
+    headlineTail: ", no la película.",
+    sub: "Puntúa el trabajo de cada actor del 1 al 10. Cuanto más valoras, más se afina tu perfil de gustos — y Ardy Bee descubre películas donde tus favoritos comparten pantalla.",
+    startRating: "Empezar a valorar",
+    exploreRankings: "Ver clasificaciones",
+    popularNow: "Populares ahora",
+    upcoming: "Próximamente",
+  },
+  leaderboard: {
+    title: "La tabla de líderes",
+    topActors: "Mejores actores",
+    topMovies: "Mejores películas",
+    nothingRated: "Nada valorado aún",
+    empty:
+      "Aún no hay actuaciones valoradas — sé el primero en poner a un actor en la tabla.",
+  },
+  movies: {
+    title: "Películas",
+    lead: "Explora películas y valora las actuaciones que contienen.",
+    popular: "Populares",
+    topRated: "Mejor valoradas",
+    comingSoon: "Próximamente",
+  },
+  actors: {
+    title: "Actores",
+    lead: "Descubre intérpretes y valora su trabajo en cada película.",
+    popularThisWeek: "Populares esta semana",
+  },
+  actor: {
+    filmography: "Filmografía",
+  },
+  rankings: {
+    title: "Clasificaciones",
+    lead: "Ordenado por una puntuación ponderada — un amplio cuerpo de buen trabajo supera a un único 10 con suerte. Cuantas más valoraciones, más fiable es la puntuación.",
+    yourTop: "Tus mejores actuaciones",
+    yourTopSub: "según la puntuación que diste",
+    yourScore: "tu puntuación",
+    bestPerformances: "Mejores actuaciones",
+    bestPerformancesSub: "en toda la colmena",
+    topActors: "Mejores actores",
+    bestMovies: "Mejores películas",
+    bestMoviesSub: "por reparto",
+    weighted: "ponderada",
+    emptyMine:
+      "Aún no has valorado nada. ¡Abre una película y valora al reparto!",
+    emptyPerformances:
+      "Aún no hay actuaciones clasificadas — sé el primero en valorar una.",
+    emptyActors:
+      "Aún no hay actores clasificados — valora algunas actuaciones para animar la colmena.",
+    emptyMovies:
+      "Aún no hay películas clasificadas — valora un reparto para poner una película en la tabla.",
+  },
+  movie: {
+    castHeading: "El reparto — valora las actuaciones",
+    noCast: "No hay información del reparto disponible.",
+    rateCast: "Valora el reparto →",
+    ardyRating: "Valoración de Ardy · {n} actuaciones valoradas",
+    as: "como",
+  },
+  search: {
+    placeholder: "Buscar películas y actores…",
+    aria: "Buscar películas y actores",
+    noMatches: "Sin resultados",
+    actor: "Actor",
+    movie: "Película",
+  },
+  recommendations: {
+    title: "Para ti",
+    lead: "Películas donde dos o más de tus actores favoritos comparten pantalla — a partir de las actuaciones que mejor has valorado.",
+    signInPrompt:
+      "Inicia sesión y valora algunas actuaciones para desbloquear recomendaciones.",
+    needTwo:
+      "Valora actuaciones de al menos dos actores que te encanten (un 7 o más) y encontraremos películas donde coprotagonizan.",
+    favoriteHintPre: "Por ahora tu favorito es",
+    favoriteHintPost: "— valora una gran actuación más para empezar.",
+    browseRankings: "Ver clasificaciones",
+    yourFavorites: "Tus favoritos",
+    noCoStars:
+      "Ninguno de tus favoritos ha compartido pantalla todavía. ¡Valora más actuaciones para ampliar la red!",
+    favoritesBadge: "favoritos",
+    favoriteBadge: "favorito",
+    featuring: "Con",
+  },
+  rating: {
+    rate: "Valorar",
+    remove: "Quitar",
+    removeAria: "Quitar tu valoración",
+    trackAria: "Valora esta actuación del 1 al 10",
+    cellAria: "{n} de {max}",
+    labels: {
+      stings: "Pica",
+      rough: "Floja",
+      shaky: "Irregular",
+      solid: "Sólida",
+      strong: "Potente",
+      stellar: "Estelar",
+      honey: "Miel",
+    },
+  },
+  auth: {
+    welcomeBack: "Bienvenido de nuevo",
+    loginSub:
+      "Inicia sesión para valorar actuaciones y seguir a tus actores favoritos.",
+    joinHive: "Únete a la colmena",
+    signupSub: "Crea una cuenta para empezar a valorar actuaciones de actores.",
+    displayName: "Nombre visible",
+    email: "Correo electrónico",
+    password: "Contraseña",
+    showPassword: "Mostrar contraseña",
+    hidePassword: "Ocultar contraseña",
+    submitLogin: "Iniciar sesión",
+    submitSignup: "Crear cuenta",
+    submitting: "Un momento…",
+    or: "o",
+    google: "Continuar con Google",
+    newToArdy: "¿Nuevo en Ardy Bee?",
+    createAccount: "Crea una cuenta",
+    haveAccount: "¿Ya tienes una cuenta?",
+  },
+  footer: {
+    attribution:
+      "Este producto usa la API de TMDB pero no está avalado ni certificado por TMDB.",
+  },
+  departments: {
+    Acting: "Interpretación",
+    Directing: "Dirección",
+    Writing: "Guion",
+    Production: "Producción",
+    Crew: "Equipo técnico",
+    Sound: "Sonido",
+    Camera: "Cámara",
+    Editing: "Montaje",
+    Art: "Arte",
+    "Visual Effects": "Efectos visuales",
+    Lighting: "Iluminación",
+    "Costume & Make-Up": "Vestuario y maquillaje",
+  },
+};

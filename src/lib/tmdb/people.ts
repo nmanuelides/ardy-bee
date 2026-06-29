@@ -8,8 +8,11 @@ import type {
 } from "./types";
 
 /** Full details for a single person (actor). */
-export async function getPersonDetails(id: number): Promise<TmdbPersonDetails> {
-  return tmdbFetch<TmdbPersonDetails>(`/person/${id}`, { language: "en-US" });
+export async function getPersonDetails(
+  id: number,
+  lang = "en-US",
+): Promise<TmdbPersonDetails> {
+  return tmdbFetch<TmdbPersonDetails>(`/person/${id}`, { language: lang });
 }
 
 /** Currently-popular people. */
