@@ -13,9 +13,10 @@ import { createClient } from "@/lib/supabase/server";
 import { getT } from "@/lib/i18n/server";
 import styles from "./page.module.scss";
 
-export const metadata = {
-  title: "Rankings · Ardy Bee",
-};
+export async function generateMetadata() {
+  const t = await getT();
+  return { title: t.meta.rankings };
+}
 
 export default async function RankingsPage() {
   const t = await getT();

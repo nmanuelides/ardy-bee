@@ -4,7 +4,10 @@ import { getMovieScores } from "@/lib/rankings/queries";
 import { getT } from "@/lib/i18n/server";
 import styles from "./browse.module.scss";
 
-export const metadata = { title: "Movies · Ardy Bee" };
+export async function generateMetadata() {
+  const t = await getT();
+  return { title: t.meta.movies };
+}
 
 export default async function MoviesPage() {
   const t = await getT();

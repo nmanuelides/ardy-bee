@@ -6,9 +6,10 @@ import { getRecommendations } from "@/lib/recommendations/queries";
 import { getT } from "@/lib/i18n/server";
 import styles from "./page.module.scss";
 
-export const metadata = {
-  title: "For You · Ardy Bee",
-};
+export async function generateMetadata() {
+  const t = await getT();
+  return { title: t.meta.forYou };
+}
 
 export default async function RecommendationsPage() {
   const t = await getT();

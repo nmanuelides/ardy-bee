@@ -30,6 +30,16 @@ export const en = {
     label: "ES", // shown on the button: the language you'd switch TO
     switchAria: "Switch to Spanish",
   },
+  // Browser-tab <title> strings.
+  meta: {
+    defaultTitle: "Ardy Bee — Rate the performance, not the movie",
+    description:
+      "Ardy Bee (ARDB) is the Actors Ratings Data Base: rate actor performances from 1 to 10, build your taste profile, and discover films where your favorites share the screen.",
+    movies: "Movies · Ardy Bee",
+    actors: "Actors · Ardy Bee",
+    rankings: "Rankings · Ardy Bee",
+    forYou: "For You · Ardy Bee",
+  },
   home: {
     eyebrow: "ARDB · Actors Ratings Data Base",
     headlineLead: "Rate the",
