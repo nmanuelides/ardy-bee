@@ -15,9 +15,15 @@
 .track {
   position: relative;
   display: flex;
+  // hug the hexagon pips instead of stretching across the column
+  align-self: flex-start;
   gap: 3px;
   padding: 5px;
-  border-radius: var(--radius-pill);
+  // angled-but-rounded (hexagon) corners to match the rounded honeycomb pips
+  // inside. superellipse() between `bevel` (straight) and `round` gives the
+  // soft-cornered chamfer.
+  border-radius: var(--corner-cut);
+  corner-shape: superellipse(0.2);
   @include neumorphic-inset(4px, 8px);
   cursor: pointer;
 
@@ -65,20 +71,14 @@
 
 .cell {
   position: relative;
-  flex: 1;
-  height: 1.6rem;
-  border-radius: var(--radius-sm);
+  // upright honeycomb pip: regular pointy-top hexagon. The √3:2 box makes the
+  // hexagon fill the cell exactly so the row tiles as a comb strip.
+  flex: none;
+  height: 1.7rem;
+  aspect-ratio: 0.866;
+  @include hexagon(pointy);
   background: color-mix(in srgb, var(--color-bg) 55%, transparent);
   overflow: hidden;
-
-  &:first-child {
-    border-top-left-radius: var(--radius-pill);
-    border-bottom-left-radius: var(--radius-pill);
-  }
-  &:last-child {
-    border-top-right-radius: var(--radius-pill);
-    border-bottom-right-radius: var(--radius-pill);
-  }
 }
 
 .cellFill {

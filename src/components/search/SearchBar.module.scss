@@ -13,7 +13,9 @@
   align-items: center;
   gap: 0.5ch;
   padding: 0.5rem 0.9rem;
-  border-radius: var(--radius-pill);
+  // hexagon corners
+  border-radius: var(--corner-cut);
+  corner-shape: superellipse(0.2);
 }
 
 .icon {
@@ -40,11 +42,27 @@
 
 .dropdown {
   @include glass;
+  // hexagon corners, but at the smaller cut so they don't read as too big
+  border-radius: var(--corner-cut);
+  corner-shape: superellipse(0.2);
+  // The rim-light's brightness backdrop-filter is meant to stay in a 1.5px
+  // ring, but corner-shape breaks that mask so it floods the whole panel and
+  // washes the glass milky. Drop the filter here and let the gradient be the
+  // rim — keeps clean, transparent frosted glass with a crisp edge.
+  &::after {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 250, 240, 0.7),
+      rgba(255, 250, 240, 0.15) 45%,
+      rgba(255, 250, 240, 0) 100%
+    );
+  }
   // portalled to <body>; positioned via inline left/top/width
   position: fixed;
   z-index: $z-overlay;
   padding: 0.4rem;
-  border-radius: var(--radius-md);
   max-height: 60vh;
   overflow-y: auto;
 }
@@ -80,9 +98,10 @@
   overflow: hidden;
   background: var(--color-surface);
 
+  // actor avatars render as honeycomb cells instead of circles
   &[data-person] {
     height: 38px;
-    border-radius: 50%;
+    @include hexagon;
   }
 }
 

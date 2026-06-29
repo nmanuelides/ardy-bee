@@ -52,7 +52,6 @@
   @include glass;
   flex: 1;
   padding: clamp(1.5rem, 3vw, 2.25rem);
-  border-radius: var(--radius-lg);
 }
 
 .name {

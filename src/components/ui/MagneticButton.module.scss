@@ -19,7 +19,9 @@
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  border-radius: var(--radius-pill);
+  // match the hexagon button beneath so effects clip to its silhouette
+  border-radius: var(--corner-cut);
+  corner-shape: superellipse(0.2);
   overflow: hidden;
 }
 

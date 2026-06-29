@@ -19,7 +19,6 @@
 // Glass panel wrapping the carousel
 .railWrap {
   @include glass;
-  border-radius: var(--radius-lg);
   padding: 0.75rem;
 }
 

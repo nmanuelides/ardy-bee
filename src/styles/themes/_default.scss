@@ -74,6 +74,11 @@
   --radius-md: 16px;
   --radius-lg: 28px;
   --radius-pill: 999px;
+  // Depth of the angled corner cut on honeycomb-hex surfaces. The -lg variant
+  // is used on large cards/panels/posters so the bevel reads clearly; the base
+  // value is for smaller elements (e.g. the rating track).
+  --corner-cut: 12px;
+  --corner-cut-lg: 24px;
 
   // --- Elevation (drop shadows for floating elements) ---
   --shadow-1: 0 2px 8px rgba(0, 0, 0, 0.35);

@@ -2,7 +2,6 @@
 
 .panel {
   @include glass;
-  border-radius: var(--radius-lg);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
@@ -95,10 +94,11 @@
   overflow: hidden;
   background: var(--color-surface-2);
 
+  // actor avatars render as honeycomb cells instead of circles
   &[data-round] {
     width: 30px;
     height: 30px;
-    border-radius: 50%;
+    @include hexagon;
   }
 }
 

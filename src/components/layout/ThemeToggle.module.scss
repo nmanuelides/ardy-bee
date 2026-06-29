@@ -3,11 +3,11 @@
 .toggle {
   display: inline-grid;
   place-items: center;
-  width: 2.6rem;
-  height: 2.6rem;
+  width: 2.1rem;
+  height: 2.1rem;
   flex: 0 0 auto;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--glass-border);
+  // true honeycomb hexagon (6 sides), matching the user avatar
+  @include hexagon;
   background: var(--glass-bg);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
@@ -15,12 +15,12 @@
   cursor: pointer;
   transition:
     color var(--dur-fast) var(--ease-out),
-    border-color var(--dur-base) var(--ease-out),
+    background var(--dur-base) var(--ease-out),
     transform var(--dur-fast) var(--ease-out);
 
   &:hover {
     color: var(--color-accent);
-    border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+    background: var(--color-accent-soft);
     transform: rotate(-18deg);
   }
 
