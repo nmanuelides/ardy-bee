@@ -31,14 +31,14 @@ export const es: Dictionary = {
   meta: {
     defaultTitle: "Ardy Bee — Califica la actuación, no la película",
     description:
-      "Ardy Bee (ARDB) es la Base de Datos de Valoraciones de Actores: valora actuaciones del 1 al 10, crea tu perfil de gustos y descubre películas donde tus favoritos comparten pantalla.",
+      "Ardy Bee (ARDB) es la Actors Ratings Data Base: valora actuaciones del 1 al 10, crea tu perfil de gustos y descubre películas donde tus favoritos comparten pantalla.",
     movies: "Películas · Ardy Bee",
     actors: "Actores · Ardy Bee",
     rankings: "Clasificaciones · Ardy Bee",
     forYou: "Para ti · Ardy Bee",
   },
   home: {
-    eyebrow: "ARDB · Base de Datos de Valoraciones de Actores",
+    eyebrow: "ARDB · Actors Ratings Data Base",
     headlineLead: "Califica la",
     headlineEm: "actuación",
     headlineTail: ", no la película.",
